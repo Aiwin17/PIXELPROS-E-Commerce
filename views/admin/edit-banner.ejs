@@ -1,0 +1,44 @@
+<%- include('../partials/admin-header')%>
+<section class="content-main">
+    <div class="row">
+        <div class="col-6">
+            <div class="content-header">
+                <h2 class="content-title">EDIT BANNER</h2>
+                <div>
+                    <button type="submit" class="btn btn-md rounded font-sm">SAVE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <form action="/admin/edit-banner/<%=banner._id%>" method="post" enctype="multipart/form-data">
+                        <div class="col-md-9">
+                            <div class="mb-4">
+                                <label class="form-label">Banner Name</label>
+                                <input type="text" name="bannername" value="<%=banner.name%>" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="mb-4 mt-0">
+                        <div class="col-md-9">
+                            <div class="mb-4">
+                                <img src="/images/<%=banner.image[0]%>" alt="">
+                                <label class="form-label">Images</label>
+                                <input name="bannerimage" class="form-control" type="file">
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+           
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+<%- include('../partials/admin-footer')%>
+

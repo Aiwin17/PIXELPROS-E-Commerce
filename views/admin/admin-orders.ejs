@@ -1,0 +1,116 @@
+<%- include('../partials/admin-header')%>
+    <section class="content-main">
+        <div class="content-header">
+            <h2 class="content-title">ORDERS</h2>
+            <!-- <div>
+                <a href="#" class="btn btn-primary"><i class="material-icons md-plus"></i> Create new</a>
+            </div> -->
+        </div>
+        <div class="card mb-4">
+            <header class="card-header">
+                <!-- <form action="#" id="productsTable">
+                <div class="row gx-3">
+                    <div class="col-lg-4 col-md-6 me-auto">
+                        <input type="text" placeholder="Search..." class="form-control">
+                    </div> -->
+                    <!-- <div class="col-lg-2 col-md-3 col-6">
+                        <select class="form-select">
+                            <option>Status</option>
+                            <option>Active</option>
+                            <option>Disabled</option>
+                            <option>Show all</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-6">
+                        <select class="form-select">
+                            <option>Show 20</option>
+                            <option>Show 30</option>
+                            <option>Show 40</option>
+                        </select>
+                    </div> -->
+                <!-- </div>
+            </form> -->
+            </header> <!-- card-header end// -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="example">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Name</th>
+                                <th>TotalAmount</th>
+                                <th>PaymentMethod</th>
+                                <th>Status</th>
+                                <th class="text-end"> Action </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% orders.forEach(order=> { %>
+                            <tr>
+                                </td>
+                                <td><%=order.date%></td>
+                                <td><%=order.deliveryDetails.name%></td>
+                                <td><%=order.totalAmount%></td>
+                                <td><%=order.paymentMethod%></td>
+                                <td><%=order.status%></td>
+                                <td>
+                                    <% if (order.status === 'processing') { %>
+                                        <a  class="btn btn-success btn-sm text-white" onclick="orderStatus('<%= order._id %>','<%=order.status%>')">Ship</a>
+                                    <% } %>
+                                    <% if (order.status ==='Order Cancelling') { %>
+                                        <a  class="btn btn-success btn-sm text-white" onclick="orderStatus('<%= order._id %>','<%=order.status%>')">Approve</a>
+                                    <% } %>
+                                    <% if (order.status ==='Order Returning') { %>
+                                        <a class="btn btn-warning btn-sm text-white" onclick="orderStatus('<%= order._id %>','<%=order.status%>')">Ok</a>
+                                    <% } %>
+                                </td>
+                            </tr>
+                            <% } )%>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="pagination-area mt-15 mb-50">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-start">
+                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                    <li class="page-item"><a class="page-link" href="#">02</a></li>
+                    <li class="page-item"><a class="page-link" href="#">03</a></li>
+                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                    <li class="page-item"><a class="page-link" href="#">16</a></li>
+                    <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
+                </ul>
+            </nav>
+        </div>
+    </section>
+    <%- include("../partials/admin-footer") %>
+    <script>
+        function orderStatus(orderId, orderStatus) {
+            $.post('/admin/change-order-status', { order: orderId, orderStatus })
+              .done(response => {
+                let message;
+                switch (true) {
+                  case response.shipped:
+                    message = 'Your order has been placed';
+                    break;
+                  case response.cancel:
+                    message = 'Order has been canceled';
+                    break;
+                  case response.return:
+                    message = 'Order has been returned';
+                    break;
+                }
+                if (message) {
+                  Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: message,
+                    showConfirmButton: false,
+                    timer: 1500
+                  });
+                  setTimeout(() => location.reload(), 1500);
+                }
+              });
+          }
+    </script>

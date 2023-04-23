@@ -1,0 +1,65 @@
+<%- include('../partials/admin-header')%>
+<section class="content-main">
+    <div class="row">
+        <form action="/admin/edit-products/<%=product._id%>" method="post" enctype="multipart/form-data">
+        <div class="col-9">
+            <div class="content-header">
+                <h2 class="content-title">Edit Products</h2>
+                <div>
+                    <button type="submit" class="btn btn-success rounded font-sm mr-5 text-body">Save</button>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="mb-4">
+                        <label for="product_title" class="form-label" ></label>
+                        <input type="text" placeholder="Type here" class="form-control" name="productname" id="product_title" value="<%=product.name%>">
+                    </div>
+                    <div class="row gx-3">
+                    </div>
+                    <div class="mb-4">
+                        <label for="product_brand" class="form-label"></label>
+                        <input type="text" placeholder="Type here" name="Brand" class="form-control" id="product_brand" value="<%=product.Brand%>">
+                    </div>
+                </div>
+            </div> 
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div>
+                
+                        <textarea placeholder="Type"  name="description" value="<%=product.description%>" class="form-control"><%=product.description%>
+                        </textarea>
+                    </div>
+                </div>
+                <!-- <div class="col-lg-1 col-sm-2 col-4 col-date">
+                    <span value=""></span>
+                </div> -->
+            </div>
+            <div class="card mb-4">
+                <img src="/images/<%=product.image[0]%>" class="m-2" style="width: 50px ;height: 50px;"  alt="">
+                <div class="card-body">
+                    <div>
+                        <label class="form-label">Images</label>
+                        <input class="form-control" name="image" type="file">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="mb-4">
+                        <label class="form-label"></label>
+                        <input type="text" placeholder="Type here" name="price" value=" <%=product.price%>" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>
+</section>
+<%- include('../partials/admin-footer')%>
+

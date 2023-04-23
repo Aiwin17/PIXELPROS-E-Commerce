@@ -1,0 +1,31 @@
+<%- include('../partials/user-header')%>
+<section>
+    <div class="container">
+        <div class="row mt-4">
+            <a href="/admin/add-product" class="btn btn-success ml-auto">Add Product</a>
+        </div>
+        <table class="table mt-5">
+  <thead>
+    <tr>
+       <th scope="col">image</th>
+      <th scope="col">name</th>
+      <th scope="col">price</th>
+     
+      
+ 
+    </tr>
+  </thead>
+  <tbody>
+    <% products.forEach(product => { %>
+    <tr>
+      <td><img src="/images/<%= product.product.image[0] %>" alt="" style="width: 50px;" ></td>
+      <td><%= product.product.name %></td>
+      <td><%= product.product.price %></td>
+    </td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>
+    </div>
+</section>
+<%- include('../partials/user-footer')%>

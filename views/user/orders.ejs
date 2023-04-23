@@ -1,0 +1,55 @@
+<%- include('../partials/user-header')%>
+<section>
+ <table class="table mt-5" id="example">  
+  <thead>
+    <tr>
+      <th scope="col">Date</th>
+      <th scope="col">name</th>
+      <th scope="col">Address</th>
+      <th scope="col">Amount</th>
+      <th scope="col">Payment</th>
+      <th scope="col">Status</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% orders.forEach(order => { %>
+    <tr>
+      <th><%= order.date %></th>
+      <td><%= order.deliveryDetails.name %></td>
+      <td><%= order.deliveryDetails.address %></td>
+      <td><%= order.totalAmount %></td>
+      <td><%= order.paymentMethod %></td>
+      <td ><%= order.status %></td>
+      <td>
+        <% if (order.status==="processing") { %>
+        <button onclick="orderStatus('<%= order._id %>','<%= order.status %>')" class="badge badge-warning text-light" >Cancel</button> 
+        <% } %>
+      <% if (order.status==="placed") { %>
+        <button onclick="orderStatus('<%= order._id %>','<%= order.status %>')" class="badge badge-info text-light" >Return</button>
+      <% } %>
+    </td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>
+</div>
+</section>
+<%- include('../partials/user-footer')%>
+<script>
+  function orderStatus(order,orderStatus){
+    $.ajax({
+      url:'/change-status-order',
+      data:{
+        orderId:order,
+        status:orderStatus
+      },
+      method:'post',
+      success: (response) => {
+        if(response.status){
+          location.reload()
+        }
+      }
+    })
+  }
+</script>
