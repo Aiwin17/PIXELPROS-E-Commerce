@@ -3,6 +3,7 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-12">
+                <% banner.forEach(ban=> { %>
                 <div class="banner_slider owl-carousel">
                     <div class="single_banner_slider">
                         <div class="row">
@@ -14,9 +15,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="banner_img d-none d-lg-block">
-                                <img src="userassets/img/banner_img.png" alt="">
-                            </div>
+                            <!-- <div class="banner_img d-none d-lg-block" >
+                                <img src="/images/<#%= ban.image[0] %>" alt="">
+                            </div> -->
                         </div>
                     </div>
                     <!-- <div class="single_banner_slider">
@@ -37,6 +38,7 @@
                         </div>
                     </div> -->
                 </div>
+                <% }) %>
                 <div class="slider-counter"></div>
             </div>
         </div>
@@ -114,7 +116,11 @@
                                     <div class="single_product_text">
                                         <h4><%=product.name%></h4>
                                         <h3><%=product.price%></h3>
-                                        <a onclick="addToCart('<%= product._id %>')" class="add_cart">+ add to cart<i class="ti-heart"></i></a>
+                                        <% if (user) { %>
+                                            <a onclick="addToCart('<%= product._id %>')" class="add_cart">+ add to cart<i class="ti-heart"></i></a>
+                                        <% }  else { %>
+                                            <a href="/login" class="add_cart">+ add to cart<i class="ti-heart"></i></a>
+                                        <% } %>         
                                     </div>
                                 </div>
                             </div>

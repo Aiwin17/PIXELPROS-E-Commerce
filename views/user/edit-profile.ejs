@@ -1,0 +1,43 @@
+<%- include('../partials/user-header')%>
+<section class="checkout_area padding_top">
+  <div class="container">
+    <div class="billing_details">
+      <form action="/edit-profile/<%= user._id %>" method="post">
+      <div class="row">
+        <div class="col-lg-8">
+          <h3>User Profile</h3>
+            <div class="col-md-6 form-group p_star">
+              <input
+                type="text"
+                class="form-control"
+                name="username"
+                value="<%= user.username %>"
+              />
+            </div>
+            <div class="col-md-6 form-group p_star">
+              <input
+                type="text"
+                class="form-control"
+                name="email"
+                value="<%= user.email %>"
+              />
+            </div>
+            <div class="col-md-12 form-group p_star">
+              <input
+                type="text"
+                class="form-control"
+                name="mobileno"
+                value="<%= user.mobileno %>"
+              />
+            </div>
+            <div class="col-md-12 form-group p_star">
+            <input type="text" name="userId" value="<%= user._id %>" hidden>  
+            </div>
+            <button type="submit">Save</button>
+        </div>
+      </div>
+    </form>
+    </div>
+  </div>
+</section>
+<%- include('../partials/user-footer')%>

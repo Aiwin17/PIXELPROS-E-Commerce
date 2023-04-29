@@ -6,7 +6,6 @@
           <div class="breadcrumb_iner">
             <div class="breadcrumb_iner_item">
               <h2>Cart Products</h2>
-              <p>Home <span>-</span>Cart Products</p>
             </div>
           </div>
         </div>
@@ -66,7 +65,7 @@
                     </div>
                   </td>
                   <td>
-                    <button class="btn"><i class="fas fa-trash"></i></button>
+                    <button onclick="removeCart('<%= product._id %>','<%= product.product._id %>')" class="btn"><i class="fas fa-trash"></i></button>
                   </td>
                  
               </tr>
@@ -76,7 +75,7 @@
               <td></td>
               <td>
                 <% if (total) { %>
-                  <h5 class="" style="text-align: right;">Subtotal: <span id="total"><%= total %></span></h5>
+                  <h5 style="text-align: right;">Subtotal: <span id="total"><%= total %></span></h5>
                 <% } else { %>
                   <!-- <h4 class="ml-5">Total Rs.<span id="total1">0</span></h4> -->
                 <% } %>
@@ -139,6 +138,54 @@
           } else {
             document.getElementById(proId).innerHTML = quantity + count
             document.getElementById('total').innerHTML = response.total
+          }
+        }
+      })
+    }
+    function removeCart(cartId,proId){
+      $.ajax({
+        url:'/remove-cart',
+        method:'post',
+        data:{cartId,proId},
+        success:(response)=>{
+          if(response.status){
+            const swalWithBootstrapButtons = Swal.mixin({
+              customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+              },
+              buttonsStyling: false
+            })
+            
+            swalWithBootstrapButtons.fire({
+              title: 'Are you sure?',
+              text: "You won't be able to revert this!",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'Yes, delete it!',
+              cancelButtonText: 'No, cancel!',
+              reverseButtons: true
+            }).then((result) => {
+              if (result.isConfirmed) {
+                swalWithBootstrapButtons.fire(
+                  'Deleted!',
+                  'Your file has been deleted.',
+                  'success'
+                )
+              } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+              ) {
+                swalWithBootstrapButtons.fire(
+                  'Cancelled',
+                  'Your imaginary file is safe :)',
+                  'error'
+                )
+              }
+            })
+            setTimeout(()=>{
+              location.reload()
+            },3000)
           }
         }
       })

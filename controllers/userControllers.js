@@ -4,29 +4,21 @@ var db = require('../config/connection')
 var collection = require('../config/collections')
 const { response } = require('express')
 module.exports = {
-    // verifyLogin:(req,res,next)=>{
-    //     if(req.session.user){
-    //         next()
-    //     }else{
-    //         res.redirect("/login")
-    //     }
-    // },
-    getHome: async (req, res) => {
-        let cartCount = null
-        const user = req.session.user
-        if (user) {
-            cartCount = await userHelpers.getCartCount(req.session.userId)
-        }
-        productHelpers.getAllProducts().then((products) => {
-            res.render('user/index', { products, user, cartCount })
-        })
+    middleware:async(req,res,next)=>{
+        let category=await productHelpers.getAllCategories()
+        res.locals.category=category
+        next()
     },
-    getLogin: (req, res) => {
-        if (req.session.user) {
-            res.redirect('/')
-        } else {
-            res.render('user/user-login', { user: false })
-        }
+    getHome: async (req,res) => {
+        let user = req.session.user
+        let cartCount = await userHelpers.getCartCount(req.session.userId)
+        let banner=await productHelpers.getBanner()
+        let products=await productHelpers.getAllProducts()
+        res.render('user/index', { products,user,cartCount,banner})
+    },
+    getLogin: async (req, res) => {
+        let cartCount = await userHelpers.getCartCount(req.session.userId)
+        res.render('user/user-login', { user:false,cartCount})
     },
     postLogin: (req, res) => {
         userHelpers.doLogin(req.body).then(async (response) => {
@@ -53,21 +45,24 @@ module.exports = {
                 }
             }
         )
+        req.session.loggedIn = false
         req.session.user = false
         res.redirect('/')
     },
-    getSignUp: (req, res) => {
-        res.render('user/user-signup', { user: false })
+    getSignUp: async(req, res) => {
+        let cartCount = await userHelpers.getCartCount(req.session.userId)
+        res.render('user/user-signup', { user: false,cartCount})
     },
     postSignUp: (req, res) => {
         userHelpers.doSignup(req.body).then(() => {
             res.redirect('/login')
         })
     },
-    getProducts: (req, res) => {
+    getProducts: async(req, res) => {
         let id = req.query.id
+        let cartCount = await userHelpers.getCartCount(req.session.userId)
         productHelpers.getProducts(id).then((products) => {
-            res.render('user/userproduct-list', { products, user: false })
+            res.render('user/userproduct-list', { cartCount,products, user: false })
         })
     },
     getOtpLogin: async(req, res) => {
@@ -99,29 +94,23 @@ module.exports = {
 
     },
     getCart: (async (req, res) => {
-        if (req.session.loggedIn) {
             let cartCount = await userHelpers.getCartCount(req.session.userId)
             let products = await userHelpers.getCartProducts(req.session.userId)
             let total = await userHelpers.getTotalAmount(req.session.userId)
             if(total){
-                res.render('user/addtocart', { user: req.session.user, products, cartCount, total})
+                res.render('user/addtocart', { user: req.session.user, products,cartCount, total})
 
             }else{
-                res.render('user/empty-cart', { user: req.session.user, products, cartCount,total:0})
+                res.render('user/empty-cart', { user: req.session.user, products,cartCount,total:0})
    
             }
-        } else {
-            res.redirect('/login')
-        }
     }),
     getaddToCart: (req, res) => {
-        if (req.session.loggedIn) {
-            userHelpers.addToCart(req.query.id, req.session.userId).then(() => {
-                res.json({ status: true })
+            userHelpers.addToCart(req.query.id, req.session.userId).then(async() => {
+                let cartCount = await userHelpers.getCartCount(req.session.userId)
+                res.json({ status: true,cartCount })
             })
-        } else {
-            res.redirect('/login')
-        }
+
     },
     postProQuantity: (req,res) => {
         userHelpers.changeProductQuantity(req.body).then(async(response) => { 
@@ -130,7 +119,6 @@ module.exports = {
         })
     },
     getPlaceOrder: async (req, res) => {
-        if (req.session.loggedIn) {
             let cartCount = await userHelpers.getCartCount(req.session.userId)
             userHelpers.getTotalAmount(req.session.userId).then((Total) => {
                 res.render('user/place-order', { user: req.session.user, cartCount, Total })
@@ -138,9 +126,7 @@ module.exports = {
                 console.log(err);
                 res.status(500).send('Internal Server Error');
             });
-        } else {
-            res.redirect('/login')
-        }
+        
     },
     postPlaceOrder:async (req,res)=>{
         let products=await userHelpers.getCartProductList(req.body.userId)
@@ -159,21 +145,22 @@ module.exports = {
         res.render('user/orders',{user:req.session.user,orders,cartCount})
     },
     getViewOrders:async(req,res)=>{
-        if(req.session.loggedIn){
+        
         let cartCount = await userHelpers.getCartCount(req.session.userId)
         let products=await userHelpers.getOrderProducts(req.query.id)
         res.render('user/view-orders',{user:req.session.user,products,cartCount})
-        }else{
-            res.redirect('/login')
-        }     
+             
     },
     getAllProducts:async(req,res)=>{
-        res.render('user/')
+        let cartCount = await userHelpers.getCartCount(req.session.userId)
+        productHelpers.getAllProducts().then((product) => {
+         res.render('user/userproduct-list',{user:req.session.user,cartCount,product})
+        }) 
     },
     getProductList:async(req,res)=>{
         let cartCount = await userHelpers.getCartCount(req.session.userId)
-        productHelpers.getAllProducts().then((products) => {
-         res.render('user/product-list',{user:req.session.user,cartCount,products})
+        productHelpers.getAllProducts().then((product) => {
+         res.render('user/category',{user:req.session.user,cartCount,product})
         }) 
     },
     getAddress:async(req,res)=>{
@@ -183,7 +170,7 @@ module.exports = {
     postAddress:async(req,res)=>{
         console.log(req.body);
         let address = await userHelpers.addAddress(req.body)
-        res.redirect('/place-order')
+        res.redirect('/address')
     },
     postOrderStatus:async(req,res)=>{
         let orderId = req.body.orderId
@@ -191,5 +178,55 @@ module.exports = {
         await userHelpers.postUpdateStatus(orderId,status).then((response)=>{
             res.json(response)
         })
-    }
+    },
+    postCategoryProducts:(req,res)=>{
+        userHelpers.postCategoryProducts(req.body).then((products)=>{
+            res.json(products)
+        })
+    },
+    getUserAddress:async(req,res)=>{
+        let user = req.session.user
+        let cartCount = await userHelpers.getCartCount(req.session.userId)
+        res.render('user/user-address',{user,cartCount})
+    },
+    getUserProfile:async(req,res)=>{
+        let userId = req.session.userId
+        let cartCount = await userHelpers.getCartCount(req.session.userId)
+        await userHelpers.getUsers(userId).then((user)=>{
+            res.render('user/user-profile',{user,cartCount})
+        })
+    },
+    
+    getCategoryLists:async(req,res)=>{
+        let user =req.session.user
+        let cartCount = await userHelpers.getCartCount(req.session.userId)
+        userHelpers.getCategoryList(req.query.id).then((products)=>{
+            let cat=products[0].categoryDocs
+            console.log(cat);
+            res.render('user/category-list',{user,cartCount,cat})
+        })
+    },
+    postRemoveCart:async(req,res)=>{
+        // console.log(req.body.cart);
+        userHelpers.removeCart(req.body).then((response)=>{
+            res.json(response)
+        })
+    },
+    getEditAddress:async(req,res)=>{
+        let user = req.session.user
+        let cartCount = await userHelpers.getCartCount(req.session.userId)
+        res.render('user/edit-address',{user,cartCount})
+    },
+    getEditProfile:async(req,res)=>{
+        let userId = req.session.userId
+        let cartCount = await userHelpers.getCartCount(req.session.userId)
+        await userHelpers.getUsers(userId).then((user)=>{
+            res.render('user/edit-profile',{user,cartCount})
+        })
+    },
+    postEditProfile:async(req,res)=>{
+        userHelpers.editUserProfile(req.body.userId,req.body).then(()=>{
+            res.redirect('/user-profile')
+        })
+    },
 }

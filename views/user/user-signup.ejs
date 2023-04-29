@@ -1,75 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign Up Form by Colorlib</title>
 
-<%- include('../partials/user-header')%>
+    <!-- Font Icon -->
+    <link rel="stylesheet" href="userassets/fonts/material-icon/css/material-design-iconic-font.min.css">
 
-
-<section class="breadcrumb breadcrumb_bg">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="breadcrumb_iner">
-                    <div class="breadcrumb_iner_item">
-                        <h2>Tracking Order</h2>
-                        <p>Home<span>-</span> Tracking Order</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- breadcrumb start-->
-
-<!--================login_part Area =================-->
-<section class="login_part padding_top">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 col-md-6">
-                
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="login_part_form">
-                    <div class="login_part_form_iner">
-                        <h3>Welcome Back ! <br>
-                            Please Sign in now</h3>
-                        <form class="row contact_form" action="/user-signup" method="post" name="form1">
-                            <div class="col-md-12 form-group p_star">
-                                <input type="text" class="form-control" id="form3Example1c" name="username" value=""
-                               placeholder="Username"  onkeyup="validateName()" >
+    <!-- Main css -->
+    <link rel="stylesheet" href="userassets/css/styles.css">
+</head>
+<body>
+    <div class="main">
+        <!-- Sign up form -->
+        <section class="signup">
+            <div class="container">
+                <div class="signup-content">
+                    <div class="signup-form">
+                        <h2 class="form-title">Sign up</h2>
+                        <form action="/user-signup" method="POST" class="register-form" id="register-form">
+                            <div class="form-group">
+                                <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                                <input type="text" name="username" id="name-error" placeholder="Your Name"/>
                             </div>
-                            <span id="name-error" style="color:red"></span>
-                            <div class="col-md-12 form-group p_star">
-                                <input type="text" class="form-control" id="form3Example3c" name="email" value=""
-                               placeholder="Email"  onkeyup="validateEmail()" required>
+                            <div class="form-group">
+                                <label for="email"><i class="zmdi zmdi-email"></i></label>
+                                <input type="email" name="email" id="'email-error" placeholder="Your Email"/>
                             </div>
-                            <span id="email-error" style="color:red"></span>
-
-                            <div class="col-md-12 form-group p_star">
-                                <input type="text" class="form-control" id="mobileNo-error" name="mobileno" value=""
-                                    placeholder="Mobile no"  pattern="[0-9]{10}" required>
+                            <div class="form-group">
+                                <label for="email"><i class="zmdi zmdi-email"></i></label>
+                                <input type="number" name="mobileno" id="'email-error" placeholder="Your Mobileno"/>
                             </div>
-                            <div class="col-md-12 form-group p_star">
-                                <input type="password" class="form-control" id="form3Example4c" name="password" value=""
-                                    placeholder="Password"  onkeyup="validatePassword()" required>
+                            <div class="form-group">
+                                <label for="pass"><i class="zmdi zmdi-lock"></i></label>
+                                <input type="password" name="password" id="pass" placeholder="Password"/>
                             </div>
-                            <span id="password-error" style="color:red"></span>
-
-                            <div class="col-md-12 form-group">
-                                <!-- <div class="creat_account d-flex align-items-center">
-                                    <input type="checkbox" id="f-option" name="selector">
-                                    <label for="f-option">Remember me</label>
-                                </div> -->
-                                <button type="submit" onclick="return validateForm()" class="btn_3">
-                                    SIGNUP
-                                </button>
-                                <a class="lost_pass" href="#">forget password?</a>  `
+                            <!-- <div class="form-group">
+                                <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
+                                <input type="password" name="re_pass" id="password-error" placeholder="Repeat your password"/>
+                            </div> -->
+                            <!-- <div class="form-group">
+                                <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
+                                <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all statements in  <a href="#" class="term-service">Terms of service</a></label>
+                            </div> -->
+                            <div class="form-group form-button">
+                                <input type="submit" name="signup" id="submit-error" class="form-submit" value="Register"/>
                             </div>
-                            <span id="submit-error" style="color:red"></span>
                         </form>
                     </div>
+                    <div class="signup-image">
+                        <figure><img src="/images/signup-image.jpg" alt="sing up image"></figure>
+                        <!-- <a href="#" class="signup-image-link">I am already member</a> -->
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
-</section>
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
 <script>
     // USER SIGNUP VALIDATION
 var nameError = document.getElementById('name-error');

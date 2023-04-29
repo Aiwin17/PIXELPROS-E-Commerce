@@ -36,17 +36,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <% categories.forEach(category => { %>
-                            <td><b><%= category %></b></td>
-                           
-                            <td><span class="badge rounded-pill alert-warning">Active</span></td>
-                            <td>
-                                <a href="#" class="btn btn-info rounded font-sm">Edit</a>
-                                <a class="btn btn-danger rounded font-sm" href="#">Delete</a>
-                            </td>
-                            <% }) %>
-                        </tr>
+                        <% categories.forEach(category => { %>
+                        <% if (!category.Deleted) { %>
+                            <tr>
+                                <td><b><%= category.name.category %></b></td>
+                               
+                                <td><span class="badge rounded-pill alert-warning">Active</span></td>
+                                <td>
+                                    <a href="/admin/edit-category/<%= category._id %>" class="btn btn-info rounded font-sm">Edit</a>
+                                    <!-- <a class="btn btn-danger rounded font-sm" href="/admin/delete-category/<#%= category._id %>">Delete</a> -->
+                                </td>
+                            </tr>
+                        <% } %>
+                        <% }) %>
                     </tbody>
                 </table>
             </div> <!-- table-responsive //end -->

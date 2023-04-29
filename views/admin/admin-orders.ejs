@@ -61,7 +61,7 @@
                                         <a  class="btn btn-success btn-sm text-white" onclick="orderStatus('<%= order._id %>','<%=order.status%>')">Approve</a>
                                     <% } %>
                                     <% if (order.status ==='Order Returning') { %>
-                                        <a class="btn btn-warning btn-sm text-white" onclick="orderStatus('<%= order._id %>','<%=order.status%>')">Ok</a>
+                                        <a class="btn btn-warning btn-sm text-white" onclick="orderStatus('<%= order._id %>','<%=order.status%>')">Approve</a>
                                     <% } %>
                                 </td>
                             </tr>

@@ -21,8 +21,10 @@
                     <div class="row gx-3">
                         <div class="col-md-4  mb-3">
                             <label for="product_sku" class="form-label"></label>
-                            <select name="category" class="form-control" id="category">
-                              <option value="category1">Category 1</option>
+                            <select name="category"  class="form-control" >
+                                <% category.forEach(categories => { %>
+                                    <option><%= categories.name.category %></option>
+                                <% }) %>
                             </select>
                           </div>
                         <!-- <div class="col-md-4  mb-3">

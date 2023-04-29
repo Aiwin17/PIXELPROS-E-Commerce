@@ -3,13 +3,13 @@ var collection = require('../config/collections')
 var objectId = require('mongodb').ObjectId
 const product = require('../config/collections')
 module.exports = {
-    addProduct: (product,image,callback) => {
+    addProduct: async(product,image,callback) => {
         let imagesFiles =image.map(file=>file.filename)
+        let categoryId = await db.get().collection(collection.CATEGORY_COLLECTION).find({'name.category': product.category},{ projection: { _id: 1 } }).toArray();
         db.get().collection(collection.PRODUCT_COLLECTION).
             insertOne({
                 name: product.productname,
-                category: product.category,
-                Brand: product.Brand,
+                category: categoryId[0]._id,
                 price:Number(product.price),
                 description: product.description,
                 image:imagesFiles
@@ -98,8 +98,7 @@ module.exports = {
                 for (let category of categories) {
                   cat.push(category.name.category);
                 }
-                console.log(cat);
-                resolve(cat);
+                resolve(categories);
               } catch (error) {
                 reject(error);
               }
@@ -126,22 +125,57 @@ module.exports = {
         })
     },
     getBanner:()=>{
-        return new Promise((resolve,reject)=>{
-            let banner = db.get().collection(collection.BANNER_COLLECTION).find().toArray()
+        return new Promise(async(resolve,reject)=>{
+            let banner = await db.get().collection(collection.BANNER_COLLECTION).find().toArray()
             resolve(banner)
         })
     },
     editBanner:(banId,banDetails)=>{
+        let imagesFiles =image.map(file=>file.filename)
         return new Promise((resolve,reject)=>{
             db.get().collection(collection.BANNER_COLLECTION).updateOne({_id:objectId(banId)},
             {
                 $set:{
-                    name:banDetails.bannername   
+                    name:banDetails.bannername,   
+                    image:imagesFiles
+
                 }
             }
             ).then(()=>{
                 resolve(true)
             })
+        })
+    },
+    getCategory:(categoryId)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.CATEGORY_COLLECTION).findOne({_id:objectId(categoryId)}).then((category)=>{
+                resolve(category)
+            })
+        })
+    },
+    editCategory:(categoryId,catDetails)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.CATEGORY_COLLECTION).updateOne({_id:objectId(categoryId)},
+            {
+                $set:{
+                    'name.category':catDetails.category
+                }
+            }
+            ).then(()=>{
+                resolve(true)
+            })
+        })
+    },
+    deleteCategory:(categoryId)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.CATEGORY_COLLECTION).updateOne({_id:objectId(categoryId)},
+            {
+                $set:{
+                    Deleted:true
+                }
+            }
+            )
+            resolve(true)
         })
     }
 }

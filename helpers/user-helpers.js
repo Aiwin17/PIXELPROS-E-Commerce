@@ -7,10 +7,21 @@ const twilio = require('../twilio')
 module.exports={
     doSignup:(userData)=>{       
         return new Promise(async(resolve,reject)=>{
-            userData.password=await bcrypt.hash(userData.password,10)
-            db.get().collection(collection.USER_COLLECTION).insertOne(userData).then(()=>{
-            resolve(true)
-            })
+            // let oldUser = db.get().collection(collection.USER_COLLECTION).aggregate([
+            //     {
+                
+            //         $match: { $and: [{ mobileno: userData.mobileno }, { email: userData.email }] }
+
+            //     },
+            // ])
+            // if(oldUser){
+            //     resolve(true)
+            // }else{
+                userData.password=await bcrypt.hash(userData.password,10)
+                db.get().collection(collection.USER_COLLECTION).insertOne(userData).then((userData)=>{
+                resolve(true)
+                })   
+            // }
         })
     },
     doLogin:(userData)=>{
@@ -43,36 +54,6 @@ module.exports={
             }else{
                 resolve({status:false})
             }
-        })
-    },
-    getAllUsers:()=>{
-        return new Promise(async(resolve,reject)=>{
-            let users = await db.get().collection(collection.USER_COLLECTION).find().toArray()
-            resolve(users)
-        })
-    },
-    getBlockUser:(id)=>{
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.USER_COLLECTION).updateOne({_id: ObjectID(id)},
-            {
-                $set:{
-                    blocked:true
-                }
-            }
-            )
-            resolve(true)
-        })
-    },
-    getUnBlockUser:(id)=>{
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.USER_COLLECTION).updateOne({_id: ObjectID(id)},
-            {
-                $set:{
-                    blocked:false
-                }
-            }
-            )
-            resolve(true)
         })
     },
     getUserDetails:(mobile_no)=>{
@@ -328,57 +309,13 @@ module.exports={
             let user = db.get().collection(collection.USER_COLLECTION).updateOne({_id: objectId(details.userId)},
             {
                 $push:{address:details}
-
             }
             ).then((response)=>{
                 resolve()
             })
         })
     },
-    postUpdateOrders:(status,orderId)=>{
-        return new Promise(async(resolve,reject)=>{
-            if(status==='processing'){
-            let orders = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id: objectId(orderId)},
-            {
-                $set:
-                {
-                    status:'placed'
-                }
-            }
-            ).then(()=>{
-                resolve({shipped:true})
-            })
-        }else if(status==='Order Cancelling'){
-            let orders = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id: objectId(orderId)},
-            {
-                $set:
-                {
-                    status:'Order Cancelled'
-                }
-            }
-            ).then(()=>{
-                resolve({cancel:true})
-            })
-        }else if(status==='Order Returning'){
-            let orders = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id: objectId(orderId)},
-            {
-                $set:
-                {
-                    status:'Order Returned'
-                }
-            }
-            ).then(()=>{
-                resolve({return:true})
-            })
-        }
-        })
-    },
-    getAllOrders:()=>{
-        return new Promise(async(resolve,reject)=>{
-            let orders = db.get().collection(collection.ORDER_COLLECTION).find().toArray()
-            resolve(orders)
-        })
-    },
+    
     postUpdateStatus:(orderId,status)=>{
         return new Promise(async(resolve,reject)=>{
             if(status==='processing'){
@@ -405,5 +342,93 @@ module.exports={
             })
         }
         })
-    }   
+    },   
+    postCategoryProducts:(categoryData)=>{
+        return new Promise(async(resolve,reject)=>{
+           let products=await db.get().collection(collection.CATEGORY_COLLECTION).aggregate([
+                {
+                    $match:{'name.category':categoryData.catname}
+                },
+                {
+                    $lookup:
+                    {
+                        from:collection.PRODUCT_COLLECTION,
+                        localField:'_id',
+                        foreignField:'category',
+                        as:'categoryDocs'
+                    }
+                },
+                { 
+                    $match: { "categoryDocs.Deleted": { $ne: true} } 
+                },
+            ]).toArray()
+            resolve(products)
+        })
+    },
+    getCategoryList:(categoryData)=>{
+        return new Promise(async(resolve,reject)=>{
+           let products=await db.get().collection(collection.CATEGORY_COLLECTION).aggregate([
+                {
+                    $match:{_id:objectId(categoryData)}
+                },
+                {
+                    $lookup:
+                    {
+                        from:collection.PRODUCT_COLLECTION,
+                        localField:'_id',
+                        foreignField:'category',
+                        as:'categoryDocs'
+                    }
+                },
+               
+            ]).toArray()
+            // console.log(products);
+            resolve(products)
+        })
+    },
+    removeCart:(cartDetails)=>{
+        console.log(cartDetails);
+        let cartID=cartDetails.cartId
+        let proID=cartDetails.proId
+
+        console.log(cartDetails,'[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[');
+
+        return new Promise(async(resolve,reject)=>{
+            await db.get().collection(collection.CART_COLLECTION).updateOne({ _id: objectId(cartID) },
+            {
+                $pull:
+                {
+                    products: {
+                        item: objectId(proID)
+                    }
+                }
+            }
+            
+            
+            ).then((response)=>{
+                resolve({status:true})
+            })
+        })   
+    },
+    editUserProfile:(userId,userDetails)=>{
+        return new Promise(async(resolve,reject)=>{
+            await db.get().collection(collection.USER_COLLECTION).updateOne({_id:objectId(userId)},
+            {
+                $set:{
+                    username:userDetails.username,
+                    email:userDetails.email,
+                    mobileno:userDetails.mobileno
+                }
+            }
+            ).then((response)=>{
+                resolve()
+            })
+        })
+    },
+    getUsers:(userId)=>{
+        return new Promise(async(resolve,reject)=>{
+           let user =  await db.get().collection(collection.USER_COLLECTION).findOne({_id:objectId(userId)})
+           resolve(user)
+        })
+    },
 }

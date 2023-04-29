@@ -5,8 +5,7 @@
         <div class="col-lg-8">
           <div class="breadcrumb_iner">
             <div class="breadcrumb_iner_item">
-              <h2>Producta Checkout</h2>
-              <p>Home <span>-</span> Shop Single</p>
+              <h2>Products Checkout</h2>
             </div>
           </div>
         </div>
@@ -69,7 +68,7 @@
             <div>
               <% user.address.forEach(users => { %>
                 <label>
-                  <input type="radio" name="address" value="">
+                  <input type="radio" onclick="adrss('<%= users.name %>','<%= users.number %>','<%= users.address %>', '<%= users.country %>','<%= users.district %>','<%= users.pincode %>')" name="address" value="">
                   <%= users.name %>,
                   <%= users.number %>,
                   <%= users.address %>,
@@ -79,25 +78,25 @@
               <% }) %>
             </div>
               <div class="col-md-6 form-group p_star">
-                <input type="text" class="form-control" id="first" name="name"  placeholder="Full name(First and Last name)"/>
+                <input type="text" class="form-control" id="name" name="name"  placeholder="Full name(First and Last name)"/>
               </div>
               <div class="col-md-6 form-group p_star">
                 <input type="text" class="form-control" id="number" name="number"  placeholder="Mobile number"/>
               </div>
               <div class="col-md-12 form-group p_star">
-                <input type="text" class="form-control" id="add1" name="address"  placeholder="Address"/>
+                <input type="text" class="form-control" id="address" name="address"  placeholder="Address"/>
               </div>
               <div class="col-md-12 form-group p_star">
-                <input type="text" class="form-control" name="country"  placeholder="Country"/>
+                <input type="text" class="form-control" name="country" id="country" placeholder="Country"/>
               </div>
               <div class="col-md-12 form-group p_star">
-                <input type="text" class="form-control" name="district"  placeholder="District"/>
+                <input type="text" class="form-control" name="district" id="district" placeholder="District"/>
               </div>
               <div class="col-md-12 form-group">
                 <input type="text" class="form-control" id="pincode" name="pincode" placeholder="PIN Code" />
               </div>
               <input type="text" name="userId" value="<%= user._id %>" hidden>
-              <h6>Do you want to add new address<a href="/address">Click Here</a></h6>
+              <h6>Do you want to add new address<a href=  >Click Here</a></h6>
               <!-- <div class="col-md-12 form-group p_star">
                 <label for="country">Country</label>
                 <select class="form-control" id="country" name="country">
@@ -215,12 +214,33 @@ $("#checkout-form").submit((e)=>{
       method:'post',
       data:$('#checkout-form').serialize(),
       success:(response)=>{
-        alert(response)
         if(response.status){
-          location.href='/order-success'
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Orders has been placed',
+            showConfirmButton: false,
+            timer: 1500
+          });
+          setTimeout(()=>{
+            location.href='/order-success'
+          },1500)
         }
       }
     })
   })
   </script>
+  <script>
+    function adrss(name,number,address,country,district,pincode){
+      console.log(name,number,address,country,district,pincode)
+      document.getElementById('name').value=name
+      document.getElementById('number').value=number
+      document.getElementById('address').value=address
+      document.getElementById('country').value=country
+      document.getElementById('district').value=district
+      document.getElementById('pincode').value=pincode
+    }
+  </script>
   <%- include('../partials/user-footer')%>
+
+ 

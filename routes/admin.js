@@ -52,4 +52,10 @@ router.get('/admin-orders',admincontrollers.getOrder)
 
 router.post('/change-order-status',admincontrollers.postOrders)
 
+router.get('/edit-category/:id',admincontrollers.getEditCategory)
+
+router.post('/edit-category/:id',admincontrollers.postEditCategory)
+
+router.get('/delete-category/:id',admincontrollers.postDeletecategory)
+
 module.exports = router;

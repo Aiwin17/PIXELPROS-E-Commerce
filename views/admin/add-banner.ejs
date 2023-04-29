@@ -1,42 +1,42 @@
 <%- include('../partials/admin-header')%>
-    <section class="content-main">
-        <form action="/admin/add-banner" method="post"  enctype="multipart/form-data" >
-        <div class="row">
-            <div class="col-6">
-                <div class="content-header">
-                    <h2 class="content-title">Add Banner</h2>
-                    <div>
-                        <button type="submit" class="btn btn-md rounded font-sm">Add</button>
-                    </div>
+<section class="content-main">
+    <form action="/admin/add-banner" method="post"  enctype="multipart/form-data" >
+    <div class="row">
+        <div class="col-6">
+            <div class="content-header">
+                <h2 class="content-title">Add Banner</h2>
+                <div>
+                    <button type="submit" class="btn btn-md rounded font-sm">Add</button>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="row">
-                                <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label">Banner Name</label>
-                                        <input type="text" name="bannername" class="form-control">
-                                    </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                            <div class="col-md-9">
+                                <div class="mb-4">
+                                    <label class="form-label">Banner Name</label>
+                                    <input type="text" name="bannername" class="form-control">
                                 </div>
-                        </div>
-                        <hr class="mb-4 mt-0">
-                        <div class="col-md-9">
-                            <div class="mb-4">
-                                    <label class="form-label">Images</label>
-                                    <input class="form-control" name="image" type="file">
                             </div>
+                    </div>
+                    <hr class="mb-4 mt-0">
+                    <div class="col-md-9">
+                        <div class="mb-4">
+                                <label class="form-label">Images</label>
+                                <input class="form-control" name="image" type="file">
                         </div>
                     </div>
                 </div>
-
             </div>
+
         </div>
-        </div>
-        </div>
-    </form>
-    </section>
-    <%- include('../partials/admin-footer')%>
+    </div>
+    </div>
+    </div>
+</form>
+</section>
+<%- include('../partials/admin-footer')%>

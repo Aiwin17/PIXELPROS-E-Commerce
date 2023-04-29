@@ -1,5 +1,6 @@
 const productsHelpers = require("../helpers/products-helpers");
 const userHelpers = require("../helpers/user-helpers");
+const adminHelpers = require("../helpers/admin-helpers");
 require("dotenv").config();
 module.exports = {
   verifyLogin: (req, res, next) => {
@@ -62,20 +63,20 @@ module.exports = {
     });
   },
   getUsers: (req, res) => {
-    userHelpers.getAllUsers(req.params).then((users) => {
+    adminHelpers.getAllUsers(req.params).then((users) => {
       res.render("admin/admin-users", { users });
     });
   },
   getBlockUser: (req, res) => {
     let id = req.params.id;
-    userHelpers.getBlockUser(id).then(() => {
+    adminHelpers.getBlockUser(id).then(() => {
       res.redirect("/admin/view-users");
     });
   },
   getUnBlockUser: (req, res) => {
     let id = req.params.id;
-    userHelpers.getUnBlockUser(id).then(() => {
-      res.redirect("/admin/view-users");
+    adminHelpers.getUnBlockUser(id).then(() => {
+      res.render("admin/view-users");
     });
   },
   getDeleteProducts: (req, res) => {
@@ -90,9 +91,7 @@ module.exports = {
     });
   },
   getCategory:(req,res)=>{
-    productsHelpers.getAllCategories().then((cat)=>{
-    res.render('admin/admin-categories',{cat})
-    })
+    res.render('admin/admin-categories')
   },
   postCategories: (req, res) => {
       productsHelpers.addCategories(req.body).then(()=>{
@@ -126,15 +125,31 @@ module.exports = {
     });
   },
   getOrder: async (req, res) => {
-    await userHelpers.getAllOrders().then((orders)=>{
+    await adminHelpers.getAllOrders().then((orders)=>{
       res.render("admin/admin-orders", { orders });
     });
   },
   postOrders:async(req,res)=>{
    let orderId = req.body.order
    let status = req.body.orderStatus
-   await userHelpers.postUpdateOrders(status,orderId).then((response)=>{
+   await adminHelpers.postUpdateOrders(status,orderId).then((response)=>{
     res.json(response)
    })
+  },
+  getEditCategory:async(req,res)=>{
+    let category=await productsHelpers.getCategory(req.params.id)
+    res.render('admin/edit-category',{category})
+  },
+  postEditCategory:async(req,res)=>{
+    let id = req.params.id
+    await productsHelpers.editCategory(id,req.body).then(()=>{
+      res.redirect('/admin/category-list')
+    })
+  },
+  postDeletecategory:async(req,res)=>{
+    let id = req.params.id
+    await productsHelpers.deleteCategory(id).then(()=>{
+      res.redirect('/admin/category-list')
+    })
   }
 };
