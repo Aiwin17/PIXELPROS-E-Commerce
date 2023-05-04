@@ -1,6 +1,7 @@
 const productsHelpers = require("../helpers/products-helpers");
 const userHelpers = require("../helpers/user-helpers");
 const adminHelpers = require("../helpers/admin-helpers");
+const { Admin } = require("mongodb");
 require("dotenv").config();
 module.exports = {
   verifyLogin: (req, res, next) => {
@@ -41,9 +42,9 @@ module.exports = {
     });
   },
   addProduct: (req, res) => {
-    productsHelpers.getAllCategories().then((category)=>{
-      res.render("admin/add-products",{category});
-    })
+    productsHelpers.getAllCategories().then((category) => {
+      res.render("admin/add-products", { category });
+    });
   },
   postProduct: (req, res) => {
     let image = req.files;
@@ -87,16 +88,16 @@ module.exports = {
   },
   getCategoryList: (req, res) => {
     productsHelpers.getAllCategories().then((categories) => {
-      res.render("admin/category-list", { categories});
+      res.render("admin/category-list", { categories });
     });
   },
-  getCategory:(req,res)=>{
-    res.render('admin/admin-categories')
+  getCategory: (req, res) => {
+    res.render("admin/admin-categories");
   },
   postCategories: (req, res) => {
-      productsHelpers.addCategories(req.body).then(()=>{
-        res.redirect("/admin/add-categories");
-      })
+    productsHelpers.addCategories(req.body).then(() => {
+      res.redirect("/admin/add-categories");
+    });
   },
   getBanners: (req, res) => {
     productsHelpers.getBanner().then((banner) => {
@@ -125,31 +126,58 @@ module.exports = {
     });
   },
   getOrder: async (req, res) => {
-    await adminHelpers.getAllOrders().then((orders)=>{
+    await adminHelpers.getAllOrders().then((orders) => {
       res.render("admin/admin-orders", { orders });
     });
   },
-  postOrders:async(req,res)=>{
-   let orderId = req.body.order
-   let status = req.body.orderStatus
-   await adminHelpers.postUpdateOrders(status,orderId).then((response)=>{
-    res.json(response)
-   })
+  postOrders: async (req, res) => {
+    let orderId = req.body.order;
+    let status = req.body.orderStatus;
+    await adminHelpers.postUpdateOrders(status, orderId).then((response) => {
+      res.json(response);
+    });
   },
-  getEditCategory:async(req,res)=>{
-    let category=await productsHelpers.getCategory(req.params.id)
-    res.render('admin/edit-category',{category})
+  getEditCategory: async (req, res) => {
+    let category = await productsHelpers.getCategory(req.params.id);
+    res.render("admin/edit-category", { category });
   },
-  postEditCategory:async(req,res)=>{
+  postEditCategory: async (req, res) => {
+    let id = req.params.id;
+    await productsHelpers.editCategory(id, req.body).then(() => {
+      res.redirect("/admin/category-list");
+    });
+  },
+  postDeletecategory: async (req, res) => {
+    let id = req.params.id;
+    await productsHelpers.deleteCategory(id).then(() => {
+      res.redirect("/admin/category-list");
+    });
+  },
+  getAddCoupen: (req, res) => {
+    res.render("admin/add-coupon");
+  },
+  postAddCoupons: async (req, res) => {
+    await productsHelpers.createCoupon(req.body).then(() => {
+      res.redirect("/admin/add-coupon");
+    });
+  },
+  getCoupon: async (req, res) => {
+    await productsHelpers.getAllCoupons().then((coupons) => {
+      res.render("admin/coupons", { coupons });
+    });
+  },
+  getDeleteCoupons: async (req,res)=>{
     let id = req.params.id
-    await productsHelpers.editCategory(id,req.body).then(()=>{
-      res.redirect('/admin/category-list')
+    await productsHelpers.deleteCoupons(id).then((response)=>{
+      res.json(response)
     })
   },
-  postDeletecategory:async(req,res)=>{
+  getOrderDetails:async(req,res)=>{
     let id = req.params.id
-    await productsHelpers.deleteCategory(id).then(()=>{
-      res.redirect('/admin/category-list')
-    })
+    await userHelpers.getOrderProducts(id).then(async(orderDetails)=>{
+      await adminHelpers.getOrder(id).then((userDetails)=>{
+        res.render('admin/view-order-details',{userDetails,orderDetails})
+      })
+  })
   }
 };

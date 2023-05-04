@@ -17,7 +17,6 @@ const fileStorage = multer.diskStorage({
   }
 });
 
-
 const upload = multer({storage: fileStorage})
 
 var userRouter = require('./routes/user');

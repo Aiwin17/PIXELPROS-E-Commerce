@@ -62,12 +62,12 @@ module.exports = {
         let id = req.query.id
         let cartCount = await userHelpers.getCartCount(req.session.userId)
         productHelpers.getProducts(id).then((products) => {
-            res.render('user/userproduct-list', { cartCount,products, user: false })
+            res.render('user/userproduct-list', { cartCount,products, user: req.session.user })
         })
     },
     getOtpLogin: async(req, res) => {
         let cartCount = await userHelpers.getCartCount(req.session.userId)
-        res.render('user/otp-Login', { user: true , cartCount})
+        res.render('user/otp-Login', { user: req.session.user , cartCount})
     },
     postOtpLogin: (req, res) => {
         let mobile_no = req.body.mobile_no
@@ -81,7 +81,7 @@ module.exports = {
     postVerifyOtp: (req, res) => {
         let mobileno = req.body.mobileNo
         let otp = req.body.number
-        userHelpers.verifyOtp(otp, mobileno).then(response=>{
+        userHelpers.verifyOtp(otp,mobileno).then(response=>{
             if(response.status){
                 req.session.user = response.userData
                 req.session.loggedIn = true
@@ -91,7 +91,6 @@ module.exports = {
                 res.render('user/verify-otp', { mobile_no })
             }
         })
-
     },
     getCart: (async (req, res) => {
             let cartCount = await userHelpers.getCartCount(req.session.userId)
@@ -128,11 +127,27 @@ module.exports = {
             });
         
     },
-    postPlaceOrder:async (req,res)=>{
+     postPlaceOrder:async (req,res)=>{
+        let coupon = req.body.coupon
         let products=await userHelpers.getCartProductList(req.body.userId)
         let totalPrice = await userHelpers.getTotalAmount(req.body.userId)
-        userHelpers.placeOrder(req.body,products,totalPrice).then((response)=>{
-            res.json({status:true})
+        if(coupon){
+            let cpn = await productHelpers.getAllCoupons(coupon)
+            let discount = parseInt(cpn[0].max_discount)
+            total = totalPrice-discount
+        }else{
+            total = totalPrice
+        }
+        userHelpers.placeOrder(req.body,products,totalPrice,req.session.userId).then((orderId)=>{
+            console.log(orderId);
+            if(req.body['payment-method']=='COD'){
+            res.json({codSuccess:true})
+            }else{
+                console.log(total);
+                userHelpers.generateRazorpay(orderId,total).then((response)=>{
+                    res.json(response)
+                })
+            }
         })
     },
     getOrderSuccess:async (req,res)=>{
@@ -154,7 +169,7 @@ module.exports = {
     getAllProducts:async(req,res)=>{
         let cartCount = await userHelpers.getCartCount(req.session.userId)
         productHelpers.getAllProducts().then((product) => {
-         res.render('user/userproduct-list',{user:req.session.user,cartCount,product})
+         res.render('user/userproduct-list',{cartCount,product})
         }) 
     },
     getProductList:async(req,res)=>{
@@ -185,9 +200,13 @@ module.exports = {
         })
     },
     getUserAddress:async(req,res)=>{
-        let user = req.session.user
+        let userId = req.session.userId
+        console.log(userId,"///////////////////////////////");
         let cartCount = await userHelpers.getCartCount(req.session.userId)
+        await userHelpers.getUsers(userId).then((user)=>{
+            console.log(user,".......................................");
         res.render('user/user-address',{user,cartCount})
+        })
     },
     getUserProfile:async(req,res)=>{
         let userId = req.session.userId
@@ -214,8 +233,11 @@ module.exports = {
     },
     getEditAddress:async(req,res)=>{
         let user = req.session.user
+        const address = user.address.find((item) => {
+            return item._id == req.params.id;
+        });
         let cartCount = await userHelpers.getCartCount(req.session.userId)
-        res.render('user/edit-address',{user,cartCount})
+        res.render('user/edit-address',{user,cartCount,address})
     },
     getEditProfile:async(req,res)=>{
         let userId = req.session.userId
@@ -224,9 +246,82 @@ module.exports = {
             res.render('user/edit-profile',{user,cartCount})
         })
     },
+    postEditAddress:async(req,res)=>{
+        let addressId = req.params.id
+        await userHelpers.editAddress(req.body,addressId).then(()=>{
+            res.redirect('/user-address/:id')
+        })
+    },
     postEditProfile:async(req,res)=>{
         userHelpers.editUserProfile(req.body.userId,req.body).then(()=>{
             res.redirect('/user-profile')
         })
     },
+    getUserCoupons:async(req,res)=>{
+        let user = req.session.user
+        await userHelpers.getAllCoupon().then(async(coupons)=>{
+            let cartCount = await userHelpers.getCartCount(req.session.userId)
+            res.render('user/user-coupons',{cartCount,user,coupons})
+        })
+    },
+    postVerifyPayment:(req,res)=>{
+        console.log(req.body);
+        userHelpers.verifyPayment(req.body).then(()=>{
+            userHelpers.changePaymentStatus(req.body['order[receipt]']).then(()=>{
+                res.json({status:true})
+            })
+        }).catch((err)=>{
+            res.json({status:false})
+        })
+    },
+    postApplyCoupon:async(req,res)=>{
+        console.log(req.body);
+        await userHelpers.applyCoupon(req.body.couponCode,req.body.userId).then((response)=>{
+            console.log(response);
+            if(response.status){
+                console.log(response);
+                let total=req.body.total-response.discount
+                res.json({total,discount:response.discount})
+            }else{
+                console.log("invalid coupon")
+                res.json({status:false})
+            }
+        })
+    },
+    getOtpChangePassword:async(req,res)=>{
+        let cartCount = await userHelpers.getCartCount(req.session.userId)
+        res.render('user/otp-changePassword', { user: req.session.user , cartCount})
+    },
+    postOtpChangePassword:async(req,res)=>{
+        let mobile_no = req.body.mobile_no
+        userHelpers.getUserDetails(mobile_no).then(() => {
+            res.render('user/verify-otp-password', { mobile_no })
+        })
+    },
+    postVerifyOtpChangePassword:async(req,res)=>{
+        let mobileno = req.body.mobileNo
+        let otp = req.body.number
+        userHelpers.verifyOtp(otp, mobileno).then(response=>{
+            if(response.status){
+                res.render('user/forgot-password',{mobileno})
+            }else{
+                let mobile_no =mobileno
+                res.render('user/verify-otp-password',{ mobile_no })
+            }
+        })
+    },
+    postUpdatePassword:async(req,res)=>{
+        console.log(req.body);
+        await userHelpers.updatePassword(req.body.confirmPassword,req.body.mobileno).then(()=>{
+            res.redirect('/login')
+        })
+    },
+    getViewDetails:async(req,res)=>{
+        let user = req.session.user
+        let id = req.query.id
+        let cartCount = await userHelpers.getCartCount(req.session.userId)
+        await userHelpers.getOrderProducts(id).then((orderDetails)=>{
+            res.render('user/view-details',{user,cartCount,orderDetails})
+        })
+    }
 }

@@ -78,5 +78,13 @@ module.exports={
             })
         }
         })
-    }
+    },
+    getOrder:(orderId)=>{
+        console.log(orderId,'.........');
+        return new Promise(async(resolve,reject)=>{
+            let order = await db.get().collection(collection.ORDER_COLLECTION).find({_id:objectId(orderId)}).toArray()
+            console.log(order);    
+            resolve(order)
+            })
+            }   
 }

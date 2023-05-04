@@ -1,0 +1,40 @@
+<%- include('../partials/user-header')%>
+<section class="cart_area padding_top">
+    <div class="container">
+      <div class="cart_inner">
+        <div class="table-responsive">
+          <table class="table">
+            <% orderDetails.forEach(orders => { %>
+            <thead>
+              <tr>
+                <th scope="col">Product</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="media">
+                    <div class="d-flex">
+                      <img src="/images/<%= orders.product.image[0] %>" alt="" />
+                    </div>
+                    <div class="media-body">
+                      <p><%= orders.product.name %></p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                    <h5><%= orders.quantity %></h5>
+                  </td>
+                <td>
+                  <h5><%= orders.product.price %></h5>
+                </td>
+              </tr>
+            </tbody>
+            <% }) %>
+          </table>
+        </div>
+      </div>
+</section>
+<%- include('../partials/user-footer')%>

@@ -1,0 +1,41 @@
+<%- include('../partials/user-header')%>
+<section class="confirmation_part padding_top">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+        </div>
+          <% coupons.forEach(coupon => { %>
+        <% if (!coupon.Deleted) { %>
+            <div class="col-lg-6 col-lx-4">
+              <div class="single_confirmation_details">
+                <h4>Coupon</h4>
+                <ul>
+                  <li>
+                    <p>Coupon Code</p><span id="couponCode">:<%= coupon.name %></span>
+                  </li>
+                  <li>
+                    <p>max_discount</p><span id="number">:<%= coupon.max_discount %></span>
+                  </li>
+                  <li>
+                    <p>expiry_date</p><span id="address">:<%= coupon.expiry_date %></span>
+                  </li>
+                  <!-- <li>
+                    <p>Country</p><span id="country">:<%#= users.country %></span>
+                  </li>
+                  <li>
+                    <p>District</p><span id="district">:<%#= users.district %></span>
+                  </li>
+                  <li>
+                    <p>Pincode</p><span id="pincode">:<%#= users.pincode %></span>
+                  </li> -->
+                </ul>
+              </div>
+            </div>
+            <% } %>
+            <% }) %>
+            <%# } else { %>
+              <!-- <h6 class="pt-4 pl-3">Do you want to add new address <a href="/address">Click here</a></h6> -->
+          <%# } %>
+    </div>
+</section>
+<%- include('../partials/user-footer')%>

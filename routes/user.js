@@ -54,7 +54,7 @@ router.post('/address',usercontrollers.postAddress)
 
 router.post('/category-products',usercontrollers.postCategoryProducts)
 
-router.get('/user-address',userSession,usercontrollers.getUserAddress)
+router.get('/user-address/:id',userSession,usercontrollers.getUserAddress)
 
 router.get('/user-profile',userSession,usercontrollers.getUserProfile)
 
@@ -64,10 +64,28 @@ router.get('/category-lists',usercontrollers.getCategoryLists)
 
 router.post('/remove-cart',usercontrollers.postRemoveCart)
 
-router.get('/edit-address',usercontrollers.getEditAddress)
+router.get('/edit-address/:id',usercontrollers.getEditAddress)
+
+router.post('/edit-address/:id',usercontrollers.postEditAddress)
 
 router.get('/edit-profile/:id',usercontrollers.getEditProfile)
 
 router.post('/edit-profile/:id',usercontrollers.postEditProfile)
+
+router.get('/user-coupons',userSession,usercontrollers.getUserCoupons)
+
+router.post('/verify-payment',usercontrollers.postVerifyPayment)
+
+router.post('/apply-coupon',usercontrollers.postApplyCoupon)
+
+router.get('/otp-changePassword',usercontrollers.getOtpChangePassword)
+
+router.post('/otp-changePassword',usercontrollers.postOtpChangePassword)
+
+router.post('/verify-otp-password',usercontrollers.postVerifyOtpChangePassword)
+
+router.post('/forgot-password',usercontrollers.postUpdatePassword)
+
+router.get('/view-details',userSession,usercontrollers.getViewDetails)
 
 module.exports = router;

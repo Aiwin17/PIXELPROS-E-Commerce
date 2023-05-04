@@ -51,17 +51,17 @@
         </form>
       </div> -->
       <div class="cupon_area">
+        <form  id="checkout-form">
         <div class="check_title">
           <h2>
             Have a coupon?
-            <a href="#">Click here to enter your code</a>
+            <a href="/user-coupons">Click here to enter your code</a>
           </h2>
         </div>
-        <input type="text" placeholder="Enter coupon code" />
-        <a class="tp_btn" href="#">Apply Coupon</a>
+        <input type="text" placeholder="Enter coupon code" name="coupon" id="applyCoupon"  />
+        <div class="tp_btn" onclick="applyCoupen('<%= user._id %>')">Apply Coupon</div>
       </div>
-      <div class="billing_details">
-        <form  id="checkout-form">
+      <div class="billing_details">  
         <div class="row">
           <div class="col-lg-8">
             <h3>Billing Details</h3>
@@ -96,7 +96,7 @@
                 <input type="text" class="form-control" id="pincode" name="pincode" placeholder="PIN Code" />
               </div>
               <input type="text" name="userId" value="<%= user._id %>" hidden>
-              <h6>Do you want to add new address<a href=  >Click Here</a></h6>
+              <h6>Do you want to add new address<a href= "/address" >Click Here</a></h6>
               <!-- <div class="col-md-12 form-group p_star">
                 <label for="country">Country</label>
                 <select class="form-control" id="country" name="country">
@@ -158,7 +158,7 @@
                 </li>
                 <li>
                   <a href="#">Total
-                    <span>Rs.<%= Total %></span>
+                    <span id="totalAmount"><%= Total %></span>
                   </a>
                 </li>
               </ul>
@@ -206,15 +206,17 @@
       </div>
     </div>
   </section>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script>
 $("#checkout-form").submit((e)=>{
+  let couponCode = document.getElementById('applyCoupon').value
     e.preventDefault()
     $.ajax({
       url:'/place-order',
       method:'post',
-      data:$('#checkout-form').serialize(),
+      data:$('#checkout-form').serialize(),couponCode,
       success:(response)=>{
-        if(response.status){
+        if(response.codSuccess){
           Swal.fire({
             position: 'center',
             icon: 'success',
@@ -225,20 +227,87 @@ $("#checkout-form").submit((e)=>{
           setTimeout(()=>{
             location.href='/order-success'
           },1500)
+        }else{
+          razorpayPayment(response)
         }
       }
     })
   })
+  function razorpayPayment(order){
+    var options = {
+      "key": "rzp_test_OBIWtPdGUChjsm", // Enter the Key ID generated from the Dashboard
+      "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      "currency": "INR",
+      "name": "CamShop", //your business name
+      "description": "Test Transaction",
+      "image": "https://example.com/your_logo",
+      "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      "handler":function (response){
+        verifyPayment(response,order)
+      },
+      "prefill": {
+          "name": "Gaurav Kumar", //your customer's name
+          "email": "gaurav.kumar@example.com",
+          "contact": "9000090000"
+      },
+      "notes": {
+          "address": "Razorpay Corporate Office"
+      },
+      "theme": {
+          "color": "#3399cc"
+      }
+  };
+  var rzp1 = new Razorpay(options);
+    rzp1.open();
+  }
+  function verifyPayment(payment,order){
+    $.ajax({
+      url:'/verify-payment',
+      data:{
+        payment,
+        order
+      },
+      method:'post',
+      success:(response)=>{
+        console.log(response.status)
+        if(response.status){
+          location.href='/order-success'
+        }else{
+          alert("Payment Failed")
+        }
+      }
+    })
+  }
   </script>
   <script>
     function adrss(name,number,address,country,district,pincode){
-      console.log(name,number,address,country,district,pincode)
       document.getElementById('name').value=name
       document.getElementById('number').value=number
       document.getElementById('address').value=address
       document.getElementById('country').value=country
       document.getElementById('district').value=district
       document.getElementById('pincode').value=pincode
+    }
+    function applyCoupen(userId){
+      let couponCode=document.getElementById('applyCoupon').value
+      let totalAmount=document.getElementById('totalAmount').innerHTML
+      let total = parseInt(totalAmount)
+      $.ajax({
+        url:'/apply-coupon',
+        data:{
+          couponCode,
+          userId,
+          total
+        },
+        method:'post',
+        success:(response)=>{
+          if(response.status == false){
+            alert("Inavalid coupon")
+          }else{
+             document.getElementById('totalAmount').innerHTML = response.total
+          }
+        }
+      })
     }
   </script>
   <%- include('../partials/user-footer')%>

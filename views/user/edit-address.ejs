@@ -5,24 +5,24 @@
         <div class="row">
           <div class="col-lg-8">
             <h3>Edit Details</h3>
-            <form class="row contact_form" action="/address" method="post">
+            <form class="row contact_form" action="/edit-address/<%= address._id %>" method="post">
                 <div class="col-md-6 form-group p_star">
-                    <input type="text" class="form-control" name="name" value="<%= user.address[0].name %>"/>
+                    <input type="text" class="form-control" name="name" value="<%= address.name %>"/>
                   </div>
                   <div class="col-md-6 form-group p_star">
-                    <input type="text" class="form-control" name="number" value="<%= user.address[0].number %>"/>
+                    <input type="text" class="form-control" name="number" value="<%= address.number %>"/>
                   </div>
                   <div class="col-md-12 form-group p_star">
-                    <input type="text" class="form-control" name="address" value="<%= user.address[0].address %>"/>
+                    <input type="text" class="form-control" name="address" value="<%= address.address %>"/>
                   </div>
                   <div class="col-md-12 form-group p_star">
-                    <input type="text" class="form-control" name="country" value="<%= user.address[0].country %>"/>
+                    <input type="text" class="form-control" name="country" value="<%= address.country %>"/>
                   </div>
                   <div class="col-md-12 form-group p_star">
-                    <input type="text" class="form-control" name="district" value="<%= user.address[0].district %>"/>
+                    <input type="text" class="form-control" name="district" value="<%= address.district %>"/>
                   </div>
                   <div class="col-md-12 form-group p_star">
-                    <input type="text" class="form-control" name="pincode" value="<%= user.address[0].pincode %>"/>
+                    <input type="text" class="form-control" name="pincode" value="<%= address.pincode %>"/>
                   </div>                
               <button type="submit" class="btn_3">Edit And Save</button>
             </form>

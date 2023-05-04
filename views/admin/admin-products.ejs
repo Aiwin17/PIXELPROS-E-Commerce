@@ -1,5 +1,5 @@
 <%- include('../partials/admin-header')%>
-    <section class="content-main">
+<section class="content-main">
         <div class="content-header">
             <h2 class="content-title">Products</h2>
             <div>
@@ -61,7 +61,7 @@
                                 <td><span class="badge rounded-pill alert-success">Active</span></td>
                                 <td class="text-end">
                                     <a href="/admin/edit-products/<%=product._id%>" class="btn btn-sm btn-brand rounded font-sm mt-15">Edit</a>
-                                    <a href="" onclick="deleteProducts('<%=product._id%>');return false" class="btn btn-sm btn-danger rounded font-sm mt-15">Delete</a>
+                                    <a onclick="deleteProducts('<%=product._id%>');return false" class="btn btn-sm btn-danger rounded font-sm mt-15">Delete</a>
 
                                 </td>
                             </tr>
@@ -83,6 +83,6 @@
                 </ul>
             </nav>
         </div>
-    </section>
-    <%- include("../partials/admin-footer") %>
+</section>
+<%- include("../partials/admin-footer") %>
     

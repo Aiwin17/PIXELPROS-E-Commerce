@@ -34,12 +34,14 @@ module.exports = {
         updateProduct:(prodId,proDetails,image)=>{
         let imagesFiles =image.map(file=>file.filename)
         if(imagesFiles.length===0){
-            return new Promise((resolve,reject)=>{
+            return new Promise(async(resolve,reject)=>{
+                let categoryId = await db.get().collection(collection.CATEGORY_COLLECTION).find({'name.category': proDetails.category},{ projection: { _id: 1 } }).toArray();
+                console.log(categoryId);
                 db.get().collection(collection.PRODUCT_COLLECTION)
                 .updateOne({_id:objectId(prodId)},{
                     $set:{
                         name:proDetails.productname,
-                        // Brand:proDetails.Brand,
+                        category: categoryId[0]._id,
                         description:(proDetails.description).trim(),
                         price:proDetails.price,
                     }
@@ -48,12 +50,13 @@ module.exports = {
                 })
             })
         }else{
-            return new Promise((resolve,reject)=>{
+            return new Promise(async(resolve,reject)=>{
+                let categoryId = await db.get().collection(collection.CATEGORY_COLLECTION).find({'name.category': product.category},{ projection: { _id: 1 } }).toArray();
                 db.get().collection(collection.PRODUCT_COLLECTION)
                 .updateOne({_id:objectId(prodId)},{
                     $set:{
                         name:proDetails.productname,
-                        // Brand:proDetails.Brand,
+                        category: categoryId[0],
                         description:(proDetails.description).trim(),
                         price:proDetails.price,
                         image:imagesFiles
@@ -176,6 +179,40 @@ module.exports = {
             }
             )
             resolve(true)
+        })
+    },
+    createCoupon:(couponDetails)=>{
+        console.log("This is coupon ", couponDetails.expirydate)
+        
+        return new Promise(async(resolve,reject)=>{
+            db.get().collection(collection.COUPON_COLLECTION)
+            .insertOne({
+                name:couponDetails.couponcode,
+                max_discount:Number(couponDetails.discount),
+                expiry_date:couponDetails.expirydate
+            }).then(()=>{
+                resolve(true)
+            })
+        })
+    },
+    getAllCoupons:()=>{
+        return new Promise(async(resolve,reject)=>{
+           let coupons = await db.get().collection(collection.COUPON_COLLECTION).find().toArray()
+            resolve(coupons)       
+        })
+    },
+    deleteCoupons:(couponId)=>{
+        return new Promise(async(resolve,reject)=>{
+            await db.get().collection(collection.COUPON_COLLECTION).updateOne({_id:objectId(couponId)},
+            {
+                $set:
+                {
+                    Deleted:true
+                }
+            }
+            ).then(()=>{
+                resolve({status:true})
+            })
         })
     }
 }

@@ -58,4 +58,14 @@ router.post('/edit-category/:id',admincontrollers.postEditCategory)
 
 router.get('/delete-category/:id',admincontrollers.postDeletecategory)
 
+router.get('/add-coupon',admincontrollers.getAddCoupen)
+
+router.post('/add-coupon',admincontrollers.postAddCoupons)
+
+router.get('/coupons',admincontrollers.getCoupon)
+
+router.get('/delete-coupons/:id',admincontrollers.getDeleteCoupons)
+
+router.get('/view-order-details/:id',admincontrollers.getOrderDetails)
+
 module.exports = router;
