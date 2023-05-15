@@ -8,9 +8,13 @@
     <!--<title>OTP Verification Form</title>-->
     <link rel="stylesheet" href="style.css" />
     <!-- Boxicons CSS -->
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
     <!--<script src="script.js" defer></script>-->
-    <link rel="stylesheet" href="/userassets/css/otp.css">
+    <link rel="stylesheet" href="/userassets/css/otp.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   </head>
   <body>
     <div class="container">
@@ -20,18 +24,27 @@
       <h4>Enter OTP Code</h4>
       <form action="/verify-otp" method="post">
         <div class="input-field">
-          <input type="number" name="number"/>
+          <input type="number" name="number" />
           <input type="number" name="number" disabled />
           <input type="number" name="number" disabled />
           <input type="number" name="number" disabled />
           <input type="number" name="number" disabled />
         </div>
-        <input type="hidden" name="mobileNo" readonly value="<%= mobile_no %>"> 
+        <div><span id="otp-timer">02:00</span></div>
+        <a
+          style="display: none"
+          id="resendotp"
+          class="btn"
+          onclick="resendOtp()"
+          >Resend OTP</a
+        >
+
+        <!-- <button id="resend-otp-btn" onclick="startTimer(60)">Resend OTP</button> -->
         <button type="submit">Verify OTP</button>
       </form>
     </div>
     <script>
-        const inputs = document.querySelectorAll("input"),
+      const inputs = document.querySelectorAll("input"),
         button = document.querySelector("button");
       // iterate over all inputs
       inputs.forEach((input, index1) => {
@@ -42,7 +55,7 @@
           const currentInput = input,
             nextInput = input.nextElementSibling,
             prevInput = input.previousElementSibling;
-      
+
           // if the value has more than one character then clear it
           if (currentInput.value.length > 1) {
             currentInput.value = "";
@@ -50,11 +63,15 @@
           }
           // if the next input is disabled and the current value is not empty
           //  enable the next input and focus on it
-          if (nextInput && nextInput.hasAttribute("disabled") && currentInput.value !== "") {
+          if (
+            nextInput &&
+            nextInput.hasAttribute("disabled") &&
+            currentInput.value !== ""
+          ) {
             nextInput.removeAttribute("disabled");
             nextInput.focus();
           }
-      
+
           // if the backspace key is pressed
           if (e.key === "Backspace") {
             // iterate over all inputs again
@@ -77,10 +94,81 @@
           button.classList.remove("active");
         });
       });
-      
+
       //focus the first input which index is 0 on window load
-      window.addEventListener("load", () => inputs[0].focus());      
+      window.addEventListener("load", () => inputs[0].focus());
+    </script>
+    <!-- <script>
+      function startTimer(duration) {
+        var timer = duration, minutes, seconds;
+        var resendBtn = document.getElementById("resend-otp-btn");
+        
+        resendBtn.disabled = true; // disable the button during the countdown
+        
+        var intervalId = setInterval(function () {
+          minutes = parseInt(timer / 60, 10);
+          seconds = parseInt(timer % 60, 10);
+      
+          minutes = minutes < 10 ? "0" + minutes : minutes;
+          seconds = seconds < 10 ? "0" + seconds : seconds;
+      
+          resendBtn.textContent = "Resend OTP in " + minutes + ":" + seconds;
+      
+          if (--timer < 0) {
+            clearInterval(intervalId);
+            resendBtn.textContent = "Resend OTP";
+            resendBtn.disabled = false; // re-enable the button
+          }
+        }, 1000);
+      }
+      </script> -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+      var duration = 10; // duration in seconds
+      var timer = document.getElementById("otp-timer");
+      var intervalId; // variable to hold interval id
+      startTimer(intervalId,timer,duration);
+      
+      function resendOtp() {
+        console.log("nnnnnnnnnn");
+        $.ajax({
+          type: "post",
+          url: "/otp-login",
+          data: { resend: true },
+          success: (response) => {
+            console.log(response);
+            if (response.status) {
+              $("#resendotp").css("display", "none");
+              var duration = 10; // duration in seconds
+              var timer = document.getElementById("otp-timer");
+              var intervalId; // variable to hold interval id
+              startTimer(intervalId,timer,duration);
+            }
+          },
+        });
+      }
+
+      function startTimer(intervalId,timer,duration) {
+        var minutes, seconds;
+        clearInterval(intervalId); // clear previous interval if any
+        intervalId = setInterval(function () {
+          minutes = parseInt(duration / 60, 10);
+          seconds = parseInt(duration % 60, 10);
+          console.log(minutes, seconds, "nnnnnnnnnnnnnnn");
+          minutes = minutes < 10 ? "0" + minutes : minutes;
+          seconds = seconds < 10 ? "0" + seconds : seconds;
+
+          timer.textContent = minutes + ":" + seconds;
+
+          if (--duration < 0) {
+            // timer has expired
+            clearInterval(intervalId);
+            timer.textContent = "00:00";
+            $("#resendotp").css("display", "block");
+          }
+        }, 1000);
+      }
     </script>
   </body>
 </html>
-

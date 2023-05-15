@@ -1,129 +1,275 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Sign Up Form by Colorlib</title>
 
-    <!-- Font Icon -->
-    <link rel="stylesheet" href="userassets/fonts/material-icon/css/material-design-iconic-font.min.css">
+     Font Icon
+    <link
+      rel="stylesheet"
+      href="userassets/fonts/material-icon/css/material-design-iconic-font.min.css"
+    />
 
-    <!-- Main css -->
-    <link rel="stylesheet" href="userassets/css/styles.css">
-</head>
-<body>
+    Main css
+    <link rel="stylesheet" href="userassets/css/styles.css" />
+  </head>
+  <body>
     <div class="main">
-        <!-- Sign up form -->
-        <section class="signup">
-            <div class="container">
-                <div class="signup-content">
-                    <div class="signup-form">
-                        <h2 class="form-title">Sign up</h2>
-                        <form action="/user-signup" method="POST" class="register-form" id="register-form">
-                            <div class="form-group">
-                                <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                                <input type="text" onclick="validateName()" name="username" id="form3Example1c" placeholder="Your Name"/>
-                                <span id="name-error" style="color: red;"></span>
-                            </div>
-                            <div class="form-group">
-                                <label for="email"><i class="zmdi zmdi-email"></i></label>
-                                <input type="email" onclick="validateEmail()" name="email" id="form3Example3c" placeholder="Your Email"/>
-                                <span id="email-error" style="color: red;"></span>
-                            </div>
-                            <div class="form-group">
-                                <label for="email"><i class="zmdi zmdi-email"></i></label>
-                                <input type="number"  name="mobileno" placeholder="Your Mobileno"/>
-                            </div>
-                            <div class="form-group">
-                                <label for="pass"><i class="zmdi zmdi-lock"></i></label>
-                                <input type="password" onclick="validatePassword()" name="password" id="form3Example4c" placeholder="Password"/>
-                                <span id="password-error" style="color: red;"></span>
-                            </div>
-                            <!-- <div class="form-group">
+       Sign up form
+      <section class="signup">
+        <div class="container">
+          <div class="signup-content">
+            <div class="signup-form">
+              <h2 class="form-title">Sign up</h2>
+              <form
+                action="/user-signup"
+                method="POST"
+                class="register-form"
+                id="register-form"
+              >
+                <div class="form-group">
+                  <label for="name"
+                    ><i class="zmdi zmdi-account material-icons-name"></i
+                  ></label>
+                  <input
+                    type="text"
+                    onclick="validateName()"
+                    name="username"
+                    id="form3Example1c"
+                    placeholder="Your Name"
+                  />
+                  <span id="name-error" style="color: red"></span>
+                </div>
+                <div class="form-group">
+                  <label for="email"><i class="zmdi zmdi-email"></i></label>
+                  <input
+                    type="email"
+                    onclick="validateEmail()"
+                    name="email"
+                    id="form3Example3c"
+                    placeholder="Your Email"
+                  />
+                  <span id="email-error" style="color: red"></span>
+                </div>
+                <div class="form-group">
+                  <label for="email"><i class="zmdi zmdi-email"></i></label>
+                  <input
+                    type="number"
+                    name="mobileno"
+                    placeholder="Your Mobileno"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="pass"><i class="zmdi zmdi-lock"></i></label>
+                  <input
+                    type="password"
+                    onclick="validatePassword()"
+                    name="password"
+                    id="form3Example4c"
+                    placeholder="Password"
+                  />
+                  <span id="password-error" style="color: red"></span>
+                </div>
+                <div class="form-group">
                                 <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
                                 <input type="password" name="re_pass" id="password-error" placeholder="Repeat your password"/>
-                            </div> -->
-                            <!-- <div class="form-group">
+                            </div>
+                <div class="form-group">
                                 <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
                                 <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all statements in  <a href="#" class="term-service">Terms of service</a></label>
-                            </div> -->
-                            <div class="form-group form-button">
-                                <input type="submit" onclick="validateForm()" name="signup" id="submit-error" class="form-submit" value="Register"/>
-                                <span id="submit-error" style="color: red;"></span>
                             </div>
-                        </form>
-                    </div>
-                    <div class="signup-image">
-                        <figure><img src="/images/signup-image.jpg" alt="sing up image"></figure>
-                        <!-- <a href="#" class="signup-image-link">I am already member</a> -->
-                    </div>
+                <div class="form-group form-button">
+                  <input
+                    type="submit"
+                    onclick="validateForm()"
+                    name="signup"
+                    id="submit-error"
+                    class="form-submit"
+                    value="Register"
+                  />
+                  <span id="submit-error" style="color: red"></span>
                 </div>
+              </form>
             </div>
-        </section>
+            <div class="signup-image">
+              <figure>
+                <img src="/images/signup-image.jpg" alt="sing up image" />
+              </figure>
+              <a href="#" class="signup-image-link">I am already member</a
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="js/main.js"></script>
-</body>
+  </body>
 </html>
 <script>
-// USER SIGNUP VALIDATION
-var nameError = document.getElementById('name-error');
-var emailError = document.getElementById('email-error');
-var passwordError = document.getElementById('password-error');
-var submitError = document.getElementById('submit-error');
+   USER SIGNUP VALIDATION
+  var nameError = document.getElementById("name-error");
+  var emailError = document.getElementById("email-error");
+  var passwordError = document.getElementById("password-error");
+  var submitError = document.getElementById("submit-error");
 
-function validateName(){                                 
-  var name = document.getElementById('form3Example1c').value;
-  if(name.length == 0){
-    nameError.innerHTML = 'Name is required';
-    return false;
-  }
-  if(!name.match(/^[A-Za-z]+ [A-Za-z]+$/)) {
-      nameError.innerHTML = 'Write full name';
+  function validateName() {
+    var name = document.getElementById("form3Example1c").value;
+    if (name.length == 0) {
+      nameError.innerHTML = "Name is required";
       return false;
-  }
-  nameError.innerHTML = '';
-      return true;
-}
-
-function validateEmail(){
-  var email = document.getElementById('form3Example3c').value;
-  if(email.length==0){
-      emailError.innerHTML = 'Email is required';
+    }
+    if (!name.match(/^[A-Za-z]+ [A-Za-z]+$/)) {
+      nameError.innerHTML = "Write full name";
       return false;
-  }
-  if(!email.match(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/)){
-    emailError.innerHTML = 'Email invalid';
-    return false;
-  }
-  emailError.innerHTML = '';
-  return true;
-}
-
-function validatePassword(){
-  var password = document.getElementById('form3Example4c').value;
-  var passChecker = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-  if(password.match(passChecker)){
-    passwordError.innerHTML = '';
+    }
+    nameError.innerHTML = "";
     return true;
-  }else{
-    passwordError.innerHTML = 'required 6-20 character,1 numeric digit, 1 uppercase and 1 lowercase';
-    return false;
   }
-}
 
-function validateForm(){
-  if(!validateName() || !validateEmail() || !validatePassword()){
-    submitError.style.display='flex';
-    submitError.style.justifyContent='center';
-    submitError.innerHTML = 'Please fix all errors to submit';
-    setTimeout(()=>{
-      submitError.style.display='none';
-    },3000);
-    return false;
+  function validateEmail() {
+    var email = document.getElementById("form3Example3c").value;
+    if (email.length == 0) {
+      emailError.innerHTML = "Email is required";
+      return false;
+    }
+    if (!email.match(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/)) {
+      emailError.innerHTML = "Email invalid";
+      return false;
+    }
+    emailError.innerHTML = "";
+    return true;
   }
-}
+
+  function validatePassword() {
+    var password = document.getElementById("form3Example4c").value;
+    var passChecker = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+    if (password.match(passChecker)) {
+      passwordError.innerHTML = "";
+      return true;
+    } else {
+      passwordError.innerHTML =
+        "required 6-20 character,1 numeric digit, 1 uppercase and 1 lowercase";
+      return false;
+    }
+  }
+
+  function validateForm() {
+    if (!validateName() || !validateEmail() || !validatePassword()) {
+      submitError.style.display = "flex";
+      submitError.style.justifyContent = "center";
+      submitError.innerHTML = "Please fix all errors to submit";
+      setTimeout(() => {
+        submitError.style.display = "none";
+      }, 3000);
+      return false;
+    }
+  }
 </script>
-<!--================login_part end =================-->
-<%- include('../partials/user-footer')%>
+================login_part end ================= 
+<%#-include('../partials/user-footer')%> -->
+
+
+<%- include('../partials/custom-header')%>
+<section class="pt-150 pb-150">
+  <div class="container">
+      <div class="row">
+          <div class="col-lg-10 m-auto">
+              <div class="row d-flex justify-content-center">
+                  <div class="col-lg-6">
+                      <div class="login_wrap widget-taber-content p-30 background-white border-radius-5">
+                          <div class="padding_eight_all bg-white">
+                              <div class="heading_s1">
+                                  <h3 class="mb-30">Create an Account</h3>
+                              </div>
+                              <form action="/user-signup" method="post">
+                                  <div class="form-group">
+                                      <input onkeyup="validateName()" type="text" required="" id="form3Example1c" name="username" placeholder="Username">
+                                      <span id="name-error" style="color: red"></span>
+                                  </div>
+                                  <div class="form-group">
+                                      <input onkeyup="validateEmail()" type="text" required="" id="form3Example3c" name="email" placeholder="Email">
+                                      <span id="email-error" style="color: red"></span>
+                                  </div>
+                                  <div class="form-group">
+                                      <input required="" type="number" name="mobileno" placeholder="Mobile Number">
+                                  </div>
+                                  <div class="form-group">
+                                      <input onkeyup="validatePassword()" required="" type="password" id="form3Example4c" name="password" placeholder="Password">
+                                      <span id="password-error" style="color: red"></span>                                  
+                                  </div>
+                                  <div class="form-group">
+                                      <button  onclick="validateForm()" type="submit" id="submit-error" class="btn btn-fill-out btn-block hover-up">Submit &amp; Register</button>
+                                      <span id="submit-error" style="color: red"></span>
+                                  </div>
+                              </form>
+                              <div class="text-muted text-center">Already have an account? <a href="/login">Sign in now</a></div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+<script>
+ var nameError = document.getElementById("name-error");
+ var emailError = document.getElementById("email-error");
+ var passwordError = document.getElementById("password-error");
+ var submitError = document.getElementById("submit-error");
+
+ function validateName() {
+   var name = document.getElementById("form3Example1c").value;
+   if (name.length == 0) {
+     nameError.innerHTML = "Name is required";
+     return false;
+   }
+   if (!name.match(/^[A-Za-z]+ [A-Za-z]+$/)) {
+     nameError.innerHTML = "Write full name";
+     return false;
+   }
+   nameError.innerHTML = "";
+   return true;
+ }
+
+ function validateEmail() {
+   var email = document.getElementById("form3Example3c").value;
+   if (email.length == 0) {
+     emailError.innerHTML = "Email is required";
+     return false;
+   }
+   if (!email.match(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/)) {
+     emailError.innerHTML = "Email invalid";
+     return false;
+   }
+   emailError.innerHTML = "";
+   return true;
+ }
+
+ function validatePassword() {
+   var password = document.getElementById("form3Example4c").value;
+   var passChecker = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+   if (password.match(passChecker)) {
+     passwordError.innerHTML = "";
+     return true;
+   } else {
+     passwordError.innerHTML =
+       "required 6-20 character,1 numeric digit, 1 uppercase and 1 lowercase";
+     return false;
+   }
+ }
+
+ function validateForm() {
+   if (!validateName() || !validateEmail() || !validatePassword()) {
+     submitError.style.display = "flex";
+     submitError.style.justifyContent = "center";
+     submitError.innerHTML = "Please fix all errors to submit";
+     setTimeout(() => {
+       submitError.style.display = "none";
+     }, 3000);
+     return false;
+   }
+ }
+</script>
+<%- include('../partials/custom-footer')%>

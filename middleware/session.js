@@ -7,7 +7,7 @@ let userSession = (req,res,next)=>{
 }
 let loginSession = (req,res,next)=>{
     if(req.session.loggedIn){
-        res.redirect('back')
+        res.redirect('/')
     }else{
         next()
     }

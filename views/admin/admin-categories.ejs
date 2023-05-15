@@ -15,28 +15,8 @@
                     <form action="/admin/add-categories" method="post">
                         <div class="mb-4">
                             <label for="product_name" class="form-label">Name</label>
-                            <input type="text" placeholder="Type here" name ='category' class="form-control" id="product_name" />
+                            <input required type="text" placeholder="Type here" name ='category' class="form-control" id="product_name" />
                         </div>
-                        <!-- <div class="mb-4">
-                            <label for="product_slug" class="form-label">Slug</label>
-                            <input type="text" placeholder="Type here" class="form-control" id="product_slug" />
-                        </div>
-                        <div class="mb-4">
-                            <label class="form-label">Parent</label>
-                            <select class="form-select">
-                                <option>Clothes</option>
-                                <option>T-Shirts</option>
-                            </select>
-                        </div>
-                        <div class="mb-4">
-                            <label class="form-label">Description</label>
-                            <textarea placeholder="Type here" class="form-control"></textarea>
-                        </div> -->
-                        <!-- <#% if (cat.status) { %>
-                            <p class="text-success">Category Already Exists</p>
-                          <#% } else { %>
-                            <p class="text-danger">Category Added</p>
-                          <#% } %> -->
                         <div class="d-grid">
                             <button class="btn btn-primary" type="submit">Create category</button>
                         </div> 

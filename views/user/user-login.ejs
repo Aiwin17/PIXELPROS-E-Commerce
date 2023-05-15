@@ -1,18 +1,18 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login in</title>
-    <!-- Font Icon -->
+     Font Icon
     <link rel="stylesheet" href="userassets/fonts/material-icon/css/material-design-iconic-font.min.css">
-   <!-- Main css -->
+   Main css 
     <link rel="stylesheet" href="userassets/css/styles.css">
 </head>
 <body>
     <div class="main">
-        <!-- Sing in  Form -->
+        Sing in  Form
         <section class="sign-in">
             <div class="container">
                 <div class="signin-content">
@@ -35,7 +35,7 @@
                             <div class="form-group">
                                 <input type="checkbox" name="remember-me" id="remember-me" class="agree-term" />
                                 <a href="/otp-changePassword">Forgot Password</a>
-                                <!-- <label for="remember-me" class="label-agree-term"><span><span></span></span>Remember me</label> -->
+                                 <label for="remember-me" class="label-agree-term"><span><span></span></span>Remember me</label>
                             </div>
                             <div class="form-group form-button">
                                 <input type="submit" name="signin" id="signin" class="form-submit" value="Login">
@@ -44,9 +44,7 @@
                         <div class="social-login">
                             <span class="social-label">Or login with</span>
                             <ul class="socials">
-                                <li><a href="#"><i class="display-flex-center zmdi zmdi-facebook"></i></a></li>
-                                <li><a href="#"><i class="display-flex-center zmdi zmdi-twitter"></i></a></li>
-                                <li><a href="#"><i class="display-flex-center zmdi zmdi-google"></i></a></li>
+                                <li><a href="/otp-Login">OTP</i></a></li>
                             </ul>
                         </div>
                     </div>
@@ -57,4 +55,57 @@
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="js/main.js"></script>
 </body>
-</html>
+</html> -->
+
+
+
+
+
+<%- include('../partials/custom-header')%>
+<section class="pt-150 pb-150">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 m-auto">
+                <div class="row  d-flex justify-content-center">
+                    <div class="col-lg-5">
+                        <div class="login_wrap widget-taber-content p-30 background-white border-radius-10 mb-md-5 mb-lg-0 mb-sm-5">
+                            <div class="padding_eight_all bg-white">
+                                <div class="heading_s1">
+                                    <h3 class="mb-30">Login</h3>
+                                </div>
+                                <form action="/login" method="post">
+                                    <div class="form-group">
+                                        <input type="text" required="" name="email" id="email" placeholder="Your Email">
+                                    </div>
+                                    <div class="form-group">
+                                        <input required="" type="password" name="password" placeholder="Password">
+                                    </div>
+                                    <div class="login_footer form-group">
+                                        <div class="chek-form">
+                                            <!-- <div class="custome-checkbox">
+                                                <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="">
+                                                <label class="form-check-label" for="exampleCheckbox1"><span>Remember me</span></label>
+                                            </div> -->
+                                        </div>
+                                        <a class="text-muted" href="/otp-changePassword">Forgot password?</a>
+                                    </div>
+                                    <div class="form-group d-flex justify-content-center">
+                                        <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Log in</button>
+                                    </div>
+                                    <hr>
+                                    <div class="form-group">
+                                        <a href="/otp-Login" type="submit" class="btn btn-fill-out btn-block hover-up" name="login">OTP Log in</a>
+                                    </div>
+                                    <div class="form-group">
+                                        <a href="/user-signup" type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Create New Account</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<%- include('../partials/custom-footer')%>

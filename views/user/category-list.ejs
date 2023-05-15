@@ -1,229 +1,221 @@
-<%- include('../partials/user-header')%>
-<section class="breadcrumb breadcrumb_bg">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="breadcrumb_iner">
-          <div class="breadcrumb_iner_item">
-            <h2>Categories</h2>
+<%- include('../partials/custom-header')%>
+<div class="mobile-header-active mobile-header-wrapper-style">
+  <div class="mobile-header-wrapper-inner">
+      <div class="mobile-header-top">
+          <div class="mobile-header-logo">
+              <a href="index.html"><img src="customassets/imgs/theme/logo.svg" alt="logo"></a>
           </div>
-        </div>
+          <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
+              <button class="close-style search-close">
+                  <i class="icon-top"></i>
+                  <i class="icon-bottom"></i>
+              </button>
+          </div>
       </div>
-    </div>
-  </div>
-</section>
-<!-- breadcrumb start-->
-
-<!--================Category Product Area =================-->
-<section class="cat_product_area section_padding">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-3">
-        <div class="left_sidebar_area">
-          <aside class="left_widgets p_filter_widgets">
-            <div class="l_w_title">
-              <h3>Categories</h3>
-            </div>
-            <div class="widgets_inner">
-              <ul class="list">
-                <%( locals.category||[]).forEach(categories => { %> <% if
-                (!categories.Deleted) { %>
-                <li>
-                  <a
-                    onclick="categoryProduct('<%= categories.name.category %>')"
-                    href="/category-lists?id=<%= categories._id %>"
-                    class="dropdown-item"
-                    ><%= categories.name.category %></a
-                  >
-                  <!-- <span>(250)</span> -->
-                </li>
-                <% } %> <% }) %>
-              </ul>
-            </div>
-          </aside>
-
-          <!-- <aside class="left_widgets p_filter_widgets">
-                        <div class="l_w_title">
-                            <h3>Product filters</h3>
-                        </div>
-                        <div class="widgets_inner">
-                            <ul class="list">
-                                <li>
-                                    <a href="#">Apple</a>
-                                </li>
-                                <li>
-                                    <a href="#">Asus</a>
-                                </li>
-                                <li class="active">
-                                    <a href="#">Gionee</a>
-                                </li>
-                                <li>
-                                    <a href="#">Micromax</a>
-                                </li>
-                                <li>
-                                    <a href="#">Samsung</a>
-                                </li>
-                            </ul>
-                            <ul class="list">
-                                <li>
-                                    <a href="#">Apple</a>
-                                </li>
-                                <li>
-                                    <a href="#">Asus</a>
-                                </li>
-                                <li class="active">
-                                    <a href="#">Gionee</a>
-                                </li>
-                                <li>
-                                    <a href="#">Micromax</a>
-                                </li>
-                                <li>
-                                    <a href="#">Samsung</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </aside> -->
-
-          <!-- <aside class="left_widgets p_filter_widgets">
-                        <div class="l_w_title">
-                            <h3>Color Filter</h3>
-                        </div>
-                        <div class="widgets_inner">
-                            <ul class="list">
-                                <li>
-                                    <a href="#">Black</a>
-                                </li>
-                                <li>
-                                    <a href="#">Black Leather</a>
-                                </li>
-                                <li class="active">
-                                    <a href="#">Black with red</a>
-                                </li>
-                                <li>
-                                    <a href="#">Gold</a>
-                                </li>
-                                <li>
-                                    <a href="#">Spacegrey</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </aside> -->
-
-          <!-- <aside class="left_widgets p_filter_widgets price_rangs_aside">
-                        <div class="l_w_title">
-                            <h3>Price Filter</h3>
-                        </div>
-                        <div class="widgets_inner">
-                            <div class="range_item">
-                                <div id="slider-range"></div>
-                                <input type="text" class="js-range-slider" value="" />
-                                <div class="d-flex">
-                                    <div class="price_text">
-                                        <p>Price :</p>
-                                    </div>
-                                    <div class="price_value d-flex justify-content-center">
-                                        <input type="text" class="js-input-from" id="amount" readonly />
-                                        <span>to</span>
-                                        <input type="text" class="js-input-to" id="amount" readonly />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </aside> -->
-        </div>
-      </div>
-      <div class="col-lg-9">
-        <!-- <div class="row">
-                    <div class="col-lg-12">
-                        <div class="product_top_bar d-flex justify-content-between align-items-center">
-                            <div class="single_product_menu">
-                                <p><span>10000 </span> Prodict Found</p>
-                            </div>
-                            <div class="single_product_menu d-flex">
-                                <h5>short by : </h5>
-                                <select>
-                                    <option data-display="Select">name</option>
-                                    <option value="1">price</option>
-                                    <option value="2">product</option>
-                                </select>
-                            </div>
-                            <div class="single_product_menu d-flex">
-                                <h5>show :</h5>
-                                <div class="top_pageniation">
-                                    <ul>
-                                        <li>1</li>
-                                        <li>2</li>
-                                        <li>3</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="single_product_menu d-flex">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="search"
-                                        aria-describedby="inputGroupPrepend">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroupPrepend"><i
-                                                class="ti-search"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-        <div class="row align-items-center latest_product_inner">
-          <% cat.forEach(product => { %>
-          <div class="col-lg-4 col-sm-6">
-            <div class="single_product_item">
-              <a href="/product-lists?id=<%= product._id %>"><img src="/images/<%= product.image[0]%>"/></a>
-              <div class="single_product_text">
-                <h4><%=product.name%></h4>
-                <h3><%=product.price%></h3>
-                <a onclick="addToCart('<%= product._id %>')" class="add_cart"
-                  >+ add to cart<i class="ti-heart"></i>
-                </a>
+      <div class="mobile-header-content-area">
+          <div class="mobile-search search-style-3 mobile-header-border">
+              <form action="#">
+                  <input type="text" placeholder="Search for items…">
+                  <button type="submit"><i class="fi-rs-search"></i></button>
+              </form>
+          </div>
+          <div class="mobile-menu-wrap mobile-header-border">
+              <div class="main-categori-wrap mobile-header-border">
+                  <a class="categori-button-active-2" href="#">
+                      <span class="fi-rs-apps"></span> Browse Categories
+                  </a>
+                  <div class="categori-dropdown-wrap categori-dropdown-active-small">
+                      <ul>
+                          <li><a href="shop-grid-right.html"><i class="evara-font-dress"></i>Women's Clothing</a></li>
+                          <li><a href="shop-grid-right.html"><i class="evara-font-tshirt"></i>Men's Clothing</a></li>
+                          <li> <a href="shop-grid-right.html"><i class="evara-font-smartphone"></i> Cellphones</a></li>
+                          <li><a href="shop-grid-right.html"><i class="evara-font-desktop"></i>Computer & Office</a></li>
+                          <li><a href="shop-grid-right.html"><i class="evara-font-cpu"></i>Consumer Electronics</a></li>
+                          <li><a href="shop-grid-right.html"><i class="evara-font-home"></i>Home & Garden</a></li>
+                          <li><a href="shop-grid-right.html"><i class="evara-font-high-heels"></i>Shoes</a></li>
+                          <li><a href="shop-grid-right.html"><i class="evara-font-teddy-bear"></i>Mother & Kids</a></li>
+                          <li><a href="shop-grid-right.html"><i class="evara-font-kite"></i>Outdoor fun</a></li>
+                      </ul>
+                  </div>
               </div>
-            </div>
           </div>
-          <% } )%>
-          <div class="col-lg-12">
-            <div class="pageination">
-              <nav aria-label="Page navigation example">
-                <!-- <ul class="pagination justify-content-center">
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Previous">
-                                            <i class="ti-angle-double-left"></i>
-                                        </a>
-                                    </li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">5</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">6</a></li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Next">
-                                            <i class="ti-angle-double-right"></i>
-                                        </a>
-                                    </li>
-                                </ul> -->
-              </nav>
-            </div>
+          
+          <div class="mobile-social-icon">
+              <h5 class="mb-15 text-grey-4">Follow Us</h5>
+              <a href="#"><img src="customassets/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+              <a href="#"><img src="customassets/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+              <a href="#"><img src="customassets/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+              <a href="#"><img src="customassets/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+              <a href="#"><img src="customassets/imgs/theme/icons/icon-youtube.svg" alt=""></a>
           </div>
-        </div>
       </div>
-    </div>
   </div>
-</section>
-<!--================End Category Product Area =================-->
+</div>
+<main class="main">
+  <div class="page-header breadcrumb-wrap">
+      <div class="container">
+          <div class="breadcrumb">
+              <a href="index.html" rel="nofollow">Home</a>
+              
+          </div>
+      </div>
+  </div>
+  <section class="mt-50 mb-50">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="shop-product-fillter">
+                      <div class="totall-product">
+                      </div>
+                      <div class="sort-by-product-area">
+                          <div class="sort-by-cover mr-10">
+                              <div class="sort-by-product-wrap">
+                                  <div class="sort-by">
+                                      <span><i class="fi-rs-apps"></i>Show:</span>
+                                  </div>
+                                  <div class="sort-by-dropdown-wrap">
+                                      <span> 50 <i class="fi-rs-angle-small-down"></i></span>
+                                  </div>
+                              </div>
+                              <div class="sort-by-dropdown">
+                                  <ul>
+                                      <li><a class="active" href="#">50</a></li>
+                                      <li><a href="#">100</a></li>
+                                      <li><a href="#">150</a></li>
+                                      <li><a href="#">200</a></li>
+                                      <li><a href="#">All</a></li>
+                                  </ul>
+                              </div>
+                          </div>
+                          <div class="sort-by-cover">
+                              <div class="sort-by-product-wrap">
+                                  <div class="sort-by">
+                                      <span><i class="fi-rs-apps-sort"></i>Sort by:</span>
+                                  </div>
+                                  <div class="sort-by-dropdown-wrap">
+                                      <span> Featured <i class="fi-rs-angle-small-down"></i></span>
+                                  </div>
+                              </div>
+                              <div class="sort-by-dropdown">
+                                  <ul>
+                                      <li><a class="active" href="#">Featured</a></li>
+                                      <li><a href="#">Price: Low to High</a></li>
+                                      <li><a href="#">Price: High to Low</a></li>
+                                      <li><a href="#">Release Date</a></li>
+                                      <li><a href="#">Avg. Rating</a></li>
+                                  </ul>
+                              </div>
+                          </div>
+                          <div class="sort-by-cover">
+                            <div class="sort-by-product-wrap">
+                                <div class="sort-by">
+                                    <span><i class="fi-rs-apps-sort"></i>Category</span>
+                                </div>
+                            </div>
+                            <div class="sort-by-dropdown">
+                                <%( locals.category||[]).forEach(categories => { %> <% if
+                                    (!categories.Deleted) { %>
+                                <ul>
+                                    <li><a onclick="categoryProduct('<%= categories.name %>')" href="/category-lists?id=<%= categories._id %>"><%= categories.name %></a></li>
+                            <% } %> <% }) %>
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="row product-grid-3">
+                  <% cat.forEach(product => { %>
+                      <div class="col-lg-3 col-md-4">
+                          <div class="product-cart-wrap mb-30">
+                              <div class="product-img-action-wrap">
+                                  <div class="product-img product-img-zoom">
+                                      <a href="/product-lists?id=<%= product._id %>">
+                                          <img class="default-img" src="/images/<%= product.image[0]%>" alt="">
+                                          <img class="hover-img" src="/images/<%= product.image[0]%>" alt="">
+                                      </a>
+                                  </div>
+                                  <div class="product-action-1">
+                                      <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal">
+<i class="fi-rs-search"></i></a>
+                                      <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                      <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                  </div>
+                                  <div class="product-badges product-badges-position product-badges-mrg">
+                                      <span class="hot">Hot</span>
+                                  </div>
+                              </div>
+                              <div class="product-content-wrap">
+                                  <div class="product-category">
+                                     
+                                  </div>
+                                  <h2><a href="shop-product-right.html"><%=product.name%></a></h2>
+                                  <div class="rating-result" title="90%">
+                                      <span>
+                                          <span>90%</span>
+                                      </span>
+                                  </div>
+                                  <div class="product-price">
+                                      <span><%=product.price%></span>
+                                      <span class="old-price">$245.8</span>
+                                  </div>
+                                  <% if (user) { %>
+                                  <div class="product-action-1 show">
+                                      <a onclick="addToCart('<%= product._id %>')" aria-label="Add To Cart" class="action-btn hover-up"><i class="fi-rs-shopping-bag-add"></i></a>
+                                  </div>
+                                  <% } %> 
+                              </div>
+                          </div>
+                      </div>
+                <% } )%>
+                  </div>
+                  <div class="pagination-area mt-15 mb-sm-5 mb-lg-0">
+                      <nav aria-label="Page navigation example">
+                          <ul class="pagination justify-content-start">
+                              <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                              <li class="page-item"><a class="page-link" href="#">02</a></li>
+                              <li class="page-item"><a class="page-link" href="#">03</a></li>
+                              <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                              <li class="page-item"><a class="page-link" href="#">16</a></li>
+                              <li class="page-item"><a class="page-link" href="#"><i class="fi-rs-angle-double-small-right"></i></a></li>
+                          </ul>
+                      </nav>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+</main>
 <script>
-  function categoryProduct(catname) {
-    console.log(catname);
-    $.ajax({
-      url: "/category-products",
-      type: "post",
-      data: { catname: catname },
-      success: (response) => {},
-    });
-  }
+    function categoryProduct(catname) {
+      $.ajax({
+        url: "/category-products",
+        type: "post",
+        data: { catname: catname },
+        success: (response) => {},
+      });
+    }
+    function addToCart(proId){
+        $.ajax({
+            url:'/add-to-cart?id='+proId,
+            method:'get',
+            success:(response)=>{
+                console.log(response.cartCount);
+                if(response.status){
+                    let count =$('#cart-count').html()
+                    count=parseInt(count)+1
+                    $("#cart-count").html(count)
+                    $("#addToCart").empty()
+                    let addtocartData = ` <style>
+                    .main_menu .cart i:after {
+                        content: "${response.cartCount}";
+                      }
+                 </style>`
+                    $("#addToCart").append(addtocartData)    
+                }
+            }
+        })
+    }
 </script>
-<%- include('../partials/user-footer')%>
+<%- include('../partials/custom-footer')%>
+
+
+

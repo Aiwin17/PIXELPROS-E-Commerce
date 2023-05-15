@@ -77,7 +77,7 @@ module.exports = {
   getUnBlockUser: (req, res) => {
     let id = req.params.id;
     adminHelpers.getUnBlockUser(id).then(() => {
-      res.render("admin/view-users");
+      res.redirect("/admin/view-users");
     });
   },
   getDeleteProducts: (req, res) => {
@@ -95,8 +95,12 @@ module.exports = {
     res.render("admin/admin-categories");
   },
   postCategories: (req, res) => {
-    productsHelpers.addCategories(req.body).then(() => {
-      res.redirect("/admin/add-categories");
+    productsHelpers.addCategories(req.body).then((response) => {
+      if(response.status){
+        res.redirect("/admin/category-list")
+      }else{
+        res.redirect("/admin/add-categories");
+      }
     });
   },
   getBanners: (req, res) => {
@@ -162,22 +166,28 @@ module.exports = {
     });
   },
   getCoupon: async (req, res) => {
-    await productsHelpers.getAllCoupons().then((coupons) => {
+    await productsHelpers.getCouponsList().then((coupons) => {
+      console.log(coupons);
       res.render("admin/coupons", { coupons });
     });
   },
-  getDeleteCoupons: async (req,res)=>{
-    let id = req.params.id
-    await productsHelpers.deleteCoupons(id).then((response)=>{
-      res.json(response)
-    })
+  getDeleteCoupons: async (req, res) => {
+    let id = req.params.id;
+    await productsHelpers.deleteCoupons(id).then((response) => {
+      res.json(response);
+    });
   },
-  getOrderDetails:async(req,res)=>{
-    let id = req.params.id
-    await userHelpers.getOrderProducts(id).then(async(orderDetails)=>{
-      await adminHelpers.getOrder(id).then((userDetails)=>{
-        res.render('admin/view-order-details',{userDetails,orderDetails})
-      })
-  })
-  }
+  getOrderDetails: async (req, res) => {
+    let id = req.params.id;
+    await userHelpers.getOrderProducts(id).then(async (orderDetails) => {
+      await adminHelpers.getOrder(id).then((userDetails) => {
+        res.render("admin/view-order-details", { userDetails, orderDetails });
+      });
+    });
+  },
+  getGraphStatics: async (req, res) => {
+    let orderStatistics = await adminHelpers.getOrdrStatistics();
+    let saleStatistics = await adminHelpers.getSaleStatistics();
+    res.json({ orderStatistics,saleStatistics});
+  },
 };

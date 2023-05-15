@@ -68,4 +68,6 @@ router.get('/delete-coupons/:id',admincontrollers.getDeleteCoupons)
 
 router.get('/view-order-details/:id',admincontrollers.getOrderDetails)
 
+router.get('/graph-statics',admincontrollers.getGraphStatics)
+
 module.exports = router;

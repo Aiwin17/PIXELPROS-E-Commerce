@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var multer = require('multer')
+const nocache = require("nocache");
+
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -39,7 +41,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({secret:"Key",cookie:{maxAge:600000000}}))
 
 app.use(multer({dest:'./public/images',storage:fileStorage}).array('image'))
-
+app.use(nocache());
 app.use((req, res, next) => {
   res.header('Cache-Control', 'no-cache,private,no-Store,must-revalidate,max-scale=0,post-check=0,pre-check=0');
   next();

@@ -4,8 +4,9 @@ var objectId = require('mongodb').ObjectId
 const product = require('../config/collections')
 module.exports = {
     addProduct: async(product,image,callback) => {
+        console.log(product);
         let imagesFiles =image.map(file=>file.filename)
-        let categoryId = await db.get().collection(collection.CATEGORY_COLLECTION).find({'name.category': product.category},{ projection: { _id: 1 } }).toArray();
+        let categoryId = await db.get().collection(collection.CATEGORY_COLLECTION).find({name: product.category},{ projection: { _id: 1 } }).toArray();
         db.get().collection(collection.PRODUCT_COLLECTION).
             insertOne({
                 name: product.productname,
@@ -82,12 +83,13 @@ module.exports = {
     },
    addCategories: (category) => {
   return new Promise((resolve, reject) => {
-    db.get().collection(collection.CATEGORY_COLLECTION).findOne({ name: category }).then((data) => {
+    let cat=category.category.toUpperCase();
+    db.get().collection(collection.CATEGORY_COLLECTION).findOne({ name:cat }).then((data) => {
       if (data) {
         resolve({status:true});
       } else {
-        db.get().collection(collection.CATEGORY_COLLECTION).insertOne({ name: category }).then((data) => {
-          resolve(data.insertedId);
+        db.get().collection(collection.CATEGORY_COLLECTION).insertOne({ name:cat }).then((data) => {
+          resolve({status:false});
         })
       }
     });
@@ -195,10 +197,11 @@ module.exports = {
             })
         })
     },
-    getAllCoupons:()=>{
+    getAllCoupons:(coupon)=>{
         return new Promise(async(resolve,reject)=>{
-           let coupons = await db.get().collection(collection.COUPON_COLLECTION).find().toArray()
-            resolve(coupons)       
+           await db.get().collection(collection.COUPON_COLLECTION).findOne({name:coupon}).then((coupons)=>{
+            resolve(coupons)    
+           })  
         })
     },
     deleteCoupons:(couponId)=>{
@@ -214,5 +217,19 @@ module.exports = {
                 resolve({status:true})
             })
         })
-    }
+    },
+    getAllProductOrders:(proId)=>{
+        console.log(proId);
+        return new Promise(async(resolve,reject)=>{
+           let products = await db.get().collection(collection.PRODUCT_COLLECTION).find({_id:proId}).toArray()
+           resolve(products)
+                
+        })
+    },
+    getCouponsList:()=>{
+    return new Promise(async(resolve,reject)=>{
+        let coupons=await db.get().collection(collection.COUPON_COLLECTION).find().toArray()
+        resolve(coupons) 
+     })
+}
 }

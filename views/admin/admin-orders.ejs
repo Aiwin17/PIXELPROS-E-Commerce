@@ -55,7 +55,7 @@
                                 <td><%=order.paymentMethod%></td>
                                 <td><%=order.status%></td>
                                 <td>
-                                    <% if (order.status === 'processing') { %>
+                                    <% if (order.status === 'placed') { %>
                                         <a  class="btn btn-success btn-sm text-white" onclick="orderStatus('<%= order._id %>','<%=order.status%>')">Ship</a>
                                     <% } %>
                                     <% if (order.status ==='Order Cancelling') { %>
@@ -94,7 +94,7 @@
                 let message;
                 switch (true) {
                   case response.shipped:
-                    message = 'Your order has been placed';
+                    message = 'Your order has been Delivered';
                     break;
                   case response.cancel:
                     message = 'Order has been canceled';

@@ -18,13 +18,13 @@ router.post('/user-signup',usercontrollers.postSignUp);
 
 router.get('/product-lists',usercontrollers.getProducts);
 
-router .get('/otp-Login',loginSession,usercontrollers.getOtpLogin)
+router.get('/otp-Login',loginSession,usercontrollers.getOtpLogin)
 
-router.post('/otp-login',usercontrollers.postOtpLogin)
+router.post('/otp-login',loginSession,usercontrollers.postOtpLogin)
 
 router.get('/verify-otp',loginSession,usercontrollers.getVerifyOtp)
 
-router.post('/verify-otp',usercontrollers.postVerifyOtp)
+router.post('/verify-otp',loginSession,usercontrollers.postVerifyOtp)
 
 router.get('/cart',userSession,usercontrollers.getCart)
 
@@ -48,7 +48,7 @@ router.get('/product-lists',usercontrollers.getAllProducts)
 
 router.get('/product-list',usercontrollers.getProductList)
 
-router.get('/address',usercontrollers.getAddress)
+router.get('/address',userSession,usercontrollers.getAddress)
 
 router.post('/address',usercontrollers.postAddress)
 
@@ -64,9 +64,11 @@ router.get('/category-lists',usercontrollers.getCategoryLists)
 
 router.post('/remove-cart',usercontrollers.postRemoveCart)
 
-router.get('/edit-address/:id',usercontrollers.getEditAddress)
+router.get('/edit-address',usercontrollers.getEditAddress)
 
-router.post('/edit-address/:id',usercontrollers.postEditAddress)
+router.post('/edit-address',usercontrollers.postEditAddress)
+
+router.post('/delete-address/:id',usercontrollers.postDeleteAddress)
 
 router.get('/edit-profile/:id',usercontrollers.getEditProfile)
 
@@ -82,10 +84,20 @@ router.get('/otp-changePassword',usercontrollers.getOtpChangePassword)
 
 router.post('/otp-changePassword',usercontrollers.postOtpChangePassword)
 
+// router.get('/verify-otp-password',usercontrollers.getVerifyOtpChangePassword)
+
 router.post('/verify-otp-password',usercontrollers.postVerifyOtpChangePassword)
 
 router.post('/forgot-password',usercontrollers.postUpdatePassword)
 
 router.get('/view-details',userSession,usercontrollers.getViewDetails)
+
+router.post('/mobileno-verify',usercontrollers.postVerifyNumber)
+
+router.get('/wishlist',userSession,usercontrollers.getWishlist)
+
+router.get('/add-to-wishList',userSession,usercontrollers.getaddToWishlist)
+
+router.post('/remove-wishlist',userSession,usercontrollers.postRemoveWishlist)
 
 module.exports = router;

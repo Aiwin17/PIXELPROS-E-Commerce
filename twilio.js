@@ -8,7 +8,11 @@ module.exports = {
         client.verify.v2.services(verifySid)
             .verifications
             .create({ to: '+91' + mobileNo, channel: 'sms' })
-            .then(verification => console.log(verification.sid));
+            .then(verification => console.log(verification.sid))
+            .catch(error=>{
+                
+                console.log(error.message);
+            })
     },
     verifyOtp(mobileNo, otp) {
         
