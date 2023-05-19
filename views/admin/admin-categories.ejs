@@ -4,9 +4,6 @@
         <div>
             <h2 class="content-title card-title">CATEGORIES</h2>
         </div>
-        <div>
-            <input type="text" placeholder="Search Categories" class="form-control bg-white">
-        </div>
     </div>
     <div class="card">
         <div class="card-body">
@@ -17,9 +14,12 @@
                             <label for="product_name" class="form-label">Name</label>
                             <input required type="text" placeholder="Type here" name ='category' class="form-control" id="product_name" />
                         </div>
+                        <% if (categoryErr !== "") { %>
+                            <p class="text-danger" >Category Already Exist</p>
+                        <% } %>
                         <div class="d-grid">
                             <button class="btn btn-primary" type="submit">Create category</button>
-                        </div> 
+                        </div>
                     </form>
                 </div>
             </div>

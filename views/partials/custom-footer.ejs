@@ -125,31 +125,33 @@ Preloader Start
     </div>
 </div>
 <!-- Vendor JS-->
-<script src="customassets/js/vendor/modernizr-3.6.0.min.js"></script>
-<script src="customassets/js/vendor/jquery-3.6.0.min.js"></script>
-<script src="customassets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
-<script src="customassets/js/vendor/bootstrap.bundle.min.js"></script>
-<script src="customassets/js/plugins/slick.js"></script>
-<script src="customassets/js/plugins/jquery.syotimer.min.js"></script>
-<script src="customassets/js/plugins/wow.js"></script>
-<script src="customassets/js/plugins/jquery-ui.js"></script>
-<script src="customassets/js/plugins/perfect-scrollbar.js"></script>
-<script src="customassets/js/plugins/magnific-popup.js"></script>
-<script src="customassets/js/plugins/select2.min.js"></script>
-<script src="customassets/js/plugins/waypoints.js"></script>
-<script src="customassets/js/plugins/counterup.js"></script>
-<script src="customassets/js/plugins/jquery.countdown.min.js"></script>
-<script src="customassets/js/plugins/images-loaded.js"></script>
-<script src="customassets/js/plugins/isotope.js"></script>
-<script src="customassets/js/plugins/scrollup.js"></script>
-<script src="customassets/js/plugins/jquery.vticker-min.js"></script>
+<script src="/customassets/js/vendor/modernizr-3.6.0.min.js"></script>
+<script src="/customassets/js/vendor/jquery-3.6.0.min.js"></script>
+<script src="/customassets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+<script src="/customassets/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="/customassets/js/plugins/slick.js"></script>
+<script src="/customassets/js/plugins/jquery.syotimer.min.js"></script>
+<script src="/customassets/js/plugins/wow.js"></script>
+<script src="/customassets/js/plugins/jquery-ui.js"></script>
+<script src="/customassets/js/plugins/perfect-scrollbar.js"></script>
+<script src="/customassets/js/plugins/magnific-popup.js"></script>
+<script src="/customassets/js/plugins/select2.min.js"></script>
+<script src="/customassets/js/plugins/waypoints.js"></script>
+<script src="/customassets/js/plugins/counterup.js"></script>
+<script src="/customassets/js/plugins/jquery.countdown.min.js"></script>
+<script src="/customassets/js/plugins/images-loaded.js"></script>
+<script src="/customassets/js/plugins/isotope.js"></script>
+<script src="/customassets/js/plugins/scrollup.js"></script>
+<script src="/customassets/js/plugins/jquery.vticker-min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/customassets/js/plugins/jquery.theia.sticky.js"></script>
+<script src="/customassets/js/plugins/jquery.elevatezoom.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <!-- Template  JS -->
-<script src="customassets/js/main.js"></script>
-<script src="customassets/js/shop.js"></script>
+<script src="/customassets/js/main.js"></script>
+<script src="/customassets/js/shop.js"></script>
 <script>
     function addToCart(proId) {
       $.ajax({
@@ -178,7 +180,8 @@ Preloader Start
             url:"/add-to-wishList?id="+ proId,
             method:"get",
             success:(response)=>{
-                if(response.wishlistCount){
+                console.log(response)
+                if(response.status){
                     Toastify({
                         text: 'Product added to WishList',
                         duration: 3000,

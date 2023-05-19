@@ -203,6 +203,10 @@
                                       <button  onclick="validateForm()" type="submit" id="submit-error" class="btn btn-fill-out btn-block hover-up">Submit &amp; Register</button>
                                       <span id="submit-error" style="color: red"></span>
                                   </div>
+                                  <%if(signupErr!= ""){%>
+                                    <p class="text-danger"><%=signupErr%></p>
+                                  <%}%>
+                                  <input type="number" value="0" name="wallet" hidden>
                               </form>
                               <div class="text-muted text-center">Already have an account? <a href="/login">Sign in now</a></div>
                           </div>

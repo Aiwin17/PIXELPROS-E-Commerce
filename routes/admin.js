@@ -1,73 +1,104 @@
 var express = require('express');
 var router = express.Router();
-const admincontrollers = require('../controllers/adminControllers');
+const adminControllers = require('../controllers/adminControllers');
 const productsHelpers = require('../helpers/products-helpers');
 
-/* GET users listing. */
-router.get('/',admincontrollers.verifyLogin,admincontrollers.getHome)
 
-router.get('/login',admincontrollers.getLogin)
+//Admin Login & Logout
 
-router.post('/login',admincontrollers.postLogin)
+router.get('/',adminControllers.verifyLogin,adminControllers.getHome)
 
-router.get('/logout',admincontrollers.getLogout)
+router.get('/login',adminControllers.getLogin)
 
-router.get('/view-products',admincontrollers.verifyLogin,admincontrollers.getProducts)
+router.post('/login',adminControllers.postLogin)
 
-router.get('/add-products',admincontrollers.verifyLogin,admincontrollers.addProduct)
+router.get('/logout',adminControllers.getLogout)
 
-router.post('/add-products',admincontrollers.verifyLogin,admincontrollers.postProduct)
 
-router.get('/edit-products/:id',admincontrollers.getEdit)
 
-router.post('/edit-products/:id',admincontrollers.postEdit)
+//products
 
-router.get('/view-users',admincontrollers.getUsers)
+router.get('/view-products',adminControllers.verifyLogin,adminControllers.getProducts)
 
-router.get('/block-user/:id',admincontrollers.getBlockUser)
+router.get('/add-products',adminControllers.verifyLogin,adminControllers.addProduct)
 
-router.get('/unblock-user/:id',admincontrollers.getUnBlockUser)
+router.post('/add-products',adminControllers.verifyLogin,adminControllers.postProduct)
 
-router.get('/delete-products/:id',admincontrollers.getDeleteProducts)
+router.get('/edit-products/:id',adminControllers.getEdit)
 
-router.get('/add-categories',admincontrollers.getCategory)
+router.post('/edit-products/:id',adminControllers.postEdit)
 
-router.post('/add-categories',admincontrollers.postCategories)
+router.get('/delete-products/:id',adminControllers.getDeleteProducts)
 
-router.get('/category-list',admincontrollers.getCategoryList)
 
-router.get('/view-banners',admincontrollers.getBanners)
+//Users
 
-router.post('view-banners',admincontrollers.postAddBanner)
+router.get('/view-users',adminControllers.getUsers)
 
-router.get('/add-banner',admincontrollers.getAddBanner)
+router.get('/block-user/:id',adminControllers.getBlockUser)
 
-router.post('/add-banner',admincontrollers.postAddBanner)
+router.get('/unblock-user/:id',adminControllers.getUnBlockUser)
 
-router.get('/edit-banner/:id',admincontrollers.getEditBanner)
 
-router.post('/edit-banner/:id',admincontrollers.postEditBanner)
+//Categories
 
-router.get('/admin-orders',admincontrollers.getOrder)
+router.get('/add-categories',adminControllers.getCategory)
 
-router.post('/change-order-status',admincontrollers.postOrders)
+router.post('/add-categories',adminControllers.postCategories)
 
-router.get('/edit-category/:id',admincontrollers.getEditCategory)
+router.get('/category-list',adminControllers.getCategoryList)
 
-router.post('/edit-category/:id',admincontrollers.postEditCategory)
+router.post('/edit-category/:id',adminControllers.postEditCategory)
 
-router.get('/delete-category/:id',admincontrollers.postDeletecategory)
+router.get('/delete-category/:id',adminControllers.postDeletecategory)
 
-router.get('/add-coupon',admincontrollers.getAddCoupen)
 
-router.post('/add-coupon',admincontrollers.postAddCoupons)
+//Banners
 
-router.get('/coupons',admincontrollers.getCoupon)
+router.get('/view-banners',adminControllers.getBanners)
 
-router.get('/delete-coupons/:id',admincontrollers.getDeleteCoupons)
+router.post('view-banners',adminControllers.postAddBanner)
 
-router.get('/view-order-details/:id',admincontrollers.getOrderDetails)
+router.get('/add-banner',adminControllers.getAddBanner)
 
-router.get('/graph-statics',admincontrollers.getGraphStatics)
+router.post('/add-banner',adminControllers.postAddBanner)
+
+router.get('/edit-banner/:id',adminControllers.getEditBanner)
+
+router.post('/edit-banner/:id',adminControllers.postEditBanner)
+
+
+
+//Orders
+
+router.get('/admin-orders',adminControllers.getOrder)
+
+router.post('/change-order-status',adminControllers.postOrders)
+
+router.get('/edit-category/:id',adminControllers.getEditCategory)
+
+router.get('/view-order-details/:id',adminControllers.getOrderDetails)
+
+
+//Coupons
+
+router.get('/add-coupon',adminControllers.getAddCoupen)
+
+router.post('/add-coupon',adminControllers.postAddCoupons)
+
+router.get('/coupons',adminControllers.getCoupon)
+
+router.get('/delete-coupons/:id',adminControllers.getDeleteCoupons)
+
+
+//Graph And Chart
+
+router.get('/graph-statics',adminControllers.getGraphStatics)
+
+//SalesReport
+
+router.get('/view-sales-report',adminControllers.getSalesReport)
+
+router.post('/sales-report',adminControllers.verifyLogin,adminControllers.viewReportByDate)
 
 module.exports = router;

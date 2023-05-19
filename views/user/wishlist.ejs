@@ -35,10 +35,18 @@
                                     </td>
                                     <td class="price" data-title="Price"><span><%= product.product.price %></span></td>
                                     <td class="text-center" data-title="Stock">
-                                        <span class="color3 font-weight-bold">In Stock</span>
+                                        <% if (product.product.stock===0) { %>
+                                            <span>
+                                              <span style="color: red;">Out Of Stock</span>
+                                            </span>
+                                            <% } else { %>
+                                              <span style="color: rgb(55, 194, 155);">InStock</span>
+                                            <%} %>
                                     </td>
                                     <td class="text-right" data-title="Cart">
-                                        <button onclick="addToCart('<%= product._id %>')" class="btn btn-sm"><i class="fi-rs-shopping-bag mr-5"></i>Add to cart</button>
+                                        <% if (product.product.stock!==0) { %>
+                                        <button onclick="addToCart('<%= product.product._id %>')" class="btn btn-sm"><i class="fi-rs-shopping-bag mr-5"></i>Add to cart</button>
+                                        <%} %>
                                     </td>
                                     <td class="action" data-title="Remove"><a onclick="removeWishlist('<%= product._id %>','<%= product.product._id %>')"><i class="fi-rs-trash"></i></a></td>
                                 </tr>
@@ -53,6 +61,7 @@
 </main>
 <script>
     function removeWishlist(wishListId,proId){
+        console.log(proId)
         $.ajax({
           url:'/remove-wishlist',
           method:'post',

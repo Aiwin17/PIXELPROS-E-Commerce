@@ -58,63 +58,70 @@ module.exports = {
   },
   postUpdateOrders: (status, orderId) => {
     return new Promise(async (resolve, reject) => {
-      if (status === "placed") {
-        let orders = await db
-          .get()
-          .collection(collection.ORDER_COLLECTION)
-          .updateOne(
-            { _id: objectId(orderId) },
-            {
-              $set: {
-                status: "Delivered",
-              },
-            }
-          )
-          .then(() => {
-            resolve({ shipped: true });
-          });
-      } else if (status === "Order Cancelling") {
-        let orders = await db
-          .get()
-          .collection(collection.ORDER_COLLECTION)
-          .updateOne(
-            { _id: objectId(orderId) },
-            {
-              $set: {
-                status: "Order Cancelled",
-              },
-            }
-          )
-          .then(() => {
-            resolve({ cancel: true });
-          });
-      } else if (status === "Order Returning") {
-        let orders = await db
-          .get()
-          .collection(collection.ORDER_COLLECTION)
-          .updateOne(
-            { _id: objectId(orderId) },
-            {
-              $set: {
-                status: "Order Returned",
-              },
-            }
-          )
-          .then(() => {
-            resolve({ return: true });
-          });
+      let orders = await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: objectId(orderId) });
+      let products = orders.products;
+      for (let i = 0; i < products.length; i++) {
+        let product = products[i];
+        let productDetails = await db.get()
+          .collection(collection.PRODUCT_COLLECTION)
+          .findOne({ _id: objectId(product.item) });
+        console.log(productDetails);
       }
+  
+      if (status === "placed") {
+        await db.get().collection(collection.ORDER_COLLECTION).updateOne(
+          { _id: objectId(orderId) },
+          {
+            $set: {
+              status: "Delivered",
+            },
+          }
+        );
+        resolve({ shipped: true });
+      } else if (status === "Order Cancelling") {
+        await db.get().collection(collection.ORDER_COLLECTION).updateOne(
+          { _id: objectId(orderId) },
+          {
+            $set: {
+              status: "Order Cancelled"
+            },
+          }
+        );
+        for (let i = 0; i < products.length; i++) {
+          let product = products[i];
+          await db.get().collection(collection.PRODUCT_COLLECTION).updateOne(
+            { _id: new objectId(product.item) },
+            { $inc: { stock: product.quantity } }
+          );
+        }
+        resolve({ cancel: true });
+      }else if(status === "Order Returning"){
+        await db.get().collection(collection.ORDER_COLLECTION).updateOne(
+          { _id: objectId(orderId) },
+          {
+            $set: {
+              status: "Order Returned"
+            },
+          }
+        );
+        for (let i = 0; i < products.length; i++) {
+          let product = products[i];
+          await db.get().collection(collection.PRODUCT_COLLECTION).updateOne(
+            { _id: new objectId(product.item) },
+            { $inc: { stock: product.quantity } }
+          );
+        }
+      }
+      resolve({return:true})
     });
-  },
+  },  
   getOrder: (orderId) => {
-    console.log(orderId, ".........");
     return new Promise(async (resolve, reject) => {
       let order = await db
         .get()
         .collection(collection.ORDER_COLLECTION)
         .find({ _id: objectId(orderId) })
         .toArray();
-      console.log(order);
       resolve(order);
     });
   },
@@ -128,12 +135,10 @@ module.exports = {
             $group: {
               _id: "$status",
               count: { $sum: 1 },
-              //   ids: { $push: "$orderStatus" }
             },
           },
         ])
         .toArray();
-      console.log(ordrStatistics, "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
       resolve(ordrStatistics);
     });
   },
@@ -159,8 +164,56 @@ module.exports = {
           { $sort: { date: 1 } },
         ])
         .toArray();
-      console.log(saleStatistics, "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
       resolve(saleStatistics);
     });
   },
+  getReport: (startDate, endDate) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let orders=await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+          {
+            $match: {
+              status: "Delivered",
+              date: {
+                $gte: new Date(startDate),
+                $lte: new Date(endDate),
+              },
+            },
+          },
+          {
+            $sort: {
+              date: -1,
+            },
+          }
+        ]).toArray()
+        console.log(orders,'///////////////////');
+        resolve(orders);
+      } catch (err) {
+        console.error(err);
+        reject(err);
+      }
+    });
+  },
+  totalRev: async () => {
+    let total = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+      {
+        $match: {
+          status: "Delivered"
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$totalAmount"}
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          total: "$totalAmount"
+        }
+      }
+    ]).toArray();
+    return total
+  }
 };

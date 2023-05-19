@@ -194,7 +194,13 @@
   ::footer_part start::
 <%#- include('../partials/user-footer')%> -->
 
-
+<style>
+  .disabled {
+    pointer-events: none;
+    color: gray;
+    text-decoration: none;
+  }
+</style>
 
 <%- include('../partials/custom-header')%>
   <div class="mobile-header-active mobile-header-wrapper-style">
@@ -299,13 +305,17 @@
                                     </td>
                                     <td class="text-center" data-title="Stock">
                                         <div class="detail-qty border radius  m-auto">
-                                            <a class="qty-down"><i onclick="changeQuantity('<%= product._id %>','<%= product.product._id %>','<%= user._id %>',-1,'<%= product.product.price %>')" class="fi-rs-angle-small-down"></i></a>
+                                            <a class="qty-down"><i onclick="changeQuantity('<%= product._id %>','<%= product.product._id %>','<%= user._id %>',-1,'<%= product.product.price %>','<%= product.product.stock %>')" class="fi-rs-angle-small-down"></i></a>
                                             <span id="<%=  product.product._id %>" class="qty-val"><%= product.quantity %></span>
-                                            <a class="qty-up"><i onclick="changeQuantity('<%= product._id %>','<%= product.product._id %>','<%= user._id %>',1,'<%= product.product.price %>')" class="fi-rs-angle-small-up"></i></a>
+                                            <a class="qty-up"><i onclick="changeQuantity('<%= product._id %>','<%= product.product._id %>','<%= user._id %>',1,'<%= product.product.price %>','<%= product.product.stock %>')" class="fi-rs-angle-small-up"></i></a>
                                         </div>
                                     </td>
-                                    <td class="text-right" data-title="Cart">
-                                        <span id="price<%= product.product._id %>"><%= product.product.price %></span>
+                                    <% let subTotal =product.product.price* product.quantity  %>
+                                    <td class="text-right" id="outOfStock<%= product.product._id %>" data-title="Cart"><% if (product.quantity>=product.product.stock) { %>
+                                    <span id="price<%= product.product._id %>"><%= subTotal %> <br><span class="noStock" style="color: red;">Out Of Stock</span></span>
+                                    <% } else { %>
+                                      <span id="price<%= product.product._id %>"><%= subTotal %></span>
+                                    <%} %> 
                                     </td>
                                     <td class="action" data-title="Remove"><a onclick="removeCart('<%= product._id %>','<%= product.product._id %>')"><i class="fi-rs-trash"></i></a></td>
                                   </tr>
@@ -637,17 +647,17 @@
                                                 <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping</td>
                                             </tr>
                                             <tr>
-                                                <td class="cart_total_label">Total</td>
-                                                <% if (total) { %>
-                                                <td class="cart_total_amount"><strong>Rs<span id="total" class="font-xl fw-900 text-brand"><%= total %></span></strong></td>
-                                                <% } else { %>
-                                                <h4 class="ml-5">Total Rs.<span id="total1">0</span></h4>
-                                                <% } %>
+                                                <td  class="cart_total_label">Total</td>
+                                                      <% if (total) { %>
+                                                        <td class="cart_total_amount"><strong>Rs<span id="total" class="font-xl fw-900 text-brand"><%= total %></span></strong></td>
+                                                        <% } else { %>
+                                                        <h4 class="ml-5">Total Rs.<span id="total1">0</span></h4>
+                                                        <% } %>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                <a href="/place-order" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
+                                <a href="/place-order" class="btn" id="placeBtn"> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
                             </div>
                         </div>
                     </div>
@@ -657,11 +667,10 @@
     </section>
 </main>
 <script>
-  function changeQuantity(cartId, proId, userId, count,proPrice) {
-    console.log(proPrice,"kkkkkkkkkkkkkkk")
-    let quantity = parseInt(document.getElementById(proId).innerHTML)
-    count = parseInt(count)
-    console.log(proId)
+  function changeQuantity(cartId, proId, userId, count, proPrice, stock) {
+    let quantity = parseInt(document.getElementById(proId).innerHTML);
+    count = parseInt(count);
+  
     $.ajax({
       url: '/change-product-quantity',
       data: {
@@ -673,32 +682,107 @@
       },
       method: 'post',
       success: (response) => {
-        console.log(response)
         if (response.removeProduct) {
-          alert("Product Removed from the cart")
-          location.reload()
+          Swal.fire({
+            title: 'Are you sure you want to remove?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Remove'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              Swal.fire(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+              );
+              setTimeout(() => {
+                location.reload();
+              }, 1500);
+            }
+          });
         } else {
-          console.log(quantity)
+          let newQuantity = quantity + count;
+          let price = newQuantity * proPrice;
+          
+          if(stock<newQuantity){
+            $('#outOfStock'+proId).empty()
+            let outOfStock = `<span id="price${proId}">${price} <br> <span class="noStock">Out Of Stock</span> </span>`
+            $('#outOfStock'+proId).append(outOfStock)
+          }else{
+            document.getElementById('price' + proId).innerHTML = price;
+          }
+          
+          document.getElementById(proId).innerHTML = newQuantity;
+          
+          document.getElementById('total').innerHTML = response.total;
 
-          let price = ((quantity+ count)*proPrice);
 
-          document.getElementById(proId).innerHTML = quantity+ count
-          document.getElementById('price'+proId).innerHTML =price
-          console.log(price)
-          document.getElementById('total').innerHTML = response.total
+       
         }
+
+        var noStockElements = document.querySelectorAll('.noStock');
+        var noStockArray = [];
+        
+        noStockElements.forEach(function(element) {
+          var spanText = element.textContent;
+          noStockArray.push(spanText);
+        });
+        if(noStockArray.length>0){
+          console.log(noStockArray);
+         document.getElementById('placeBtn').classList.add('disabled')
+          }else{
+            document.getElementById('placeBtn').classList.remove('disabled')
+          }
+        console.log(noStockArray)
+      
       }
+    });
+  }
+  
+  function removeCart(cartId,proId){
+    Swal.fire({
+      title: 'Are you sure you want to remove?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Remove'
+    }).then((result) => {
+      $.ajax({
+        url:'/remove-cart',
+        method:'post',
+        data:{cartId,proId},
+        success:(response)=>{
+          if (result.isConfirmed) {
+            Swal.fire(
+              'Removed',
+              'Your product has been Removed',
+              'success'
+            );
+            setTimeout(() => {
+              location.reload();
+            }, 1500);
+          }
+        }
+      })
     })
   }
-  function removeCart(cartId,proId){
-    $.ajax({
-      url:'/remove-cart',
-      method:'post',
-      data:{cartId,proId},
-      success:(response)=>{
-          location.reload()
-      }
-    })
+  var noStockElements = document.querySelectorAll('.noStock');
+  var noStockArray = [];
+  
+  noStockElements.forEach(function(element) {
+    var spanText = element.textContent;
+    noStockArray.push(spanText);
+  });
+  if(noStockArray.length>0){
+  console.log(noStockArray);
+ document.getElementById('placeBtn').classList.add('disabled')
+  }else{
+    document.getElementById('placeBtn').classList.remove('disabled')
   }
 </script>
 <%- include('../partials/custom-footer')%>

@@ -514,6 +514,7 @@ $("#checkout-form").submit((e)=>{
                   <div class="mb-25">
                       <h4>Billing Details</h4>
                   </div>
+                  <% if (user.address) { %>
                   <% user.address.forEach(users => { %>
                     <% if (!users.deleted) { %>
                     <div class="card my-3 col-md-8">
@@ -524,7 +525,6 @@ $("#checkout-form").submit((e)=>{
                             <h5 class="mb-0">Billing Address</h5>
                           </label>
                         </div>
-        
                       </div>
                       <div class="card-body">
                           <%= users.name %>             
@@ -541,6 +541,7 @@ $("#checkout-form").submit((e)=>{
                     </div>
                     <% } %>
                   <%})%>
+                  <% } %> 
               </div>
               <div class="col-md-6">
                   <div class="order_review">
@@ -643,13 +644,11 @@ $("#checkout-form").submit((e)=>{
       data:$('#checkout-form').serialize(),couponCode,userId,discountPrice,
       success:(response)=>{
         if(response.codSuccess){
-          Swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: 'Orders has been placed',
-            showConfirmButton: false,
-            timer: 1500
-          });
+          Swal.fire(
+          'Good job',
+          'You order is placed',
+          'success'
+          )
           setTimeout(()=>{
             location.href='/'
           },1500)
@@ -727,7 +726,10 @@ $("#checkout-form").submit((e)=>{
       method:'post',
       success:(response)=>{
         if(response.status == false){
-          alert("Inavalid coupon")
+          Swal.fire(
+          'Oops',
+          'You coupon is Invalid',
+          )
         }else{
            document.getElementById('totalAmount').innerHTML = response.total
         }

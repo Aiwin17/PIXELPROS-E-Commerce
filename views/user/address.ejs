@@ -1,6 +1,6 @@
-<%- include('../partials/user-header')%>
+<%#- include('../partials/user-header')%>
 <!--================Add Address Area =================-->
-  <section class="checkout_area padding_top">
+  <!-- <section class="checkout_area padding_top">
     <div class="container">
       <div class="billing_details">
         <div class="row">
@@ -25,12 +25,63 @@
               <div class="col-md-12 form-group p_star">
                 <input type="text" class="form-control" name="pincode"  placeholder="PIN code"/>
               </div>
-              <input type="text" name="userId" value="<%= user._id %>" hidden>
+              <input type="text" name="userId" value="<%#= user._id %>" hidden>
               <button type="submit" class="btn_3">Save</button>
             </form>
           </div>
         </div>
       </div>
     </div>
+  </section> -->
+  <%#- include('../partials/user-footer')%>
+
+
+
+  <%- include('../partials/custom-header')%>
+<main class="main">
+  <div class="page-header breadcrumb-wrap">
+      <div class="container">
+          <div class="breadcrumb">
+              <a href="index.html" rel="nofollow">Home</a>
+              <span></span> Shop
+              <span></span> Edit Address
+          </div>
+      </div>
+  </div>
+  <section class="mt-50 mb-50">
+      <div class="container">
+          <div class="row">
+              <div class="col-md-6">
+                  <div class="mb-25">
+                      <h4>Add Address</h4>
+                  </div>
+                  <form action="/address" method="post">
+                      <div class="form-group">
+                          <input type="text" required="" name="name" placeholder="Full name *">
+                      </div>
+                      <div class="form-group">
+                          <input required="" type="number" name="number" placeholder="Mobile number*">
+                      </div>
+                      <div class="form-group">
+                          <input type="text" name="address" required="" placeholder="Address *">
+                      </div>
+                      <div class="form-group">
+                          <input required="" type="text" name="country" placeholder="Country *">
+                      </div>
+                      <div class="form-group">
+                          <input required="" type="text" name="district" placeholder="District *">
+                      </div>
+                      <div class="form-group">
+                          <input required="" type="text" name="pincode" placeholder="PIN code *">
+                      </div>
+                      <div class="form-group">
+                        <button class="btn btn-success" type="submit" class="btn_3">Save</button>
+                    </div>
+                  <input type="text" name="userId" value="<%= user._id %>" hidden>
+                  </form>
+              </div>
+          </div>
+      </div>
   </section>
-  <%- include('../partials/user-footer')%>
+</main>
+<%- include('../partials/custom-footer')%>

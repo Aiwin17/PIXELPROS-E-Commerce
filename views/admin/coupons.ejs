@@ -58,31 +58,38 @@
             </div> <!-- table-responsive //end -->
         </div> <!-- card-body end// -->
     </div> <!-- card end// -->
-    <div class="pagination-area mt-15 mb-50">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-start">
-                <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                <li class="page-item"><a class="page-link" href="#">02</a></li>
-                <li class="page-item"><a class="page-link" href="#">03</a></li>
-                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                <li class="page-item"><a class="page-link" href="#">16</a></li>
-                <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
-            </ul>
-        </nav>
-    </div>
 </section>
 <script>
-  function deleteCoupons(id){
-    $.ajax({
-      url:`/admin/delete-coupons/${id}`,
-      method:'get',
-      success:(response)=>{
-        if(response.status){
-          location.reload()
-        }
-      }
-    })
-  }
+    function deleteCoupons(id) {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              url: `/admin/delete-coupons/${id}`,
+              method: 'get',
+              success: (response) => {
+                if(response.status){
+                Swal.fire(
+                  'Deleted!',
+                  'Your file has been deleted.',
+                  'success'
+                );
+                setTimeout(() => {
+                  location.reload();
+                }, 2000);
+              }
+            }
+            });
+          }
+        });
+    }      
 </script>
 <%- include("../partials/admin-footer") %>
 

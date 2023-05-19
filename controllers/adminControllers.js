@@ -11,8 +11,13 @@ module.exports = {
       res.redirect("/admin/login");
     }
   },
-  getHome: (req, res) => {
-    res.render("admin/index");
+  getHome: async(req, res) => {
+    let order = await productsHelpers.getAllOrders()
+    let orderCount = order.length ?? 0
+    let totalA = await adminHelpers.totalRev()
+    let total = totalA[0]?.total ?? 0
+    let products = await productsHelpers.productCount() ?? 0
+    res.render("admin/index",{orderCount, products, total});
   },
   getLogin: (req, res) => {
     if (req.session.admin) {
@@ -49,7 +54,7 @@ module.exports = {
   postProduct: (req, res) => {
     let image = req.files;
     productsHelpers.addProduct(req.body, image, () => {
-      res.redirect("/admin/add-products");
+      res.redirect("/admin/view-products");
     });
   },
   getEdit: (req, res) => {
@@ -92,14 +97,17 @@ module.exports = {
     });
   },
   getCategory: (req, res) => {
-    res.render("admin/admin-categories");
+    let categoryErr = ""
+    res.render("admin/admin-categories",{categoryErr});
   },
   postCategories: (req, res) => {
+    console.log(req.body);
     productsHelpers.addCategories(req.body).then((response) => {
       if(response.status){
-        res.redirect("/admin/category-list")
+        let categoryErr = "Category Already Exist"
+        res.render("admin/admin-categories",{categoryErr})
       }else{
-        res.redirect("/admin/add-categories");
+        res.redirect("/admin/category-list");
       }
     });
   },
@@ -162,7 +170,7 @@ module.exports = {
   },
   postAddCoupons: async (req, res) => {
     await productsHelpers.createCoupon(req.body).then(() => {
-      res.redirect("/admin/add-coupon");
+      res.redirect("/admin/coupons");
     });
   },
   getCoupon: async (req, res) => {
@@ -181,6 +189,7 @@ module.exports = {
     let id = req.params.id;
     await userHelpers.getOrderProducts(id).then(async (orderDetails) => {
       await adminHelpers.getOrder(id).then((userDetails) => {
+        console.log(userDetails,'///////');
         res.render("admin/view-order-details", { userDetails, orderDetails });
       });
     });
@@ -189,5 +198,19 @@ module.exports = {
     let orderStatistics = await adminHelpers.getOrdrStatistics();
     let saleStatistics = await adminHelpers.getSaleStatistics();
     res.json({ orderStatistics,saleStatistics});
+  },
+  getSalesReport:async(req,res)=>{
+    await adminHelpers.getAllOrders().then((orders) => {
+      res.render("admin/view-salesreport", { orders });
+    });
+  },
+  viewReportByDate: async (req, res) => {
+    try {
+      const { startDate, endDate } = req.body;
+      const orders = await adminHelpers.getReport(startDate, endDate);
+      res.render("admin/view-salesreport", { orders });
+    } catch (err) {
+      console.error(err);
+    }
   },
 };

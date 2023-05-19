@@ -263,7 +263,7 @@
                                       <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
                                   </li>
                                   <li class="nav-item">
-                                      <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rs-shopping-cart-check mr-10"></i>Track Your Order</a>
+                                      <!-- <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rs-shopping-cart-check mr-10"></i>Track Your Order</a> -->
                                   </li>
                                   <li class="nav-item">
                                       <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rs-marker mr-10"></i>My Address</a>
@@ -310,7 +310,7 @@
                                                   <tbody>
                                                     <% orders.forEach(order => { %>
                                                       <tr>
-                                                          <td><%= order._id %></td>
+                                                          <td><%= order.orderid %></td>
                                                           <td><%= new Date(order.date).toLocaleDateString('en-GB', {
                                                             day: '2-digit',
                                                             month: '2-digit',
@@ -335,7 +335,7 @@
                                       </div>
                                   </div>
                               </div>
-                              <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
+                              <!-- <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
                                   <div class="card">
                                       <div class="card-header">
                                           <h5 class="mb-0">Orders tracking</h5>
@@ -359,25 +359,42 @@
                                           </div>
                                       </div>
                                   </div>
-                              </div>
+                              </div> -->
                               <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">                                  
                                   <div class="row">
-                                    <% user.address.forEach(users => { %>
-                                        <% if (!users.deleted) { %>
-                                      <div class="col-lg-6">
-                                          <div class="card mb-3 mb-lg-0">
-                                              <div class="card-header">
-                                                  <h5 class="mb-0">Billing Address</h5>
-                                              </div>
-                                              <div class="card-body">
-                                                  <address><%= users.name %><br><%= users.number %><br><%= users.address %><br><%= users.country %><br><%= users.district %></address>
-                                                  <p><%= users.pincode %></p>
-                                                  <a href="/edit-address?id=<%= users._id %>" class="btn-small">Edit</a>
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <% } %>
-                                      <% }) %>
+                                    <% if (user.address) { %>
+                                        <% user.address.forEach((users) => { %>
+                                            <% if (!users.deleted) { %>
+                                                <div class="col-lg-6">
+                                                    <div class="card mb-3 mb-lg-0">
+                                                        <div class="card-header">
+                                                            <h5 class="mb-0">Billing Address</h5>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <address>
+                                                                <%= users.name %><br>
+                                                                <%= users.number %><br>
+                                                                <%= users.address %><br>
+                                                                <%= users.country %><br>
+                                                                <%= users.district %>
+                                                            </address>
+                                                            <p><%= users.pincode %></p>
+                                                            <a href="/edit-address?id=<%= users._id %>" class="btn-small">Edit</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <% } %>
+                                        <% }) %>
+                                        <div>
+                                            <a href="/address" class="btn btn-success ">Add Address</a>
+                                       </div>
+                                    <% } else { %>
+                                        <div>
+                                             <a href="/address" class="btn btn-success ">Add Address</a>
+                                        </div>
+                                    <% } %>
+                                    
+                            
                                       <!-- <div class="col-lg-6">
                                           <div class="card">
                                               <div class="card-header">
@@ -466,6 +483,6 @@
         }
       })
     }
-  </script>
+</script>
 <%- include('../partials/custom-footer')%>
 

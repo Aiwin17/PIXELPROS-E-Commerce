@@ -6,7 +6,7 @@
             <div class="content-header">
                 <h2 class="content-title">Edit Products</h2>
                 <div>
-                    <button type="submit" class="btn btn-success rounded font-sm mr-5 text-body">Save</button>
+                    <button type="submit" onclick="return validateForm()" class="btn btn-success rounded font-sm mr-5 text-body">Save</button>
                     
                 </div>
             </div>
@@ -17,6 +17,7 @@
                     <div class="mb-4">
                         <label for="product_title" class="form-label" ></label>
                         <input type="text" placeholder="Type here" class="form-control" name="productname" id="product_title" value="<%=product.name%>">
+                        <span id="name-error" class="validation" style="color: rgb(255, 0, 0)"></span>
                     </div>
                     <div class="row gx-3">
                     </div>
@@ -24,18 +25,23 @@
                         <label for="product_sku" class="form-label"></label>
                         <select name="category"  class="form-control" >
                             <% category.forEach(categories => { %>
-                                <option><%= categories.name.category %></option>
+                                <option name="category"><%= categories.name %></option>
                             <% }) %>
                         </select>
                       </div>
+                      <div class="col-md-4  mb-3">
+                        <label for="product_color" class="form-label"></label>
+                        <input type="number" placeholder="Quantity" value="<%= product.stock %>" name="quantity" class="form-control" id="quantity">
+                        <span id="price-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                    </div>
                 </div>
             </div> 
             <div class="card mb-4">
                 <div class="card-body">
                     <div>
-                
                         <textarea placeholder="Type"  name="description" value="<%=product.description%>" class="form-control"><%=product.description%>
                         </textarea>
+                        <span id="description-error" class="validation" style="color: rgb(255, 0, 0)"></span>
                     </div>
                 </div>
                 <!-- <div class="col-lg-1 col-sm-2 col-4 col-date">
@@ -58,6 +64,7 @@
                     <div class="mb-4">
                         <label class="form-label"></label>
                         <input type="text" placeholder="Type here" name="price" value=" <%=product.price%>" class="form-control">
+                        <span id="price-error" class="validation" style="color: rgb(255, 0, 0)"></span>
                     </div>
                 </div>
             </div>
@@ -65,5 +72,54 @@
     </form>
     </div>
 </section>
+<script>
+    const nameError = document.getElementById("name-error");
+    const submitError = document.getElementById("submit-error");
+    const descriptionError = document.getElementById("description-error")
+    const priceError = document.getElementById("price-error");
+  
+  
+    function validateName() {
+      var name = document.getElementById("name").value;
+      if (name.length == 0) {
+        nameError.innerHTML = "Name is required";
+        return false;
+      }
+      nameError.innerHTML = "";
+      return true;
+    }
+  
+    function validatePrice(){
+      const priceValue = document.getElementById("price").value;
+      if (priceValue == "") {
+          priceError.innerHTML = "Price is required";
+          return false;
+        }
+        priceError.innerHTML = "";
+        return true;
+    }
+  
+    function validateDescription() {
+      var description = document.getElementById("description").value;
+      if (description.length == 0) {
+        description.innerHTML = "Description is required";
+        return false;
+      }
+      descriptionError.innerHTML = "";
+      return true;
+    }
+  
+    function validateForm() {
+      if (!validateName() || !validatePrice() || !validateDescription()) {
+        submitError.style.display = "flex";
+        submitError.style.justifyContent = "center";
+        submitError.innerHTML = "Enter valid details";
+        setTimeout(() => {
+          submitError.style.display = "none";
+        }, 3000);
+        return false;
+      }
+    }
+  </script>
 <%- include('../partials/admin-footer')%>
 

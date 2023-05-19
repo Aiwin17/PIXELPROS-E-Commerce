@@ -1,75 +1,97 @@
 <%- include('../partials/custom-header')%>
 <main class="main">
   <section class="mt-50 mb-50">
-      <div class="container">
-          <div class="row">
-              <div class="col-12" id="container_content">
-                <div>
-                <h2>ORDER DETAILS</h2>
-                 </div>
-                  <div class="table-responsive">
-                    
-                    <table class="table shopping-summery text-center">
-                      <thead>
-                          <tr class="main-heading">
-                              <th scope="col">Name</th>
-                              <th scope="col">MobileNo</th>
-                              <th scope="col">PaymentMethod</th>
-                              <th scope="col">Status</th>
-                              <th scope="col">Address</th>
-                              <th scope="col">PinCode</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                        <% orders.forEach(order => { %>
-                          <tr>
-                              <td>
-                                  <h5><%= order.deliveryDetails.name %></h5>
-                              </td>
-                              <td class="price" data-title="Price"><span><%= order.deliveryDetails.mobile %></span></td>
-                              <td class="price" data-title="Price"><span><%= order.paymentMethod %></span></td>
-                              <td class="price" data-title="Price"><span><%= order.status %></span></td>
-                              <td class="price" data-title="Price"><span><%= order.deliveryDetails.address %></span></td>
-                              <td class="price" data-title="Price"><span><%= order.deliveryDetails.pincode %></span></td>
-                        <% }) %>
-                      </tbody>
-                  </table>
-                      <table class="table shopping-summery text-center">
-                          <thead>
-                              <tr class="main-heading">
-                                  <th scope="col" colspan="2">Product</th>
-                                  <th scope="col">Quantity</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                            <% orderDetails.forEach(orders => { %>
-                              <tr>
-                                  <td class="image product-thumbnail"><img src="/images/<%= orders.product.image[0] %>"></td>
-                                  <td class="product-des product-name">
-                                      <h5 class="product-name"><a href="shop-product-right.html"><%= orders.product.name %></a></h5>
-                                      <p class="font-xs"><%= orders.product.description %><br>
-                                      </p>
-                                  </td>
-                                  <td class="price" data-title="Price"><span><%= orders.quantity %></span></td>
-                                  
-                                  <!-- <td class="text-center" data-title="Stock">
-                                      <span class="color3 font-weight-bold">In Stock</span>
-                                  </td> -->
-                              </tr>
-                              <% }) %>
-                          </tbody>
-                      </table>
-              </div>
-              <button
-              class="btn"
-              style="background-color: white; color: black"
-              id="download">Download Invoice
-           </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-12" id="container_content">
+          <div>
+            <h2>ORDER DETAILS</h2>
           </div>
+          <div class="table-responsive">
+            <table class="table shopping-summery text-center">
+              <thead>
+                <tr class="main-heading">
+                  <th scope="col">Name</th>
+                  <th scope="col">MobileNo</th>
+                  <th scope="col">PaymentMethod</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Address</th>
+                  <th scope="col">PinCode</th>
+                  <th scope="col">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% orders.forEach(order => { %>
+                <a
+                  href="/download-invoice/<%= order._id %>"
+                  class="btn"
+                  style="background-color: white; color: black"
+                  id="download"
+                  >Download Invoice</a
+                >
+                <tr>
+                  <td>
+                    <h5><%= order.deliveryDetails.name %></h5>
+                  </td>
+                  <td class="price" data-title="Price">
+                    <span><%= order.deliveryDetails.mobile %></span>
+                  </td>
+                  <td class="price" data-title="Price">
+                    <span><%= order.paymentMethod %></span>
+                  </td>
+                  <td class="price" data-title="Price">
+                    <span><%= order.status %></span>
+                  </td>
+                  <td class="price" data-title="Price">
+                    <span><%= order.deliveryDetails.address %></span>
+                  </td>
+                  <td class="price" data-title="Price">
+                    <span><%= order.deliveryDetails.pincode %></span>
+                  </td>
+                  <td class="price" data-title="Price">
+                    <span><%= order.totalAmount %></span>
+                  </td>
+                  <% }) %>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table shopping-summery text-center">
+              <thead>
+                <tr class="main-heading">
+                  <th scope="col" colspan="2">Product</th>
+                  <th scope="col">Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% orderDetails.forEach(products => { %>
+                <tr>
+                  <td class="image product-thumbnail">
+                    <img src="/images/<%= products.product.image[0] %>" />
+                  </td>
+                  <td class="product-des product-name">
+                    <h5 class="product-name">
+                      <a href="shop-product-right.html"
+                        ><%= products.product.name %></a
+                      >
+                    </h5>
+                    <p class="font-xs">
+                      <%= products.product.description %><br />
+                    </p>
+                  </td>
+                  <td class="price" data-title="Price">
+                    <span><%= products.quantity %></span>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
+    </div>
   </section>
 </main>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
     window.onload = function () {
       document.getElementById("download").addEventListener("click", () => {
@@ -78,8 +100,6 @@
         console.log(window);
         html2pdf().from(invoice).save();
       });
-    };
-  </script>
+};
+  </script> -->
 <%- include('../partials/custom-footer')%>
-
-

@@ -1,0 +1,145 @@
+<%- include('../partials/admin-header') %>
+<section class="content-main">
+  <div class="content-header">
+    <div>
+      <h2 class="content-title card-title">Sales Report.</h2>
+      <p></p>
+    </div>
+    <div>
+      <a
+        href="#"
+        class="btn btn-primary"
+        onclick="createReport(); event.preventDefault();"
+        ><i class="text-muted material-icons md-post_add"></i>Create report</a
+      >
+    </div>
+  </div>
+  <div class="card mb-4">
+    <header class="card-header">
+      <div class="row gx-3">
+        <!-- <div class="col-lg-4 col-md-6 me-auto">
+          <input type="text" placeholder="Search..." class="form-control" />
+        </div>
+        <div class="col-lg-2 col-6 col-md-3">
+          <select class="form-select">
+            <option>Status</option>
+            <option>Active</option>
+            <option>Disabled</option>
+            <option>Show all</option>
+          </select>
+        </div> -->
+      </div>
+    </header>
+    <form method="POST" action="/admin/sales-report">
+      <label for="start-date">Start Date:</label>
+      <input type="date" id="start-date" name="startDate" />
+
+      <label for="end-date">End Date:</label>
+      <input type="date" id="end-date" name="endDate" />
+
+      <button class="btn btn-primary" type="submit">Filter</button>
+    </form>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table id="myTable" class="table table-hover display">
+          <thead>
+            <tr>
+              <th>#Order Id</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Payment Method</th>
+              <th scope="col">Status</th>
+              <th scope="col">Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orders.forEach(function(order) { %>
+            <tr>
+              <td><%= order.orderid %></td>
+              <!-- <td><b><%#= order?.user_id %></b></td> -->
+              <td>&#x20B9;<%= order.totalAmount %></td>
+              <td><%= order.paymentMethod %></td>
+              <td>
+                <% if (order.status === "placed") { %>
+                <span class="badge rounded-pill bg-primary">
+                  <%= order.status %>
+                </span>
+                <!-- <#% } else if (order.order_status === "Shipped") { %>
+                <span class="badge rounded-pill bg-success">
+                  <#%= order.order_status %>
+                </span> -->
+                <% } else if (order.status === "Order Cancelling") { %>
+                <span class="badge rounded-pill bg-danger">
+                  <%= order.status %>
+                </span>
+                <% } else if (order.status === "Order Returned") { %>
+                  <span class="badge rounded-pill bg-danger">
+                    <%= order.status %>
+                  </span>
+                <% }else if (order.status === "Delivered") { %>
+                  <span class="badge rounded-pill bg-primary">
+                    <%= order.status %>
+                  </span>
+                <% } %>
+              </td>
+              <td>
+                <%= new Date(order.date).toLocaleDateString('en-GB', {
+                day: '2-digit', month: '2-digit', year: 'numeric', hour:
+                '2-digit', minute: '2-digit', }).replace(/\//g, '-') %>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  function createReport() {
+    // Show SweetAlert popup
+    Swal.fire({
+      title: "Select report format",
+      icon: "info",
+      showCancelButton: true,
+      cancelButtonText: "Cancel",
+      confirmButtonText: "Create",
+      html:
+        '<select id="reportFormat">' +
+        '<option value="pdf">PDF</option>' +
+        '<option value="excel">Excel</option>' +
+        "</select>",
+      preConfirm: function () {
+        // Get selected option value
+        var reportFormat = document.getElementById("reportFormat").value;
+        // Get start and end dates
+  
+        // Make AJAX call based on selected option and date range
+        let data = document.getElementById("myTable");
+  
+        switch (reportFormat) {
+          case "pdf":
+            var opt = {
+              margin: 0,
+              filename: "Sales_Report.pdf",
+              html2canvas: { scale: 10 },
+            };
+  
+            html2pdf().set(opt).from(data).save();
+            break;
+          case "excel":
+            // Generate Excel file
+            var fp = XLSX.utils.table_to_book(data, { sheet: "CamHeaven" });
+            XLSX.write(fp, {
+              bookType: "xlsx",
+              type: "base64",
+            });
+            XLSX.writeFile(fp, "Sales_Report.xlsx");
+            break;
+          default:
+            console.log("Invalid report format");
+        }
+      },
+    });
+  }
+</script>
+<%- include('../partials/admin-footer')%>

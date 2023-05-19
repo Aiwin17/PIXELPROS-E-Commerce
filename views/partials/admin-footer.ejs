@@ -12,6 +12,11 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 
+<!--  sales-report cdn-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.3/dist/xlsx.full.min.js"></script>
+
+
 <script>
     $(document).ready(function() {
         $('#example').dataTable({
@@ -50,10 +55,8 @@
                   );
                   setTimeout(()=>{
                     location.reload()
-                  },5000)
-                  
+                  },5000) 
                 }
-              
               }
             });
           } else if (result.dismiss === Swal.DismissReason.cancel) {
