@@ -2,10 +2,10 @@
 <section class="content-main">
     <div class="content-header">
         <div>
-            <h2 class="content-title card-title">Order List </h2>
+            <h2 class="content-title card-title">Categories</h2>
         </div>
         <div>
-            <a class="btn btn-success text-light" href="/admin/add-categories">Add Category</a>
+            <a class="btn btn-primary" href="/admin/add-categories">Add Category</a>
         </div>
     </div>
     <div class="card mb-4">
@@ -31,7 +31,6 @@
                     <thead>
                         <tr>
                             <th scope="col">Name</th>
-                            <th scope="col">Status</th>
                             <th scope="col" > Action </th>
                         </tr>
                     </thead>
@@ -40,11 +39,9 @@
                         <% if (!category.Deleted) { %>
                             <tr>
                                 <td><b><%= category.name %></b></td>
-                               
-                                <td><span class="badge rounded-pill alert-warning">Active</span></td>
                                 <td>
-                                    <a href="/admin/edit-category/<%= category._id %>" class="btn btn-info rounded font-sm">Edit</a>
-                                    <!-- <a class="btn btn-danger rounded font-sm" href="/admin/delete-category/<#%= category._id %>">Delete</a> -->
+                                    <a href="/admin/edit-category/<%= category._id %>" id="editCategory" class="btn btn-info rounded font-sm">Edit</a>
+                                    <a class="btn btn-danger rounded font-sm" href="/admin/remove-category/<%= category._id %>">Unlist</a>
                                 </td>
                             </tr>
                         <% } %>

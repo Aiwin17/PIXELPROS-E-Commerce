@@ -1,13 +1,13 @@
-var db = require("../config/connection");
-var collection = require("../config/collections");
+const db = require("../config/connection");
+const collection = require("../config/collections");
 const bcrypt = require("bcrypt");
 const { ObjectID } = require("bson");
-var objectId = require("mongodb").ObjectId;
+const objectId = require("mongodb").ObjectId;
 const twilio = require("../twilio");
 const Razorpay = require("razorpay");
 const { name } = require("ejs");
 const { resolve } = require("path");
-var instance = new Razorpay({
+const instance = new Razorpay({
   key_id: process.env.KEY_ID,
   key_secret: process.env.KEY_SECRET,
 });
@@ -80,7 +80,6 @@ module.exports = {
     });
   },
   getUserDetails: (mobile_no) => {
-    console.log(typeof mobile_no);
     return new Promise(async (resolve, reject) => {
       let user = await 
       db.get().collection(collection.USER_COLLECTION).find({ mobileno: mobile_no });
@@ -98,7 +97,6 @@ module.exports = {
     });
   },
   verifyOtp: (otp, mobileno) => {
-    console.log(otp, mobileno);
     otp = otp.join("");
     return new Promise(async (resolve, reject) => {
       let result = await twilio.verifyOtp(mobileno, otp);
@@ -303,12 +301,10 @@ module.exports = {
           },
         ])
         .toArray();
-      console.log(total[0]?.total);
       resolve(total[0]?.total);
     });
   },
-  placeOrder: (order, products, total, userId) => {
-    console.log(products);
+  placeOrder: (order, products, total, userId,walletAmount) => {
     let quantity = products.quantity;
     return new Promise(async (resolve, reject) => {
       let address = await db
@@ -328,7 +324,7 @@ module.exports = {
         );
       let orderId = "ODID" + Math.floor(Math.random() * 1000000);
       let status =
-        order.payment_option === "COD" || order.payment_option === "razorpay"
+        order.payment_option === "COD" || order.payment_option === "razorpay" || order.payment_option === "wallet"
           ? "placed"
           : "Order Failed";
       let orderObj = {
@@ -342,7 +338,7 @@ module.exports = {
         userId: objectId(userId),
         paymentMethod: order.payment_option,
         products: products,
-        totalAmount: total,
+        totalAmount: Number(total),
         status: status,
         date: new Date(),
       };
@@ -366,6 +362,16 @@ module.exports = {
             resolve(response.insertedId);
           });
       } else {
+        if (order.payment_option === "wallet") {
+          await db.get().collection(collection.USER_COLLECTION).updateOne(
+            { _id: new objectId(userId) },
+            {
+              $inc: {
+                wallet: -total
+              }
+            }
+          );
+        }
         await products.forEach((i) => {
           db.get()
             .collection(collection.PRODUCT_COLLECTION)
@@ -374,7 +380,12 @@ module.exports = {
               { $inc: { stock: -i.quantity } }
             );
         });
-
+        // await db.get().collection(collection.USER_COLLECTION).updateOne({_id:new objectId(userId)},
+        // {
+        //   $set:{
+        //     wallet:Number(walletAmount) 
+        //   }
+        // })
         db.get()
           .collection(collection.ORDER_COLLECTION)
           .insertOne(orderObj)
@@ -393,8 +404,8 @@ module.exports = {
         .get()
         .collection(collection.CART_COLLECTION)
         .findOne({ user: objectId(userId) });
-      console.log(cart.products, "///////////////////////////////////////");
-      resolve(cart.products);
+        resolve(cart.products);
+      
     });
   },
   getUserOrders: (userId) => {
@@ -568,12 +579,8 @@ module.exports = {
     });
   },
   removeCart: (cartDetails) => {
-    console.log(cartDetails);
     let cartID = cartDetails.cartId;
     let proID = cartDetails.proId;
-
-    // console.log(cartDetails,'[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[');
-
     return new Promise(async (resolve, reject) => {
       await db
         .get()
@@ -623,7 +630,6 @@ module.exports = {
     });
   },
   editAddress: (addressDetails, addressId) => {
-    console.log(addressDetails, addressId);
     return new Promise(async (resolve, reject) => {
       await db
         .get()
@@ -649,7 +655,6 @@ module.exports = {
     });
   },
   deleteAddress: (addressId) => {
-    console.log(addressId);
     return new Promise(async (resolve, reject) => {
       await db
         .get()
@@ -677,7 +682,6 @@ module.exports = {
         .find()
         .toArray()
         .then((coupon) => {
-          console.log(coupon);
           resolve(coupon);
         });
     });
@@ -691,9 +695,7 @@ module.exports = {
       };
       instance.orders.create(options, function (err, order) {
         if (err) {
-          console.log(err);
         } else {
-          console.log(order);
           resolve(order);
         }
       });
@@ -745,8 +747,6 @@ module.exports = {
         let expiryDate = new Date(checkCoupon[0].expiry_date);
         const date = new Date(checkCoupon[0].expiry_date);
         checkCoupon[0].expiry_date = date;
-        console.log(checkCoupon[0].expiry_date);
-        console.log(newDate);
         let user = await db
           .get()
           .collection(collection.COUPON_COLLECTION)
@@ -932,7 +932,6 @@ module.exports = {
     });
   },
   removeWishlist: (wishlistDetails) => {
-    console.log(wishlistDetails);
     let wishlistId = wishlistDetails.wishListId;
     let proID = wishlistDetails.proId;
 
@@ -955,4 +954,22 @@ module.exports = {
         });
     });
   },
+  searchproducts:(searchedProduct)=>{
+    let product = searchedProduct.search
+    return new Promise(async (resolve,reject)=>{
+      let products=await db.get().collection(collection.PRODUCT_COLLECTION).find({name:product}).toArray()
+      resolve(products)
+    })
+  },
+  viewTotalProduct : (pageNum, limit) => {
+    let skipNum = parseInt((pageNum - 1) * limit);
+    return new Promise(async (resolve, reject) => {
+      try {
+        let products = await db.get().collection(collection.PRODUCT_COLLECTION).find().skip(skipNum).limit(limit).toArray();
+        resolve(products);
+      } catch (error) {
+        reject(error);
+      }
+    });
+},
 };

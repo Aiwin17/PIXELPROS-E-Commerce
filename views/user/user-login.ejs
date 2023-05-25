@@ -75,6 +75,11 @@
                                 </div>
                                 <form action="/login" method="post">
                                     <div class="form-group">
+                                        <% if (loginErr) { %>
+                                         <p class="text-danger">Invalid Credentials</p>
+                                        <% } %>
+                                    </div>
+                                    <div class="form-group">
                                         <input type="text" required="" name="email" id="email" placeholder="Your Email">
                                     </div>
                                     <div class="form-group">

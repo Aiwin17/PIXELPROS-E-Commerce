@@ -311,7 +311,7 @@
                                         </div>
                                     </td>
                                     <% let subTotal =product.product.price* product.quantity  %>
-                                    <td class="text-right" id="outOfStock<%= product.product._id %>" data-title="Cart"><% if (product.quantity>=product.product.stock) { %>
+                                    <td class="text-right" id="outOfStock<%= product.product._id %>" data-title="Cart"><% if (product.quantity>product.product.stock) { %>
                                     <span id="price<%= product.product._id %>"><%= subTotal %> <br><span class="noStock" style="color: red;">Out Of Stock</span></span>
                                     <% } else { %>
                                       <span id="price<%= product.product._id %>"><%= subTotal %></span>

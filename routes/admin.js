@@ -50,7 +50,7 @@ router.get('/category-list',adminControllers.getCategoryList)
 
 router.post('/edit-category/:id',adminControllers.postEditCategory)
 
-router.get('/delete-category/:id',adminControllers.postDeletecategory)
+router.get('/remove-category/:id',adminControllers.postRemovecategory)
 
 
 //Banners

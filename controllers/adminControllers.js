@@ -101,7 +101,6 @@ module.exports = {
     res.render("admin/admin-categories",{categoryErr});
   },
   postCategories: (req, res) => {
-    console.log(req.body);
     productsHelpers.addCategories(req.body).then((response) => {
       if(response.status){
         let categoryErr = "Category Already Exist"
@@ -150,18 +149,24 @@ module.exports = {
     });
   },
   getEditCategory: async (req, res) => {
+    let catErr =""
     let category = await productsHelpers.getCategory(req.params.id);
-    res.render("admin/edit-category", { category });
+    res.render("admin/edit-category", { category,catErr });
   },
   postEditCategory: async (req, res) => {
     let id = req.params.id;
-    await productsHelpers.editCategory(id, req.body).then(() => {
-      res.redirect("/admin/category-list");
+    await productsHelpers.editCategory(id, req.body).then((response) => {
+      if(!response.status){
+        let catErr = "Category already exist"
+        res.render("admin/edit-category",{catErr});
+      }else{
+        res.render
+      }
     });
   },
-  postDeletecategory: async (req, res) => {
+  postRemovecategory: async (req, res) => {
     let id = req.params.id;
-    await productsHelpers.deleteCategory(id).then(() => {
+    await productsHelpers.removeCategory(id).then(() => {
       res.redirect("/admin/category-list");
     });
   },
@@ -175,7 +180,6 @@ module.exports = {
   },
   getCoupon: async (req, res) => {
     await productsHelpers.getCouponsList().then((coupons) => {
-      console.log(coupons);
       res.render("admin/coupons", { coupons });
     });
   },
@@ -189,7 +193,6 @@ module.exports = {
     let id = req.params.id;
     await userHelpers.getOrderProducts(id).then(async (orderDetails) => {
       await adminHelpers.getOrder(id).then((userDetails) => {
-        console.log(userDetails,'///////');
         res.render("admin/view-order-details", { userDetails, orderDetails });
       });
     });

@@ -15,7 +15,12 @@
                     <form action="/admin/edit-category/<%= category._id %>" method="post">
                         <div class="mb-4">
                             <label for="product_name" class="form-label">Name</label>
-                            <input value="<%= category.name.category %>" type="text" placeholder="Type here" name ='category' class="form-control" id="product_name" />
+                            <input value="<%= category.name %>" type="text" placeholder="Type here" name ='category' class="form-control" id="product_name" />
+                        </div>
+                        <div>
+                            <% if (catErr) { %>
+                             <span style="color: red;"><%= catErr %></span>
+                            <% } %>
                         </div>
                         <!-- <div class="mb-4">
                             <label for="product_slug" class="form-label">Slug</label>

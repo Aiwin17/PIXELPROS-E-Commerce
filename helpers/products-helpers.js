@@ -1,10 +1,9 @@
-var db = require("../config/connection");
-var collection = require("../config/collections");
-var objectId = require("mongodb").ObjectId;
+const db = require("../config/connection");
+const collection = require("../config/collections");
+const objectId = require("mongodb").ObjectId;
 const product = require("../config/collections");
 module.exports = {
   addProduct: async (product, image, callback) => {
-    console.log(product);
     let imagesFiles = image.map((file) => file.filename);
     let categoryId = await db
       .get()
@@ -57,7 +56,6 @@ module.exports = {
             { projection: { _id: 1 } }
           )
           .toArray();
-        console.log(proDetails);
         db.get()
           .collection(collection.PRODUCT_COLLECTION)
           .updateOne(
@@ -223,23 +221,28 @@ module.exports = {
     });
   },
   editCategory: (categoryId, catDetails) => {
-    return new Promise((resolve, reject) => {
-      db.get()
+    console.log(catDetails,categoryId);
+    return new Promise(async(resolve, reject) => {
+      let cat = catDetails.category.toUpperCase();
+      let oldCategory = await db.get().collection(collection.CATEGORY_COLLECTION).find({name:cat})
+      if(oldCategory){
+        resolve({status:false})
+      }else{
+        await db.get()
         .collection(collection.CATEGORY_COLLECTION)
         .updateOne(
           { _id: objectId(categoryId) },
           {
             $set: {
-              "name.category": catDetails.category,
+              name: cat,
             },
           }
         )
-        .then(() => {
-          resolve(true);
-        });
+        resolve({status:true})
+      }
     });
   },
-  deleteCategory: (categoryId) => {
+  removeCategory: (categoryId) => {
     return new Promise((resolve, reject) => {
       db.get()
         .collection(collection.CATEGORY_COLLECTION)
@@ -255,8 +258,6 @@ module.exports = {
     });
   },
   createCoupon: (couponDetails) => {
-    console.log("This is coupon ", couponDetails.expirydate);
-
     return new Promise(async (resolve, reject) => {
       db.get()
         .collection(collection.COUPON_COLLECTION)
@@ -300,7 +301,6 @@ module.exports = {
     });
   },
   getAllProductOrders: (proId) => {
-    console.log(proId);
     return new Promise(async (resolve, reject) => {
       let products = await db
         .get()

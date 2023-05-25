@@ -588,8 +588,12 @@ $("#checkout-form").submit((e)=>{
                                   </tr> -->
                                   <tr>
                                       <th>Total</th>
-                                      <td colspan="2" class="product-subtotal"><span class="font-xl text-brand fw-900" id='totalAmount'><%= Total %></span></td>
+                                      <td colspan="2" class="product-subtotal"><span class="font-xl text-brand fw-900" id='totalAmount'>₹<%= Total %></span></td>
                                   </tr>
+                                  <tr>
+                                    <th>Wallet</th>
+                                    <td colspan="2" class="product-subtotal"><span class="font-xl text-brand fw-900" id='walletAmount'>₹<%= user.wallet %></span></td>
+                                </tr>
                               </tbody>
                           </table>
                       </div>
@@ -613,13 +617,32 @@ $("#checkout-form").submit((e)=>{
                                       <p class="text-muted mt-5">Please send your cheque to Store Name, Store Street, Store Town, Store State / County, Store Postcode. </p>
                                   </div>
                               </div>
-                              <div class="custome-radio">
-                                  <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios5" value="paypal" checked="">
-                                  <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">Paypal</label>
-                                  <div class="form-group collapse in" id="paypal">
+                              <!-- <div class="custome-checkbox">
+                                <input class="form-check-input" type="checkbox" id="exampleCheckbox"  value="wallet">
+                                <label class="form-check-label" for="exampleCheckbox" data-bs-toggle="collapse" data-target="#wallet" aria-controls="wallet" style="font-weight: 600; color: #292b2c">Wallet</label>
+                                <div class="form-group collapse in" id="wallet">
+                                    <p class="text-muted mt-5">Pay via PayPal; you can pay with your credit card if you don't have a PayPal account.</p>
+                                </div>
+                              </div> -->
+                              <% if (parseInt(Total) <= parseInt(user.wallet)) { %>
+                                <div class="custome-radio">
+                                  <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios5" value="wallet" checked="">
+                                  <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">Wallet</label>
+                                  <!-- <div class="form-group collapse in" id="paypal">
                                       <p class="text-muted mt-5">Pay via PayPal; you can pay with your credit card if you don't have a PayPal account.</p>
-                                  </div>
-                              </div>
+                                  </div> -->
+                                  <span style="color: red"></span>
+                                </div>   
+                              <% } else { %>
+                                <div class="custome-radio">
+                                  <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios5" value="wallet" checked="" disabled>
+                                  <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">Wallet</label>
+                                  <!-- <div class="form-group collapse in" id="paypal">
+                                      <p class="text-muted mt-5">Pay via PayPal; you can pay with your credit card if you don't have a PayPal account.</p>
+                                  </div> -->
+                                  <span style="color: red"><br>Insufficient Balance in wallet</span>
+                                </div>
+                              <% } %>
                           </div>
                       </div>
                       <button type="submit" id="checkout" class="btn btn-fill-out btn-block mt-30">Place Order</button>
@@ -636,12 +659,15 @@ $("#checkout-form").submit((e)=>{
   let couponCode = document.getElementById('applyCoupon').value
   let userId = document.getElementById('applyCoupon').value
   let discountPrice=parseInt(document.getElementById('totalAmount').innerText)
-
+  let total = document.getElementById('totalAmount').textContent
+  total =parseFloat(total.replace('₹', ''));
+  let walletTotal = document.getElementById('walletAmount').textContent
+  walletTotal =parseFloat(walletTotal.replace('₹', ''));
     e.preventDefault()
     $.ajax({
       url:'/place-order',
       method:'post',
-      data:$('#checkout-form').serialize(),couponCode,userId,discountPrice,
+      data: $('#checkout-form').serialize() + '&total=' + total + '&wallet=' + walletTotal,
       success:(response)=>{
         if(response.codSuccess){
           Swal.fire(
@@ -684,16 +710,15 @@ $("#checkout-form").submit((e)=>{
   };
   var rzp1 = new Razorpay(options);
   rzp1.on('payment.failed', function (response){
-    alert(response.error.code);
-    alert(response.error.description);
-    alert(response.error.source);
-    alert(response.error.step);
-    alert(response.error.reason);
-    alert(response.error.metadata.order_id);
-    alert(response.error.metadata.payment_id);
+    window.location.href = '/cart'
 })
-    rzp1.open();
+rzp1.on('payment.window.closed', function() {
+ 
+  window.location.href = '/cart'
+});
+   rzp1.open();
   }
+
   function verifyPayment(payment,order){
     $.ajax({
       url:'/verify-payment',
@@ -705,7 +730,7 @@ $("#checkout-form").submit((e)=>{
       success:(response)=>{
         console.log(response.status)
         if(response.status){
-          location.href='/order-success'
+          location.href='/'
         }else{
           alert("Payment Failed")
         }
@@ -747,6 +772,29 @@ $("#checkout-form").submit((e)=>{
       }
     })
   }
+  var checkbox = document.getElementById('exampleCheckbox');
+  let total = document.getElementById('totalAmount').textContent
+  total =parseFloat(total.replace('₹', ''));
+  let walletTotal = document.getElementById('walletAmount').textContent
+  walletTotal =parseFloat(walletTotal.replace('₹', ''));
+  checkbox.addEventListener('click', function() {
+      if(checkbox.checked){
+      let totalPrice = total-walletTotal
+      if(total<=walletTotal){
+      document.getElementById('totalAmount').textContent='₹0'
+    }else{
+        document.getElementById('totalAmount').textContent='₹ '+totalPrice
+      }
+      if(total>=walletTotal){
+        document.getElementById('walletAmount').textContent='₹0'
+      }else{
+        document.getElementById('walletAmount').textContent='₹ ' +Math.abs(totalPrice)
+      }
+    }else{
+      document.getElementById('totalAmount').textContent='₹ '+total
+       document.getElementById('walletAmount').textContent='₹ ' +walletTotal
+    }
+  });
   </script>
 <%- include('../partials/custom-footer')%>
 

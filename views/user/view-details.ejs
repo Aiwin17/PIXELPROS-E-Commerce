@@ -22,13 +22,15 @@
               </thead>
               <tbody>
                 <% orders.forEach(order => { %>
-                <a
-                  href="/download-invoice/<%= order._id %>"
-                  class="btn"
-                  style="background-color: white; color: black"
-                  id="download"
-                  >Download Invoice</a
-                >
+                  <% if (order.status==="Order Failed" || order.status==="Order Returning" || order.status==="Order Cancelling" || order.status==="Order Cancelled" || order.status==="Order Returned" ) { %>
+                  <% } else { %>
+                  <div style="text-align: right;">
+                    <a href="/download-invoice/<%= order._id %>"
+                      class="btn"
+                      style="background-color: white; color: black"
+                      id="download">Download Invoice</a>
+                  </div>
+                  <% } %>
                 <tr>
                   <td>
                     <h5><%= order.deliveryDetails.name %></h5>
@@ -51,7 +53,7 @@
                   <td class="price" data-title="Price">
                     <span><%= order.totalAmount %></span>
                   </td>
-                  <% }) %>
+                <% }) %>
                 </tr>
               </tbody>
             </table>

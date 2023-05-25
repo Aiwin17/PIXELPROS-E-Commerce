@@ -1,8 +1,8 @@
-var db = require("../config/connection");
-var collection = require("../config/collections");
+const db = require("../config/connection");
+const collection = require("../config/collections");
 const bcrypt = require("bcrypt");
 const { ObjectID } = require("bson");
-var objectId = require("mongodb").ObjectId;
+const objectId = require("mongodb").ObjectId;
 
 module.exports = {
   getAllUsers: () => {
@@ -59,13 +59,14 @@ module.exports = {
   postUpdateOrders: (status, orderId) => {
     return new Promise(async (resolve, reject) => {
       let orders = await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: objectId(orderId) });
+      let userId = orders.userId
+      let returnAmount = orders.totalAmount
       let products = orders.products;
       for (let i = 0; i < products.length; i++) {
         let product = products[i];
         let productDetails = await db.get()
           .collection(collection.PRODUCT_COLLECTION)
           .findOne({ _id: objectId(product.item) });
-        console.log(productDetails);
       }
   
       if (status === "placed") {
@@ -83,8 +84,40 @@ module.exports = {
           { _id: objectId(orderId) },
           {
             $set: {
-              status: "Order Cancelled"
+              status: "Order Cancelled",
             },
+          }
+        );
+        const result = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+          {
+            $match: {$and:[
+              { status: "Order Cancelled"}
+              ,{userId:userId}
+            ]
+            }
+          },
+          {
+            $group: {
+              _id: null,
+              totalAmount: { $sum: { $toInt: "$totalAmount" } }
+            }
+          },
+          {
+            $project: {
+              _id: 0,
+              totalAmount: 1
+            }
+          }
+        ]).toArray();
+        
+        const walletAmount = result.length > 0 ? result[0].totalAmount : 0;
+        
+        await db.get().collection(collection.USER_COLLECTION).updateOne(
+          { _id: userId },
+          {
+            $set: {
+              wallet: walletAmount
+            }
           }
         );
         for (let i = 0; i < products.length; i++) {
@@ -94,14 +127,46 @@ module.exports = {
             { $inc: { stock: product.quantity } }
           );
         }
-        resolve({ cancel: true });
+        resolve({ cancel:true });
       }else if(status === "Order Returning"){
         await db.get().collection(collection.ORDER_COLLECTION).updateOne(
           { _id: objectId(orderId) },
           {
             $set: {
-              status: "Order Returned"
+              status: "Order Returned",
             },
+          }
+        );
+        const result = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+          {
+            $match: {$and:[
+              { status: "Order Returned"}
+              ,{userId:userId}
+            ]
+            }
+          },
+          {
+            $group: {
+              _id: null,
+              totalAmount: { $sum: { $toInt: "$totalAmount" } }
+            }
+          },
+          {
+            $project: {
+              _id: 0,
+              totalAmount: 1
+            }
+          }
+        ]).toArray();
+        
+        const walletAmount = result.length > 0 ? result[0].totalAmount : 0;
+        
+        await db.get().collection(collection.USER_COLLECTION).updateOne(
+          { _id: userId },
+          {
+            $set: {
+              wallet: walletAmount
+            }
           }
         );
         for (let i = 0; i < products.length; i++) {
@@ -186,7 +251,6 @@ module.exports = {
             },
           }
         ]).toArray()
-        console.log(orders,'///////////////////');
         resolve(orders);
       } catch (err) {
         console.error(err);

@@ -7,8 +7,9 @@
                 <h2 class="content-title">Add New Product</h2>
                 <div>
                     <button class="btn btn-md rounded font-sm hover-up" type="submit">Publish</button>
-                </div>
+                <br>
                 <span id="submit-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                </div>
             </div>
         </div>
         <div class="col-lg-6">
@@ -57,16 +58,18 @@
                 <div class="card-body">
                     <div>
                         <label class="form-label">Images</label>
-                        <input class="form-control" name="image" type="file">
+                        <input class="form-control" name="image" id="image" type="file">
 
                         <label class="form-label">Images</label>
-                        <input class="form-control" name="image" type="file">
+                        <input class="form-control" name="image" id="image" type="file">
 
                         <label class="form-label">Images</label>
-                        <input class="form-control" name="image" type="file">
+                        <input class="form-control" name="image" id="image" type="file">
 
                         <label class="form-label" >Images</label>
-                        <input class="form-control" name="image" type="file">
+                        <input class="form-control" name="image" id="image" type="file">
+
+                        <span id="image-error" class="validation" style="color: rgb(255, 0, 0)"></span>
                     </div>
                 </div>
             </div> <!-- card end// -->
@@ -135,12 +138,14 @@
     const descriptionError = document.getElementById("description-error")
     const priceError = document.getElementById("price-error");
     const quantityerror = document.getElementById("quantity-error");
+    const imageError = document.getElementById("image-error")
     function validateForm() {
        let name = validateName()
        let price =  validatePrice()
        let description = validateDescription()
-        let quantity = validateQuantity()
-        if (!name || !price || !description || !quantity) {
+       let quantity = validateQuantity()
+       let image = validateImage()
+        if (!name || !price || !description || !quantity || !image) {
           submitError.style.display = "flex";
           submitError.style.justifyContent = "center";
           submitError.innerHTML = "Enter valid details";
@@ -157,6 +162,10 @@
         nameError.innerHTML = "Name is required";
         return false;
       }
+      else if(name.length > 10){
+        nameError.innerHTML = "Invalid Name"
+        return false
+      }
       nameError.innerHTML = "";
       return true;
     }
@@ -167,6 +176,10 @@
           priceError.innerHTML = "Price is required";
           return false;
         }
+      else if(priceValue <= 0){
+        priceError.innerHTML = "Invalid Price";
+        return false;
+      }
         priceError.innerHTML = "";
         return true;
     }
@@ -174,7 +187,7 @@
     function validateDescription() {
       var description = document.getElementById("description").value;
       if (description == "") {
-        description.innerHTML = "Description is required";
+        descriptionError.innerHTML = "Description is required";
         return false;
       }
       descriptionError.innerHTML = "";
@@ -183,15 +196,30 @@
     
     function validateQuantity() {
         var quantity = document.getElementById("quantity").value;
-        if (quantity.length == 0) {
-          quantity.innerHTML = "Quantity is required";
+        if(quantity < 0 ){
+            quantityerror.innerHTML = "Quantity cannot be a negative value"
+            return false
+        }
+        else if(quantity == 0){
+            quantityerror.innerHTML = "Quantity cannot be a zero"
+            return false
+        }
+        else if (quantity.length == 0) {
+          quantityerror.innerHTML = "Quantity is required";
           return false;
         }
         quantityerror.innerHTML = "";
         return true;
       }
-  
-   
-  </script>
+    function validateImage(){
+        const image = document.getElementById('image').value
+        if(image.length==0){
+            imageError.innerHTML = "Image is Required";
+            return false
+        }
+        imageError.innerHTML=""
+        return true
+    }
+</script>
 <%- include('../partials/admin-footer')%>
 

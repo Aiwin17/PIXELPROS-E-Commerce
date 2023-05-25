@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const usercontrollers = require('../controllers/userControllers')
 let {userSession,loginSession}=require('../middleware/session')
 router.use(usercontrollers.middleware)
@@ -135,6 +135,13 @@ router.post('/edit-profile/:id',usercontrollers.postEditProfile)
 router.get('/user-coupons',userSession,usercontrollers.getUserCoupons)
 
 router.post('/apply-coupon',usercontrollers.postApplyCoupon)
+
+
+//search
+
+router.post('/search',usercontrollers.postSearchProducts)
+
+router.get('/productPagination',usercontrollers.getPages)
 
 
 
