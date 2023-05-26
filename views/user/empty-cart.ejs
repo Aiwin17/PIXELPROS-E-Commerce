@@ -1,30 +1,65 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
-    <link rel="stylesheet" href="/userassets/css/emptycart.css">
-</head>
-<body>
-    <div class="container-fluid  mt-100">
-        <div class="row">
-           <div class="col-md-12">
-                   <div class="card">
-               <div class="card-header">
-               <h5>Cart</h5>
-               </div>
-               <div class="card-body cart">
-                       <div class="col-sm-12 empty-cart-cls text-center">
-                           <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3">
-                           <h3><strong>Your Cart is Empty</strong></h3>
-                           <h4>Add something to make me happy :</h4>
-                           <a href="/" class="btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping</a>
-                       </div>
-               </div>
+<%- include('../partials/custom-header')%>
+  <div class="mobile-header-active mobile-header-wrapper-style">
+    <div class="mobile-header-wrapper-inner">
+        <div class="mobile-header-top">
+            <div class="mobile-header-logo">
+                <a href="index.html"><img src="customassets/imgs/theme/logo.svg" alt="logo"></a>
             </div>
-           </div>
+            <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
+                <button class="close-style search-close">
+                    <i class="icon-top"></i>
+                    <i class="icon-bottom"></i>
+                </button>
+            </div>
         </div>
-       </div>
-</body>
-</html>
+        <div class="mobile-header-content-area">
+            <div class="mobile-search search-style-3 mobile-header-border">
+                <form action="#">
+                    <input type="text" placeholder="Search for items…">
+                    <button type="submit"><i class="fi-rs-search"></i></button>
+                </form>
+            </div>
+            <div class="mobile-menu-wrap mobile-header-border">
+            </div>
+            <div class="mobile-header-info-wrap mobile-header-border">
+                <div class="single-mobile-header-info mt-30">
+                    <a  href="page-contact.html"> Our location </a>
+                </div>
+                <div class="single-mobile-header-info">
+                    <a href="page-login-register.html">Log In / Sign Up </a>
+                </div>
+                <div class="single-mobile-header-info">
+                    <a href="#">(+01) - 2345 - 6789 </a>
+                </div>
+            </div>
+            <div class="mobile-social-icon">
+                <h5 class="mb-15 text-grey-4">Follow Us</h5>
+                <a href="#"><img src="customassets/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                <a href="#"><img src="customassets/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                <a href="#"><img src="customassets/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                <a href="#"><img src="customassets/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                <a href="#"><img src="customassets/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+            </div>
+        </div>
+    </div>
+</div>
+<main class="main">
+    <div class="page-header breadcrumb-wrap">
+    </div>
+    <section class="mt-50 mb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <img src="customassets/imgs/theme/icons/empty-cart.png" alt="" style="display: block; margin: 0 auto; max-width: 100%; height: auto;">
+                    </div>
+                    <h1 style="text-align: center; margin-top: 20px;">
+                        Your Cart is empty<br>
+                        <a class="btn btn-info" href="/">Continue Shopping</a>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<%- include('../partials/custom-footer')%>

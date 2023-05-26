@@ -327,7 +327,7 @@ module.exports = {
   },
   postAddress: async (req, res) => {
     let address = await userHelpers.addAddress(req.body);
-    res.redirect("/address");
+    res.redirect("/user-profile");
   },
   postOrderStatus: async (req, res) => {
     let orderId = req.body.orderId;
@@ -386,19 +386,25 @@ module.exports = {
     });
   },
   getEditAddress: async (req, res) => {
-    let user = req.session.user;
-    const address = user.address.find((item) => {
-      return item._id == req.query.id;
-    });
-    let wishlistCount = await userHelpers.getWishlistCount(req.session.userId);
-    let cartCount = await userHelpers.getCartCount(req.session.userId);
-    res.render("user/edit-address", {
-      user,
-      cartCount,
-      address,
-      wishlistCount,
-    });
+    try {
+      let user = req.session.user;
+      const address = user.address.find((item) => {
+        return item._id == req.query.id;
+      });
+      let wishlistCount = await userHelpers.getWishlistCount(req.session.userId);
+      let cartCount = await userHelpers.getCartCount(req.session.userId);
+      res.render("user/edit-address", {
+        user,
+        cartCount,
+        address,
+        wishlistCount,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("An error occurred. Please try again later.");
+    }
   },
+  
   postDeleteAddress: async (req, res) => {
     let id = req.params.id;
     await userHelpers.deleteAddress(id).then((response) => {
@@ -479,9 +485,6 @@ module.exports = {
       res.render("user/verify-otp-password", { mobile_no });
     });
   },
-  // getVerifyOtpChangePassword:(req,res)=>{
-  //     res.render('user/verify-otp-password',{user:false})
-  // },
   postVerifyOtpChangePassword: async (req, res) => {
     let mobileno = req.body.mobileNo;
     let otp = req.body.number;
@@ -548,11 +551,9 @@ module.exports = {
   downloadInvoice: async (req, res) => {
     try {
       const order_id = req.params.id;
-      // Generate the PDF invoice
       const order = await adminHelpers.getOrder(order_id);
       const productDetails = await userHelpers.getOrderProducts(order_id);
       const invoicePath = await generateInvoice(order, productDetails);
-      // Download the generated PDF
       res.download(invoicePath, (err) => {
         if (err) {
           res.render("../views/user/catchError", {

@@ -514,34 +514,38 @@ $("#checkout-form").submit((e)=>{
                   <div class="mb-25">
                       <h4>Billing Details</h4>
                   </div>
-                  <% if (user.address) { %>
-                  <% user.address.forEach(users => { %>
-                    <% if (!users.deleted) { %>
-                    <div class="card my-3 col-md-8">
-                      <div class="card-header d-flex">
-                        <div class="form-check">
-                          <input class="form-check-input" checked value="<%=users._id%>" type="radio" name="address" id="flexRadioDefault1" checked readonly />
-                          <label class="form-check-label" for="flexRadioDefault1">
-                            <h5 class="mb-0">Billing Address</h5>
-                          </label>
+                  <% if (user.address.length>0) { %>
+                    <% user.address.forEach(users => { %>
+                      <% if (!users.deleted) { %>
+                        <div class="card my-3 col-md-8">
+                          <div class="card-header d-flex">
+                            <div class="form-check">
+                              <input class="form-check-input" checked value="<%=users._id%>" type="radio" name="address" id="flexRadioDefault1" checked readonly />
+                              <label class="form-check-label" for="flexRadioDefault1">
+                                <h5 class="mb-0">Billing Address</h5>
+                              </label>
+                            </div>
+                          </div>
+                          <div class="card-body">
+                            <%= users.name %><br>
+                            <%= users.number %><br>
+                            <%= users.address %><br>
+                            <%= users.country %><br>
+                            <%= users.district %><br>
+                            <%= users.pincode %>
+                            <input type="text" name="userId" value="<%= users._id %>" hidden>
+                            <div class="d-flex mt-2">
+                              <a href="/edit-address?id=<%= users._id %>" type="button" class="btn btn-primary btn-small" data-toggle="modal" data-target="#editModal" data-whatever="@mdo" <a rel="modal:open" class="btn hover-up btn-small mx-1"><i class="fi-rs-edit"></i></a> ></a>
+                  
+                              <a onclick="deleteAddress('<%= users._id %>')" style="border-color: red ;" class="mx-1 btn btn-danger hover-up bg-danger btn-small"><i class="fi-rs-trash"></i></a>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      <div class="card-body">
-                          <%= users.name %>             
-                          <%= users.number %>
-                          <%= users.address %><br>
-                          <%= users.country %>   
-                          <input type="text" name="userId" value="<%= users._id %>" hidden> 
-                        <div class="d-flex mt-2">
-                          <a href="/edit-address?id=<%= users._id %>" type="button" class="btn btn-primary btn-small" data-toggle="modal" data-target="#editModal" data-whatever="@mdo" <a rel="modal:open" class="btn hover-up btn-small mx-1"><i class="fi-rs-edit"></i></a> ></a>
-        
-                          <a onclick="deleteAddress('<%= users._id %>')" style="border-color: red ;" class="mx-1 btn btn-danger hover-up bg-danger btn-small"><i class="fi-rs-trash"></i></a>
-                        </div>
-                      </div>
-                    </div>
-                    <% } %>
-                  <%})%>
-                  <% } %> 
+                        <% } %>
+                    <% }) %>
+                      <% } else { %>
+                        <a href="/address" class="btn btn-success">Add Address</a>
+                      <% } %>                 
               </div>
               <div class="col-md-6">
                   <div class="order_review">
@@ -588,11 +592,11 @@ $("#checkout-form").submit((e)=>{
                                   </tr> -->
                                   <tr>
                                       <th>Total</th>
-                                      <td colspan="2" class="product-subtotal"><span class="font-xl text-brand fw-900" id='totalAmount'>₹<%= Total %></span></td>
+                                      <td colspan="2" class="product-subtotal"><span name="total" class="font-xl text-brand fw-900" id='totalAmount'><%= Total %></span></td>
                                   </tr>
                                   <tr>
                                     <th>Wallet</th>
-                                    <td colspan="2" class="product-subtotal"><span class="font-xl text-brand fw-900" id='walletAmount'>₹<%= user.wallet %></span></td>
+                                    <td colspan="2" class="product-subtotal"><span class="font-xl text-brand fw-900" id='walletAmount'><%= user.wallet %></span></td>
                                 </tr>
                               </tbody>
                           </table>
@@ -645,7 +649,13 @@ $("#checkout-form").submit((e)=>{
                               <% } %>
                           </div>
                       </div>
+                      <% if (user.address.length>0) { %>
                       <button type="submit" id="checkout" class="btn btn-fill-out btn-block mt-30">Place Order</button>
+                      <% } else { %>
+                      <br>
+                      <span style="color: red;">Address required to proceed</span>
+                      <br><button  disabled class="btn btn-fill-out btn-block mt-30">Place Order</button>
+                      <% } %>
                   </div>
                 </form>
               </div>
@@ -756,6 +766,10 @@ rzp1.on('payment.window.closed', function() {
           'You coupon is Invalid',
           )
         }else{
+          Swal.fire(
+          'Success',
+          'Your coupon is Applied',
+          )
            document.getElementById('totalAmount').innerHTML = response.total
         }
       }

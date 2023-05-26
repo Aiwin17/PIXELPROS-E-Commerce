@@ -1,6 +1,6 @@
 <%- include('../partials/admin-header')%>
 <section class="content-main">
-    <form action="/admin/add-banner" method="post"  enctype="multipart/form-data" >
+    <form action="/admin/add-banner" method="post" onsubmit="return validateForm()" enctype="multipart/form-data" >
     <div class="row">
         <div class="col-6">
             <div class="content-header">
@@ -19,7 +19,8 @@
                             <div class="col-md-9">
                                 <div class="mb-4">
                                     <label class="form-label">Banner Name</label>
-                                    <input type="text" name="bannername" class="form-control" required>
+                                    <input type="text" name="bannername" id="banname" class="form-control">
+                                    <span style="color: red;" id="banname-error"></span>
                                 </div>
                             </div>
                     </div>
@@ -27,8 +28,9 @@
                     <div class="col-md-9">
                         <div class="mb-4">
                                 <label class="form-label">Images</label>
-                                <input class="form-control" name="image" type="file" required>
+                                <input class="form-control" name="image" type="file">
                         </div>
+                        <span style="color: red;" id="submit-error"></span>
                     </div>
                 </div>
             </div>
@@ -39,4 +41,31 @@
     </div>
 </form>
 </section>
+<script>
+    let bannerErr = document.getElementById('banname-error');
+    let submitError = document.getElementById('submit-error');
+    
+    function validateBannerName() {
+      let banname = document.getElementById('banname');
+      if (banname.value.length === 0) {
+        bannerErr.innerHTML = "Banner name is required";
+        return false;
+      }
+      bannerErr.innerHTML = "";
+      return true;
+    }
+    
+    function validateForm() {
+      let bannername = validateBannerName();
+      if (!bannername) {
+        submitError.style.display = "flex";
+        submitError.style.justifyContent = "center";
+        submitError.innerHTML = "Please fix all errors to submit";
+        setTimeout(() => {
+          submitError.style.display = "none";
+        }, 3000);
+        return false;
+      }
+    }
+  </script>
 <%- include('../partials/admin-footer')%>

@@ -22,7 +22,7 @@
               </thead>
               <tbody>
                 <% orders.forEach(order => { %>
-                  <% if (order.status==="Order Failed" || order.status==="Order Returning" || order.status==="Order Cancelling" || order.status==="Order Cancelled" || order.status==="Order Returned" ) { %>
+                  <% if (order.status==="placed" || order.status==="Order Failed" || order.status==="Order Returning" || order.status==="Order Cancelling" || order.status==="Order Cancelled" || order.status==="Order Returned" ) { %>
                   <% } else { %>
                   <div style="text-align: right;">
                     <a href="/download-invoice/<%= order._id %>"
@@ -93,15 +93,4 @@
     </div>
   </section>
 </main>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script>
-    window.onload = function () {
-      document.getElementById("download").addEventListener("click", () => {
-        let invoice = this.document.getElementById("container_content");
-        console.log(invoice);
-        console.log(window);
-        html2pdf().from(invoice).save();
-      });
-};
-  </script> -->
 <%- include('../partials/custom-footer')%>
