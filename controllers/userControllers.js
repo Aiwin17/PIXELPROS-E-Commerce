@@ -89,7 +89,6 @@ module.exports = {
   },
   postSignUp: async (req, res) => {
     let userExsist = await userHelpers.getOldUser(req.body.email);
-
     if (userExsist == undefined) {
       userHelpers.doSignup(req.body).then(() => {
         res.redirect("/login");
@@ -123,6 +122,7 @@ module.exports = {
   },
   getOtpLogin: async (req, res) => {
     let checkUser = req.query.user;
+    console.log(checkUser);
     if (checkUser) {
       res.render("user/otp-Login", { user: false, error: true });
     } else {
@@ -146,6 +146,7 @@ module.exports = {
     userHelpers
       .getUserDetails(mobile_no)
       .then((response) => {
+        console.log(response,mobile_no,'/////////////////////////////');
         if (resendCheck) {
           res.json({ status: true });
         } else {

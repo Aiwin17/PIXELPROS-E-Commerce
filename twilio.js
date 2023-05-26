@@ -26,6 +26,8 @@ module.exports = {
                 } else {
                     return false
                 }
+            }).catch(()=>{
+                console.log("Twilio error")
             })
     }
 }

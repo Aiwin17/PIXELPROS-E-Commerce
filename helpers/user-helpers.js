@@ -82,8 +82,9 @@ module.exports = {
   getUserDetails: (mobile_no) => {
     return new Promise(async (resolve, reject) => {
       let user = await 
-      db.get().collection(collection.USER_COLLECTION).find({ mobileno: mobile_no });
-      if (user) {
+      db.get().collection(collection.USER_COLLECTION).find({ mobileno: mobile_no }).toArray()
+      console.log(user);
+      if (user.length) {
         if (user.blocked) {
           reject(true);
           return;
