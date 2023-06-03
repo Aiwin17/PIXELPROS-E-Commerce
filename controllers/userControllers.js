@@ -246,6 +246,7 @@ module.exports = {
       });
   },
   postPlaceOrder: async (req, res) => {
+    console.log('//////////////');
     let userId = req.session.userId;
     let coupon = req.body.coupon;
     let totalPrice = req.body.total;

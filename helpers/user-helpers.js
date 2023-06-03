@@ -7,6 +7,7 @@ const twilio = require("../twilio");
 const Razorpay = require("razorpay");
 const { name } = require("ejs");
 const { resolve } = require("path");
+const { log } = require("console");
 const instance = new Razorpay({
   key_id: process.env.KEY_ID,
   key_secret: process.env.KEY_SECRET,
@@ -306,6 +307,7 @@ module.exports = {
     });
   },
   placeOrder: (order, products, total, userId,walletAmount) => {
+    console.log(order);
     let quantity = products.quantity;
     return new Promise(async (resolve, reject) => {
       let address = await db
