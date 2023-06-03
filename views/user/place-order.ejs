@@ -3,9 +3,6 @@
   <div class="page-header breadcrumb-wrap">
       <div class="container">
           <div class="breadcrumb">
-              <a href="index.html" rel="nofollow">Home</a>
-              <span></span> Shop
-              <span></span> Checkout
           </div>
       </div>
   </div>
@@ -15,7 +12,7 @@
             <form id="checkout-form">
               <div class="col-lg-6">
                   <div class="toggle_info">
-                      <span><i class="fi-rs-label mr-10"></i><span class="text-muted">Have a coupon?</span> <a href="#coupon" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here to enter your code</a></span>
+                      <span><i class="fi-rs-label mr-10"></i><span class="text-muted">Have a coupon?</span> <a data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here to enter your code</a></span>
                   </div>
                   <div class="panel-collapse collapse coupon_form " id="coupon">
                       <div class="panel-body">
@@ -52,8 +49,8 @@
                   <div class="mb-25">
                       <h4>Billing Details</h4>
                   </div>
-                  <% if (user.address.length>0) { %>
-                    <% user.address.forEach(users => { %>
+                  <% if (user?.address) { %>
+                    <% (user.address||[]).forEach(users => { %>
                       <% if (!users.deleted) { %>
                         <div class="card my-3 col-md-8">
                           <div class="card-header d-flex">
@@ -175,8 +172,8 @@
                               <% } %>
                           </div>
                       </div>
-                      <% if (placedProducts.some(product => product.stock <= 0 || user.address.length>0)) { %>
-                        <% if (user.address.length<0) { %>
+                      <% if (placedProducts.some(product => product.stock <= 0 || user?.address)) { %>
+                        <% if (user?.address) { %>
                           <button disabled class="btn btn-fill-out btn-block mt-30">Place Order</button>
                         <% } else if(placedProducts.some(product => product.stock <= 0)) { %>
                         <span style="color: red;">Out of stock</span>
