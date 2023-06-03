@@ -90,7 +90,7 @@ module.exports = {
           reject(true);
           return;
         } else {
-          // twilio.sendOtp(mobile_no);
+          twilio.sendOtp(mobile_no);
           resolve({ status: true });
         }
       } else {
