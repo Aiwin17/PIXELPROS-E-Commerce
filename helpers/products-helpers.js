@@ -29,7 +29,7 @@ module.exports = {
       let products = await db
         .get()
         .collection(collection.PRODUCT_COLLECTION)
-        .find({ Deleted: { $not: { $eq: true } } })
+        .find({ Deleted: { $not: { $eq: true } }, })
         .toArray();
       resolve(products);
     });
@@ -221,7 +221,6 @@ module.exports = {
     });
   },
   editCategory: (categoryId, catDetails) => {
-    console.log(catDetails,categoryId);
     return new Promise(async(resolve, reject) => {
       let cat = catDetails.category.toUpperCase();
       let oldCategory = await db.get().collection(collection.CATEGORY_COLLECTION).find({name:cat})

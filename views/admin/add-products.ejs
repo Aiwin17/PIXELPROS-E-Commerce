@@ -34,17 +34,9 @@
                             <input type="number" placeholder="Quantity" name="quantity" class="form-control" id="quantity">
                             <span id="quantity-error" class="validation" style="color: rgb(255, 0, 0)"></span>
                         </div>
-                        <!-- <div class="col-md-4  mb-3">
-                            <label for="product_size" class="form-label">Size</label>
-                            <input type="text" placeholder="Type here" class="form-control" id="product_size">
-                        </div> -->
                     </div>
-                    <!-- <div class="mb-4">
-                        <label for="product_brand" class="form-label">Brand</label>
-                        <input type="text" placeholder="Type here" name="Brand" class="form-control" id="product_brand">
-                    </div> -->
                 </div>
-            </div> <!-- card end// -->
+            </div>
             <div class="card mb-4">
                 <div class="card-body">
                     <div>
@@ -53,7 +45,7 @@
                         <span id="description-error" class="validation" style="color: rgb(255, 0, 0)"></span>
                     </div>
                 </div>
-            </div> <!-- card end// -->
+            </div>
             <div class="card mb-4">
                 <div class="card-body">
                     <div>
@@ -72,7 +64,7 @@
                         <span id="image-error" class="validation" style="color: rgb(255, 0, 0)"></span>
                     </div>
                 </div>
-            </div> <!-- card end// -->
+            </div>
         </div>
         <div class="col-lg-3">
             <div class="card mb-4">
@@ -82,52 +74,8 @@
                         <input type="text" placeholder="Type here" id="price" name="price" class="form-control">
                         <span id="price-error" class="validation" style="color: rgb(255, 0, 0)"></span>
                     </div>
-                    <!-- <div class="mb-4">
-                        <label class="form-label">Status</label>
-                        <select class="form-select">
-                            <option>Published</option>
-                            <option>Draft</option>
-                        </select>
-                    </div> -->
-                    <!-- <div class="mb-4">
-                        <label class="form-label">Tags</label>
-                        <input type="text" placeholder="Type here" class="form-control">
-                    </div>
-                    <a href="#" class="font-xs hover-up mr-15"><i class="font-xs material-icons md-close text-body"></i> Tech</a>
-                    <a href="#" class="font-xs hover-up mr-15"><i class="font-xs material-icons md-close text-body"></i> Mobile</a>
-                    <a href="#" class="font-xs hover-up mr-15"><i class="font-xs material-icons md-close text-body"></i> Apple</a>
-                    <hr> -->
-                    <!-- <h5 class="mb-3">Categories</h5>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="product-cat">
-                        <label class="form-check-label" for="product-cat"> Cameras </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="product-cat-1">
-                        <label class="form-check-label" for="product-cat-1"> Lenses </label>
-                    </div> -->
-                    <!-- <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="product-cat-2">
-                        <label class="form-check-label" for="product-cat-2"> Sneakers </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="product-cat-3">
-                        <label class="form-check-label" for="product-cat-3"> Joggers </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="product-cat-4">
-                        <label class="form-check-label" for="product-cat-4"> Vests </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="product-cat-5">
-                        <label class="form-check-label" for="product-cat-5"> Knitwear </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="product-cat-8">
-                        <label class="form-check-label" for="product-cat-8"> Shorts </label>
-                    </div> -->
                 </div>
-            </div> <!-- card end// -->
+            </div>
         </div>
     </div>
 </form>
@@ -155,7 +103,7 @@
           return false;
         }
         return true
-      }
+    }
     function validateName() {
       var name = document.getElementById("name").value;
       if (name.length == 0) {
@@ -183,7 +131,6 @@
         priceError.innerHTML = "";
         return true;
     }
-  
     function validateDescription() {
       var description = document.getElementById("description").value;
       if (description == "") {
@@ -210,7 +157,7 @@
         }
         quantityerror.innerHTML = "";
         return true;
-      }
+    }
     function validateImage(){
         const image = document.getElementById('image').value
         if(image.length==0){

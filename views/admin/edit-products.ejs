@@ -1,14 +1,15 @@
 <%- include('../partials/admin-header')%>
 <section class="content-main">
     <div class="row">
-        <form action="/admin/edit-products/<%=product._id%>" method="post" enctype="multipart/form-data">
+        <form action="/admin/edit-products/<%=product._id%>" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
         <div class="col-9">
             <div class="content-header">
                 <h2 class="content-title">Edit Products</h2>
                 <div>
-                    <button type="submit" onclick="return validateForm()" class="btn btn-success rounded font-sm mr-5 text-body">Save</button>
-                    
+                    <button type="submit" class="btn btn-success rounded font-sm mr-5 text-body">Save</button> 
                 </div>
+                <br>
+                <span id="submit-error" class="validation" style="color: rgb(255, 0, 0)"></span>
             </div>
         </div>
         <div class="col-lg-6">
@@ -16,7 +17,7 @@
                 <div class="card-body">
                     <div class="mb-4">
                         <label for="product_title" class="form-label" ></label>
-                        <input type="text" placeholder="Type here" class="form-control" name="productname" id="product_title" value="<%=product.name%>">
+                        <input type="text" placeholder="Type here" class="form-control" name="productname" id="name" value="<%=product.name%>">
                         <span id="name-error" class="validation" style="color: rgb(255, 0, 0)"></span>
                     </div>
                     <div class="row gx-3">
@@ -32,21 +33,18 @@
                       <div class="col-md-4  mb-3">
                         <label for="product_color" class="form-label"></label>
                         <input type="number" placeholder="Quantity" value="<%= product.stock %>" name="quantity" class="form-control" id="quantity">
-                        <span id="price-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                        <span id="quantity-error" class="validation" style="color: rgb(255, 0, 0)"></span>
                     </div>
                 </div>
             </div> 
             <div class="card mb-4">
                 <div class="card-body">
                     <div>
-                        <textarea placeholder="Type"  name="description" value="<%=product.description%>" class="form-control"><%=product.description%>
+                        <textarea placeholder="Type" id="description"  name="description" value="<%=product.description%>" class="form-control"><%=product.description%>
                         </textarea>
                         <span id="description-error" class="validation" style="color: rgb(255, 0, 0)"></span>
                     </div>
                 </div>
-                <!-- <div class="col-lg-1 col-sm-2 col-4 col-date">
-                    <span value=""></span>
-                </div> -->
             </div>
             <div class="card mb-4">
                 <img src="/images/<%=product.image[0]%>" class="m-2" style="width: 50px ;height: 50px;"  alt="">
@@ -63,7 +61,7 @@
                 <div class="card-body">
                     <div class="mb-4">
                         <label class="form-label"></label>
-                        <input type="text" placeholder="Type here" name="price" value=" <%=product.price%>" class="form-control">
+                        <input type="text" id="price" placeholder="Type here" name="price" value=" <%=product.price%>" class="form-control">
                         <span id="price-error" class="validation" style="color: rgb(255, 0, 0)"></span>
                     </div>
                 </div>
@@ -77,26 +75,33 @@
     const submitError = document.getElementById("submit-error");
     const descriptionError = document.getElementById("description-error")
     const priceError = document.getElementById("price-error");
-  
-  
+    const quantityerror = document.getElementById("quantity-error");
     function validateName() {
-      var name = document.getElementById("name").value;
-      if (name.length == 0) {
-        nameError.innerHTML = "Name is required";
-        return false;
-      }
-      nameError.innerHTML = "";
-      return true;
-    }
-  
-    function validatePrice(){
-      const priceValue = document.getElementById("price").value;
-      if (priceValue == "") {
-          priceError.innerHTML = "Price is required";
+        var name = document.getElementById("name").value;
+        if (name.length == 0) {
+          nameError.innerHTML = "Name is required";
           return false;
         }
-        priceError.innerHTML = "";
+        else if(name.length > 10){
+          nameError.innerHTML = "Invalid Name"
+          return false
+        }
+        nameError.innerHTML = "";
         return true;
+      }
+  
+    function validatePrice(){
+        const priceValue = document.getElementById("price").value;
+        if (priceValue.length == 0) {
+            priceError.innerHTML = "Price is required";
+            return false;
+          }
+        else if(priceValue <= 0){
+          priceError.innerHTML = "Invalid Price";
+          return false;
+        }
+          priceError.innerHTML = "";
+          return true;
     }
   
     function validateDescription() {
@@ -108,18 +113,39 @@
       descriptionError.innerHTML = "";
       return true;
     }
-  
-    function validateForm() {
-      if (!validateName() || !validatePrice() || !validateDescription()) {
-        submitError.style.display = "flex";
-        submitError.style.justifyContent = "center";
-        submitError.innerHTML = "Enter valid details";
-        setTimeout(() => {
-          submitError.style.display = "none";
-        }, 3000);
-        return false;
-      }
+    function validateQuantity() {
+        var quantity = document.getElementById("quantity").value;
+        if(quantity <= 0 ){
+            quantityerror.innerHTML = "Quantity cannot be a negative value"
+            return false
+        }
+        else if(quantity == 0){
+            quantityerror.innerHTML = "Quantity cannot be a zero"
+            return false
+        }
+        else if (quantity.length == 0) {
+          quantityerror.innerHTML = "Quantity is required";
+          return false;
+        }
+        quantityerror.innerHTML = "";
+        return true;
     }
+    function validateForm() {
+        let name = validateName()
+        let price =  validatePrice()
+        let description = validateDescription()
+        let quantity = validateQuantity()
+         if (!name || !price || !description || !quantity) {
+           submitError.style.display = "flex";
+           submitError.style.justifyContent = "center";
+           submitError.innerHTML = "Enter valid details";
+           setTimeout(() => {
+             submitError.style.display = "none";
+           }, 3000);
+           return false;
+         }
+         return true
+     }
   </script>
 <%- include('../partials/admin-footer')%>
 

@@ -5345,12 +5345,12 @@ h6.post-title {
 }
 
 .logo.logo-width-1 {
-  margin-right: 123px;
+  margin-right: 200px;
 }
 
 .logo.logo-width-1 a img {
-  width: 120px;
-  min-width: 120px;
+  width: 80px;
+  min-width: 80px;
 }
 
 .search-style-1 form {
@@ -6461,7 +6461,7 @@ h6.post-title {
 }
 
 .header-style-2 .header-middle-ptb-1 {
-  padding: 35px 0;
+  padding: 30px 0;
 }
 
 .header-style-2 .select2-container {

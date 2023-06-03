@@ -127,8 +127,7 @@
             html2pdf().set(opt).from(data).save();
             break;
           case "excel":
-            // Generate Excel file
-            var fp = XLSX.utils.table_to_book(data, { sheet: "CamHeaven" });
+            var fp = XLSX.utils.table_to_book(data, { sheet: "mycamz" });
             XLSX.write(fp, {
               bookType: "xlsx",
               type: "base64",

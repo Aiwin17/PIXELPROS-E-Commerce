@@ -95,9 +95,10 @@ router.get('/delete-coupons/:id',adminControllers.getDeleteCoupons)
 
 router.get('/graph-statics',adminControllers.getGraphStatics)
 
+
 //SalesReport
 
-router.get('/view-sales-report',adminControllers.getSalesReport)
+router.get('/view-sales-report',adminControllers.verifyLogin,adminControllers.getSalesReport)
 
 router.post('/sales-report',adminControllers.verifyLogin,adminControllers.viewReportByDate)
 

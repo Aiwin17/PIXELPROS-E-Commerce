@@ -1,96 +1,130 @@
 <%- include('../partials/custom-header')%>
-<main class="main">
-  <section class="mt-50 mb-50">
-    <div class="container">
-      <div class="row">
-        <div class="col-12" id="container_content">
-          <div>
-            <h2>ORDER DETAILS</h2>
+<section class="h-100 gradient-custom">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-lg-10 col-xl-8">
+        <div class="card" style="border-radius: 10px;">
+          <div class="card-header px-4 py-5">
+            <h5 class="text-muted mb-0">Thanks for your Order, <span style="color: #a8729a;"><%#=user.name%></span>!</h5>
           </div>
-          <div class="table-responsive">
-            <table class="table shopping-summery text-center">
-              <thead>
-                <tr class="main-heading">
-                  <th scope="col">Name</th>
-                  <th scope="col">MobileNo</th>
-                  <th scope="col">PaymentMethod</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Address</th>
-                  <th scope="col">PinCode</th>
-                  <th scope="col">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% orders.forEach(order => { %>
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <p class="lead fw-normal mb-0" style="color: #a8729a;">Receipt</p>
+              <!-- <p class="small text-muted mb-0">Receipt Voucher : 1KAU9-84UIL</p> -->
+            </div>
+            <div class="card shadow-0 border mb-4">
+              <div class="card-body">
+                <% orderDetails.forEach(products => { %>
+                <div class="row">
+                  <div class="col-md-2">
+                    <a href="/product-lists?id=<%= products.product._id %>"><img src="/images/<%= products.product.image[0] %>" class="img-fluid" alt="Phone"></a>
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0"><%= products.product.name %></p>
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">Qty:<%= products.quantity %></p>
+                  </div>
+                </div>
+                <% }); %>
+                <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
+                <div class="row d-flex align-items-center">
+                  <div class="col-md-2">
+                    <p class="text-muted mb-0 small">Track Order</p>
+                  </div>
+                  <div class="col-md-10">
+                    <div class="progress" style="height: 6px; border-radius: 16px;">
+                      <div id="progress-bar" class="progress-bar" role="progressbar" style="border-radius: 16px; background-color: #a8729a;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="d-flex justify-content-around mb-1">
+                      <p class="text-muted mt-1 mb-0 small ms-xl-5">Packed & ready to ship</p>
+                      <p class="text-muted mt-1 mb-0 small ms-xl-5">Out for delivery</p>
+                      <p class="text-muted mt-1 mb-0 small ms-xl-5">Delivered</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% orders.forEach(order => { %>
+            <div class="d-flex justify-content-between pt-2">
+              <p class="fw-bold mb-0">Order Details</p>
+              <p class="text-muted mb-0"><span class="fw-bold me-4">Total</span>₹<%= order.totalAmount %>
+              </p>
+            </div>
+            <div class="d-flex justify-content-between pt-2">
+              <p class="text-muted mb-0">Customer name :<%= order.deliveryDetails.name %></p>
+            </div>
+            <div class="d-flex justify-content-between pt-2">
+              <p class="text-muted mb-0">Mobile Number :<%= order.deliveryDetails.mobile %></p>
+              <!-- <p class="text-muted mb-0"><span class="fw-bold me-4">Discount</span> $19.00</p> -->
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <p class="text-muted mb-0">Payment Method :<%= order.paymentMethod %></p>
+              <!-- <p class="text-muted mb-0"><span class="fw-bold me-4">GST 18%</span> 123</p> -->
+            </div>
+            <% }) %>
+            <div class="d-flex justify-content-between mb-5">
+              <p class="text-muted mb-0"><span class="fw-bold me-4">Delivery Charges</span> Free</p>
+            </div>
+          </div>
+          <div class="card-footer border-0 px-4 py-5" style="background-color: #fff; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+            <% orders.forEach(order => { %>
                   <% if (order.status==="placed" || order.status==="Order Failed" || order.status==="Order Returning" || order.status==="Order Cancelling" || order.status==="Order Cancelled" || order.status==="Order Returned" ) { %>
                   <% } else { %>
-                  <div style="text-align: right;">
-                    <a href="/download-invoice/<%= order._id %>"
-                      class="btn"
-                      style="background-color: white; color: black"
-                      id="download">Download Invoice</a>
-                  </div>
-                  <% } %>
-                <tr>
-                  <td>
-                    <h5><%= order.deliveryDetails.name %></h5>
-                  </td>
-                  <td class="price" data-title="Price">
-                    <span><%= order.deliveryDetails.mobile %></span>
-                  </td>
-                  <td class="price" data-title="Price">
-                    <span><%= order.paymentMethod %></span>
-                  </td>
-                  <td class="price" data-title="Price">
-                    <span><%= order.status %></span>
-                  </td>
-                  <td class="price" data-title="Price">
-                    <span><%= order.deliveryDetails.address %></span>
-                  </td>
-                  <td class="price" data-title="Price">
-                    <span><%= order.deliveryDetails.pincode %></span>
-                  </td>
-                  <td class="price" data-title="Price">
-                    <span><%= order.totalAmount %></span>
-                  </td>
-                <% }) %>
-                </tr>
-              </tbody>
-            </table>
-            <table class="table shopping-summery text-center">
-              <thead>
-                <tr class="main-heading">
-                  <th scope="col" colspan="2">Product</th>
-                  <th scope="col">Quantity</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% orderDetails.forEach(products => { %>
-                <tr>
-                  <td class="image product-thumbnail">
-                    <img src="/images/<%= products.product.image[0] %>" />
-                  </td>
-                  <td class="product-des product-name">
-                    <h5 class="product-name">
-                      <a href="shop-product-right.html"
-                        ><%= products.product.name %></a
-                      >
-                    </h5>
-                    <p class="font-xs">
-                      <%= products.product.description %><br />
-                    </p>
-                  </td>
-                  <td class="price" data-title="Price">
-                    <span><%= products.quantity %></span>
-                  </td>
-                </tr>
-                <% }) %>
-              </tbody>
-            </table>
+                    <div style="text-align: right;">
+                      <a href="/download-invoice/<%= order._id %>" style="background-color: white; color: black"  class="btn-dark btn-lg" data-bs-target="#staticBackdrop">Download Invoice</a>
+                    </div>
+                    <% } %>
+            <% }) %>
           </div>
+          <!-- Modal HTML -->
+          <!-- <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" id="staticBackdrop">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Reason</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="card mx-auto card-login">
+                    <div class="card-body">
+                      <form>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="return" id="wrong-product" value="Wrong product received">
+                          <label class="form-check-label" for="wrong-product">Wrong product received</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="return" id="defective-product" value="Defective product">
+                          <label class="form-check-label" for="defective-product">Defective product</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="return" id="incorrect-size-color" value="Incorrect size or color">
+                          <label class="form-check-label" for="incorrect-size-color">Incorrect size or color</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="return" id="shipping-damage" value="Shipping damage">
+                          <label class="form-check-label" for="shipping-damage">Shipping damage</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="return" id="incorrect-size" value="Duplicate order">
+                          <label class="form-check-label" for="incorrect-size">Duplicate order</label>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button class="btn-info btn-lg">Return</button>
+                </div>
+              </div>
+            </div>
+          </div>  -->
         </div>
       </div>
     </div>
-  </section>
-</main>
+  </div>
+  </div>
+</section>
 <%- include('../partials/custom-footer')%>

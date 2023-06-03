@@ -139,9 +139,9 @@ router.post('/apply-coupon',usercontrollers.postApplyCoupon)
 
 //search
 
-router.post('/search',usercontrollers.postSearchProducts)
+router.post('/search',userSession,usercontrollers.postSearchProducts)
 
-router.get('/productPagination',usercontrollers.getPages)
+router.get('/productPagination',userSession,usercontrollers.getPages)
 
 
 

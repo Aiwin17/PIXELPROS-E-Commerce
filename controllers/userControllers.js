@@ -6,6 +6,7 @@ const db = require("../config/connection");
 const collection = require("../config/collections");
 const { response } = require("express");
 const { verifyOtp } = require("../twilio");
+const { getProducts } = require("./adminControllers");
 module.exports = {
   middleware: async (req, res, next) => {
     let category = await productHelpers.getAllCategories();
@@ -216,7 +217,10 @@ module.exports = {
     let userId = req.session.userId;
     let wishlistCount = await userHelpers.getWishlistCount(req.session.userId);
     let cartCount = await userHelpers.getCartCount(userId);
-    let products = await userHelpers.getCartProducts(req.session.userId);
+    let products = await userHelpers.getCartProductList(userId);
+    let orderProducts = products.map(i => i.item).join(',');
+    let placedProducts = await productHelpers.getProducts(orderProducts)
+    let coupons = await userHelpers.getAllCoupon()
     if (cartCount === 0) {
       res.redirect("/cart");
       return;
@@ -230,6 +234,9 @@ module.exports = {
             cartCount,
             Total,
             wishlistCount,
+            coupons,
+            products,
+            placedProducts
           });
         });
       })

@@ -109,17 +109,17 @@ module.exports = {
             }
           }
         ]).toArray();
-        
-        const walletAmount = result.length > 0 ? result[0].totalAmount : 0;
-        
-        await db.get().collection(collection.USER_COLLECTION).updateOne(
-          { _id: userId },
-          {
-            $set: {
-              wallet: walletAmount
+        if(orders.paymentMethod == 'razorpay' || orders.paymentMethod == 'wallet'){
+          const walletAmount = result.length > 0 ? result[0].totalAmount : 0;
+          await db.get().collection(collection.USER_COLLECTION).updateOne(
+            { _id: userId },
+            {
+              $set: {
+                wallet: walletAmount
+              }
             }
-          }
-        );
+          );
+        }
         for (let i = 0; i < products.length; i++) {
           let product = products[i];
           await db.get().collection(collection.PRODUCT_COLLECTION).updateOne(
@@ -158,17 +158,17 @@ module.exports = {
             }
           }
         ]).toArray();
-        
-        const walletAmount = result.length > 0 ? result[0].totalAmount : 0;
-        
-        await db.get().collection(collection.USER_COLLECTION).updateOne(
-          { _id: userId },
-          {
-            $set: {
-              wallet: walletAmount
+        if(orders.paymentMethod == 'razorpay' || orders.paymentMethod == 'wallet'){
+          const walletAmount = result.length > 0 ? result[0].totalAmount : 0;
+          await db.get().collection(collection.USER_COLLECTION).updateOne(
+            { _id: userId },
+            {
+              $set: {
+                wallet: walletAmount
+              }
             }
-          }
-        );
+          );
+        }
         for (let i = 0; i < products.length; i++) {
           let product = products[i];
           await db.get().collection(collection.PRODUCT_COLLECTION).updateOne(
