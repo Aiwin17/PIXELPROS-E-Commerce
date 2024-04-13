@@ -1,72 +1,66 @@
 <%- include('../partials/admin-header')%>
-<section class="content-main">
+    <section class="content-main">
         <div class="content-header">
             <h2 class="content-title">Products</h2>
             <div>
                 <a href="/admin/add-products" class="btn btn-primary"><i class="material-icons"></i>Add Product</a>
             </div>
         </div>
-        <div class="card mb-4">
-            <header class="card-header">
-                <!-- <div class="row gx-3">
-                    <div class="col-lg-4 col-md-6 me-auto">
-                        <input type="text" placeholder="Search..." class="form-control">
+        <% if(products.length===0) { %>
+            <h3 style="display: flex; justify-content: center; align-items: center;">No Products</h3>
+            <% } else { %>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover display" id="example">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>Price</th>
+                                        <th>Category</th>
+                                        <th class="text-end"> Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% products?.forEach(product=> { %>
+                                        <tr>
+                                            <td width="40%">
+                                                <a href="#" class="itemside">
+                                                    <div class="left">
+                                                        <img src="/images/<%=product.image[0]%>"
+                                                            class="img-sm square-image" alt="Imagepic" type="file"
+                                                            name="image">
+                                                    </div>
+                                                </a>
+                                            </td>
+                                            <td name="productname">
+                                                <%= product.name %>
+                                            </td>
+                                            <td name="description">
+                                                <%- product.description.substring(0, 20) + "..." %>
+                                            </td>
+                                            <td name="price">
+                                                <%= product.price %>
+                                            </td>
+                                            <td><span class="badge alert-success">
+                                                    <%= product.category %>
+                                                </span></td>
+                                            <td class="text-end">
+                                                <a href="/admin/edit-products/<%=product?._id%>"
+                                                    class="btn btn-sm btn-brand rounded font-sm mt-15">Edit</a>
+                                                <a onclick="deleteProducts('<%=product._id%>');return false"
+                                                    class="btn btn-sm btn-danger rounded font-sm mt-15">Delete</a>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="col-lg-2 col-md-3 col-6">
-                        <select class="form-select">
-                            <option>Status</option>
-                            <option>Active</option>
-                            <option>Disabled</option>
-                            <option>Show all</option>
-                        </select>
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-6">
-                        <select class="form-select">
-                            <option>Show 20</option>
-                            <option>Show 30</option>
-                            <option>Show 40</option>
-                        </select>
-                    </div>
-                </div> -->
-            </header> <!-- card-header end// -->
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover display" id="example">
-                        <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Price</th>
-                                <th>Status</th>
-                                <th class="text-end"> Action </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% products.forEach(product => { %>
-                            <tr>
-                                <td width="40%">
-                                    <a href="#" class="itemside">
-                                        <div class="left">
-                                            <img src="/images/<%=product.image[0]%>" class="img-sm img-avatar square-image" alt="Imagepic" type="file" name="image">
-                                        </div>
-                                    </a>
-                                </td>
-                                <td name="productname"><%= product.name %></td>
-                                <td name="description"><%=product.description%></td>
-                                <td name="price"><%= product.price %></td>
-                                <td><span class="badge rounded-pill alert-success">Active</span></td>
-                                <td class="text-end">
-                                    <a href="/admin/edit-products/<%=product._id%>" class="btn btn-sm btn-brand rounded font-sm mt-15">Edit</a>
-                                    <a onclick="deleteProducts('<%=product._id%>');return false" class="btn btn-sm btn-danger rounded font-sm mt-15">Delete</a>
-                                </td>
-                            </tr>
-                            <% }) %>
-                        </tbody>
-                    </table>
+
                 </div>
-            </div>
-        </div>
-</section>
-<%- include("../partials/admin-footer") %>
-    
+                <% } %>
+    </section>
+    <%- include("../partials/admin-footer") %>

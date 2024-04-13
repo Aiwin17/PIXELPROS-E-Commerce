@@ -1,66 +1,56 @@
 <%- include('../partials/admin-header')%>
-<section class="content-main">
-    <div class="content-header">
-        <h2 class="content-title">Banners</h2>
-        <div>
-            <a href="/admin/add-banner" class="btn btn-primary"><i class="material-icons"></i>Add Banner</a>
-        </div>
-    </div>
-    <div class="card mb-4">
-        <header class="card-header">
-            <!-- <div class="row gx-3">
-                <div class="col-lg-4 col-md-6 me-auto">
-                    <input type="text" placeholder="Search..." class="form-control">
-                </div>
-                <div class="col-lg-2 col-md-3 col-6">
-                    <select class="form-select">
-                        <option>Status</option>
-                        <option>Active</option>
-                        <option>Disabled</option>
-                        <option>Show all</option>
-                    </select>
-                </div>
-                <div class="col-lg-2 col-md-3 col-6">
-                    <select class="form-select">
-                        <option>Show 20</option>
-                        <option>Show 30</option>
-                        <option>Show 40</option>
-                    </select>
-                </div>
-            </div> -->
-        </header>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover display" id="example">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th class="text-end"> Action </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% banner.forEach(ban => { %>
-                        <tr>
-                            <td width="40%">
-                                <a href="#" class="itemside">
-                                    <div class="left">
-                                        <img src="/images/<%=ban.image%>" class="img-sm img-avatar square-image" alt="Imagepic" type="file" name="image">
-                                    </div>
-                                </a>
-                            </td>
-                            <td name="productname" id="banname"><%= ban.name %></td>
-                            <span style="color: red;" id="banname-error"></span>
-                            <td class="text-end">
-                                <a href="/admin/edit-banners/<%= ban._id %>" class="btn btn-sm btn-brand rounded font-sm mt-15">Edit</a>
-                                <a href="/admin/delete-banners/<%= ban._id %>" onclick="deleteProducts('<%= ban._id %>');return false" class="btn btn-sm btn-danger rounded font-sm mt-15">unlist</a>
-                            </td>
-                        </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
+    <section class="content-main">
+        <div class="content-header">
+            <h2 class="content-title">Banners</h2>
+            <div>
+                <a href="/admin/add-banner" class="btn btn-primary"><i class="material-icons"></i>Add Banner</a>
             </div>
         </div>
-    </div>
-</section>
-<%- include("../partials/admin-footer") %>
+        <% if(banner.length===0) { %>
+            <h3 style="display: flex; justify-content: center; align-items: center;">No Banners</h3>
+            <% } else { %>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover display" id="example">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Name</th>
+                                        <th class="text-end"> Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% banner.forEach(ban=> { %>
+                                        <tr>
+                                            <td width="40%">
+                                                <a href="#" class="itemside">
+                                                    <div class="left">
+                                                        <img src="/images/<%=ban.image%>"
+                                                            class="img-sm img-avatar square-image" alt="Imagepic"
+                                                            type="file" name="image">
+                                                    </div>
+                                                </a>
+                                            </td>
+                                            <td name="productname" id="banname">
+                                                <%= ban.name %>
+                                            </td>
+                                            <span style="color: red;" id="banname-error"></span>
+                                            <td class="text-end">
+                                                <a href="/admin/edit-banners/<%= ban._id %>"
+                                                    class="btn btn-sm btn-brand rounded font-sm mt-15">Edit</a>
+                                                <a href="/admin/delete-banners/<%= ban._id %>"
+                                                    onclick="deleteProducts('<%= ban._id %>');return false"
+                                                    class="btn btn-sm btn-danger rounded font-sm mt-15">unlist</a>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+
+    </section>
+    <%- include("../partials/admin-footer") %>

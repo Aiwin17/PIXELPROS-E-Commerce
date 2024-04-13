@@ -1,149 +1,135 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const usercontrollers = require('../controllers/userControllers')
-let {userSession,loginSession}=require('../middleware/session')
-router.use(usercontrollers.middleware)
-
+const usercontrollers = require("../controllers/userControllers");
+let { userSession, loginSession } = require("../middleware/session");
+router.use(usercontrollers.middleware);
 
 //User Login And Logout
+router.get("/", usercontrollers.getHome);
 
-router.get('/',usercontrollers.getHome);
+router.get("/login", loginSession, usercontrollers.getLogin);
 
-router.get('/login',loginSession,usercontrollers.getLogin);
+router.post("/login", usercontrollers.postLogin);
 
-router.post('/login',usercontrollers.postLogin);
-
-router.get('/logout',usercontrollers.getLogout);
-
+router.get("/logout", usercontrollers.getLogout);
 
 //User SignUp
+router.get("/signup", loginSession, usercontrollers.getSignUp);
 
-router.get('/user-signup',loginSession,usercontrollers.getSignUp);
-
-router.post('/user-signup',usercontrollers.postSignUp);
-
+router.post("/signup", usercontrollers.postSignUp);
 
 //Shop Page
-
-router.get('/product-lists',usercontrollers.getProducts);
-
+router.get("/product-lists", usercontrollers.getAllProducts);
 
 //Otp Section
+router.get("/otp-Login", loginSession, usercontrollers.getOtpLogin);
 
-router.get('/otp-Login',loginSession,usercontrollers.getOtpLogin)
+router.post("/otp-login", usercontrollers.postOtpLogin);
 
-router.post('/otp-login',loginSession,usercontrollers.postOtpLogin)
+router.get("/verify-otp", loginSession, usercontrollers.getVerifyOtp);
 
-router.get('/verify-otp',loginSession,usercontrollers.getVerifyOtp)
+router.post("/verify-otp", usercontrollers.postVerifyOtp);
 
-router.post('/verify-otp',loginSession,usercontrollers.postVerifyOtp)
+router.get(
+  "/otp-changePassword",
+  loginSession,
+  usercontrollers.getOtpChangePassword
+);
 
-router.get('/otp-changePassword',usercontrollers.getOtpChangePassword)
+router.post("/otp-changePassword", usercontrollers.postOtpChangePassword);
 
-router.post('/otp-changePassword',usercontrollers.postOtpChangePassword)
+router.post("/mobileno-verify", usercontrollers.postVerifyNumber);
 
-router.post('/mobileno-verify',usercontrollers.postVerifyNumber)
+router.post(
+  "/verify-otp-password",
+  usercontrollers.postVerifyOtpChangePassword
+);
 
-router.post('/verify-otp-password',usercontrollers.postVerifyOtpChangePassword)
-
-router.post('/forgot-password',usercontrollers.postUpdatePassword)
-
+router.post("/forgot-password", usercontrollers.postUpdatePassword);
 
 //Cart Section
+router.get("/cart", userSession, usercontrollers.getCart);
 
-router.get('/cart',userSession,usercontrollers.getCart)
+router.get("/add-to-cart", userSession, usercontrollers.getaddToCart);
 
-router.get('/add-to-cart',userSession,usercontrollers.getaddToCart)
+router.post("/change-product-quantity", usercontrollers.postProQuantity);
 
-router.post('/change-product-quantity',usercontrollers.postProQuantity)
-
-router.post('/remove-cart',usercontrollers.postRemoveCart)
-
+router.post("/remove-cart", usercontrollers.postRemoveCart);
 
 //WishList
+router.get("/wishlist", userSession, usercontrollers.getWishlist);
 
-router.get('/wishlist',userSession,usercontrollers.getWishlist)
+router.get("/add-to-wishList", userSession, usercontrollers.getaddToWishlist);
 
-router.get('/add-to-wishList',userSession,usercontrollers.getaddToWishlist)
-
-router.post('/remove-wishlist',userSession,usercontrollers.postRemoveWishlist)
-
+router.post(
+  "/remove-wishlist",
+  userSession,
+  usercontrollers.postRemoveWishlist
+);
 
 //PlaceOrder
+router.get("/place-order", userSession, usercontrollers.getPlaceOrder);
 
-router.get('/place-order',userSession,usercontrollers.getPlaceOrder)
+router.post("/place-order", usercontrollers.postPlaceOrder);
 
-router.post('/place-order',usercontrollers.postPlaceOrder)
-
-router.post('/verify-payment',usercontrollers.postVerifyPayment)
-
-
+router.post("/verify-payment", usercontrollers.postVerifyPayment);
 
 //Orders
+router.get("/order-success", userSession, usercontrollers.getOrderSuccess);
 
-router.get('/order-success',userSession,usercontrollers.getOrderSuccess)
+router.get("/orders", userSession, usercontrollers.getOrders);
 
-router.get('/orders',userSession,usercontrollers.getOrders)
+router.post("/change-status-order", usercontrollers.postOrderStatus);
 
-router.post('/change-status-order',usercontrollers.postOrderStatus)
+router.get("/view-Order-products", userSession, usercontrollers.getViewOrders);
 
-router.get('/view-Order-products',userSession,usercontrollers.getViewOrders)
+router.get("/view-details", userSession, usercontrollers.getViewDetails);
 
-router.get('/view-details',userSession,usercontrollers.getViewDetails)
-
-router.get('/download-invoice/:id',userSession,usercontrollers.downloadInvoice)
-
-
+router.get(
+  "/download-invoice/:id",
+  userSession,
+  usercontrollers.downloadInvoice
+);
 
 //Category
+router.get("/single-product/:id", usercontrollers.getSingleProduct);
 
-router.get('/product-list',usercontrollers.getProductList)
+router.post("/category-products", usercontrollers.postCategoryProducts);
 
-router.post('/category-products',usercontrollers.postCategoryProducts)
-
-router.get('/category-lists',usercontrollers.getCategoryLists)
-
+router.get("/category-lists", usercontrollers.getCategoryLists);
 
 //Address
 
-router.get('/address',userSession,usercontrollers.getAddress)
+router.get("/address", userSession, usercontrollers.getAddress);
 
-router.post('/address',usercontrollers.postAddress)
+router.post("/address", usercontrollers.postAddress);
 
-router.get('/user-address/:id',userSession,usercontrollers.getUserAddress)
+router.get("/user-address/:id", userSession, usercontrollers.getUserAddress);
 
-router.get('/edit-address',usercontrollers.getEditAddress)
+router.get("/edit-address", usercontrollers.getEditAddress);
 
-router.post('/edit-address',usercontrollers.postEditAddress)
+router.post("/edit-address", usercontrollers.postEditAddress);
 
-router.post('/delete-address/:id',usercontrollers.postDeleteAddress)
-
+router.post("/delete-address/:id", usercontrollers.postDeleteAddress);
 
 //User-Profile
+router.get("/user-profile", userSession, usercontrollers.getUserProfile);
 
-router.get('/user-profile',userSession,usercontrollers.getUserProfile)
+router.post("/user-profile", usercontrollers.postEditProfile);
 
-router.post('/user-profile',usercontrollers.postEditProfile)
+router.get("/edit-profile/:id", usercontrollers.getEditProfile);
 
-router.get('/edit-profile/:id',usercontrollers.getEditProfile)
-
-router.post('/edit-profile/:id',usercontrollers.postEditProfile)
-
+router.post("/edit-profile/:id", usercontrollers.postEditProfile);
 
 //Coupons
+router.get("/user-coupons", userSession, usercontrollers.getUserCoupons);
 
-router.get('/user-coupons',userSession,usercontrollers.getUserCoupons)
-
-router.post('/apply-coupon',usercontrollers.postApplyCoupon)
-
+router.post("/apply-coupon", usercontrollers.postApplyCoupon);
 
 //search
+router.post("/search", userSession, usercontrollers.postSearchProducts);
 
-router.post('/search',userSession,usercontrollers.postSearchProducts)
-
-router.get('/productPagination',userSession,usercontrollers.getPages)
-
-
+router.get("/productPagination", userSession, usercontrollers.getPages);
 
 // router.get('/verify-otp-password',usercontrollers.getVerifyOtpChangePassword)
 // router.get('/product-lists',usercontrollers.getAllProducts)

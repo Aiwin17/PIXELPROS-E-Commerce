@@ -1,3 +1,6 @@
+<footer class="main-footer font-xs">
+</footer>
+</main>
 <script src="/adminassets/js/vendors/jquery-3.6.0.min.js"></script>
 <script src="/adminassets/js/vendors/bootstrap.bundle.min.js"></script>
 <script src="/adminassets/js/vendors/select2.min.js"></script>
@@ -16,58 +19,62 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.3/dist/xlsx.full.min.js"></script>
 
-
 <script>
-    $(document).ready(function() {
-        $('#example').dataTable({
-            "paging": true,   // enable pagination
-            "ordering": true, // enable sorting
-            "searching": true // enable searching
-        });
+  $(document).ready(function () {
+    $('#example').dataTable({
+      "paging": true,   // enable pagination
+      "ordering": true, // enable sorting
+      "searching": true // enable searching
     });
-    function deleteProducts(id){
-        const swalWithBootstrapButtons = Swal.mixin({
-          customClass: {
-            confirmButton: 'btn btn-success',
-            cancelButton: 'btn btn-danger'
-          },
-          buttonsStyling: false
-        });
-        swalWithBootstrapButtons.fire({
-          title: 'Are you sure?',
-          text: "You won't be able to revert this!",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Yes, delete it!',
-          cancelButtonText: 'No, cancel!',
-          reverseButtons: true
-        }).then((result) => {
-          if (result.isConfirmed) {
-            $.ajax({
-              url:`/admin/delete-products/${id}`,
-              method:"get",
-              success:function (response){
-                if(response){
-                  swalWithBootstrapButtons.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                  );
-                  setTimeout(()=>{
-                    location.reload()
-                  },5000) 
-                }
-              }
-            });
-          } else if (result.dismiss === Swal.DismissReason.cancel) {
-            swalWithBootstrapButtons.fire(
-              'Cancelled',
-              'Your imaginary file is safe :)',
-              'error'
-            );
+  });
+  function deleteProducts(id) {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: false
+    });
+    swalWithBootstrapButtons.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: `/admin/delete-products/${id}`,
+          method: "get",
+          success: function (response) {
+            if (response) {
+              swalWithBootstrapButtons.fire(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+              );
+              setTimeout(() => {
+                location.reload()
+              }, 2000)
+            }
           }
         });
-    }
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        swalWithBootstrapButtons.fire(
+          'Cancelled',
+          'Your imaginary file is safe :)',
+          'error'
+        );
+      }
+    });
+  }
 </script>
+
 </body>
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:32:57 GMT -->
+
 </html>

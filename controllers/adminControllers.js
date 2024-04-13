@@ -11,13 +11,13 @@ module.exports = {
       res.redirect("/admin/login");
     }
   },
-  getHome: async(req, res) => {
-    let order = await productsHelpers.getAllOrders()
-    let orderCount = order.length ?? 0
-    let totalA = await adminHelpers.totalRev()
-    let total = totalA[0]?.total ?? 0
-    let products = await productsHelpers.productCount() ?? 0
-    res.render("admin/index",{orderCount, products, total});
+  getHome: async (req, res) => {
+    let order = await productsHelpers.getAllOrders();
+    let orderCount = order.length ?? 0;
+    let totalA = await adminHelpers.totalRev();
+    let total = totalA[0]?.total ?? 0;
+    let products = (await productsHelpers.productCount()) ?? 0;
+    res.render("admin/index", { orderCount, products, total });
   },
   getLogin: (req, res) => {
     if (req.session.admin) {
@@ -97,15 +97,15 @@ module.exports = {
     });
   },
   getCategory: (req, res) => {
-    let categoryErr = ""
-    res.render("admin/admin-categories",{categoryErr});
+    let categoryErr = "";
+    res.render("admin/admin-categories", { categoryErr });
   },
   postCategories: (req, res) => {
     productsHelpers.addCategories(req.body).then((response) => {
-      if(response.status){
-        let categoryErr = "Category Already Exist"
-        res.render("admin/admin-categories",{categoryErr})
-      }else{
+      if (response.status) {
+        let categoryErr = "Category Already Exist";
+        res.render("admin/admin-categories", { categoryErr });
+      } else {
         res.redirect("/admin/category-list");
       }
     });
@@ -149,18 +149,18 @@ module.exports = {
     });
   },
   getEditCategory: async (req, res) => {
-    let catErr =""
+    let catErr = "";
     let category = await productsHelpers.getCategory(req.params.id);
-    res.render("admin/edit-category", { category,catErr });
+    res.render("admin/edit-category", { category, catErr });
   },
   postEditCategory: async (req, res) => {
     let id = req.params.id;
     await productsHelpers.editCategory(id, req.body).then((response) => {
-      if(!response.status){
-        let catErr = "Category already exist"
-        res.render("admin/edit-category",{catErr});
-      }else{
-        res.render
+      if (!response.status) {
+        let catErr = "Category already exist";
+        res.render("admin/edit-category", { catErr });
+      } else {
+        res.render;
       }
     });
   },
@@ -200,9 +200,9 @@ module.exports = {
   getGraphStatics: async (req, res) => {
     let orderStatistics = await adminHelpers.getOrdrStatistics();
     let saleStatistics = await adminHelpers.getSaleStatistics();
-    res.json({ orderStatistics,saleStatistics});
+    res.json({ orderStatistics, saleStatistics });
   },
-  getSalesReport:async(req,res)=>{
+  getSalesReport: async (req, res) => {
     await adminHelpers.getAllOrders().then((orders) => {
       res.render("admin/view-salesreport", { orders });
     });

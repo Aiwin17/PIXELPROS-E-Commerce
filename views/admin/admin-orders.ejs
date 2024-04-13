@@ -3,79 +3,98 @@
         <div class="content-header">
             <h2 class="content-title">Orders</h2>
         </div>
-        <div class="card mb-4">
-            <header class="card-header">
-            </header> <!-- card-header end// -->
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover" id="example">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Name</th>
-                                <th>TotalAmount</th>
-                                <th>PaymentMethod</th>
-                                <th>Status</th>
-                                <th> Action </th>
-                                <th> Details </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% orders.forEach(order=> { %>
-                            <tr>
-                                </td>
-                                <td><%=order.date%></td>
-                                <td><%=order.deliveryDetails.name%></td>
-                                <td><%=order.totalAmount%></td>
-                                <td><%=order.paymentMethod%></td>
-                                <td><%=order.status%></td>
-                                <td>
-                                    <% if (order.status === 'placed') { %>
-                                        <a  class="btn btn-success btn-sm text-white" onclick="orderStatus('<%= order._id %>','<%=order.status%>')">Ship</a>
-                                    <% } %>
-                                    <% if (order.status ==='Order Cancelling') { %>
-                                        <a  class="btn btn-success btn-sm text-white" onclick="orderStatus('<%= order._id %>','<%=order.status%>')">Approve</a>
-                                    <% } %>
-                                    <% if (order.status ==='Order Returning') { %>
-                                        <a class="btn btn-warning btn-sm text-white" onclick="orderStatus('<%= order._id %>','<%=order.status%>')">Approve</a>
-                                    <% } %>
-                                </td>
-                                <td><a href="/admin/view-order-details/<%= order._id %>" class="btn btn-primary rounded font-sm">View Details</a></td>
-                            </tr>
-                            <% } )%>
-                        </tbody>
-                    </table>
+        <% if (orders.length===0) { %>
+            <h3 style="display: flex; justify-content: center; align-items: center;">No Orders</h3>
+            <% } else{ %>
+                <div class="card mb-4">
+                    <header class="card-header">
+                    </header> <!-- card-header end// -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="example">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Name</th>
+                                        <th>TotalAmount</th>
+                                        <th>PaymentMethod</th>
+                                        <th>Status</th>
+                                        <th> Action </th>
+                                        <th> Details </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% orders.forEach(order=> { %>
+                                        <tr>
+                                            </td>
+                                            <td>
+                                                <%=order.date%>
+                                            </td>
+                                            <td>
+                                                <%=order.deliveryDetails.name%>
+                                            </td>
+                                            <td>
+                                                <%=order.totalAmount%>
+                                            </td>
+                                            <td>
+                                                <%=order.paymentMethod%>
+                                            </td>
+                                            <td>
+                                                <%=order.status%>
+                                            </td>
+                                            <td>
+                                                <% if (order.status==='placed' ) { %>
+                                                    <a class="btn btn-success btn-sm text-white"
+                                                        onclick="orderStatus('<%= order._id %>','<%=order.status%>')">Ship</a>
+                                                    <% } %>
+                                                        <% if (order.status==='Order Cancelling' ) { %>
+                                                            <a class="btn btn-success btn-sm text-white"
+                                                                onclick="orderStatus('<%= order._id %>','<%=order.status%>')">Approve</a>
+                                                            <% } %>
+                                                                <% if (order.status==='Order Returning' ) { %>
+                                                                    <a class="btn btn-warning btn-sm text-white"
+                                                                        onclick="orderStatus('<%= order._id %>','<%=order.status%>')">Approve</a>
+                                                                    <% } %>
+                                            </td>
+                                            <td><a href="/admin/view-order-details/<%= order._id %>"
+                                                    class="btn btn-primary rounded font-sm">View Details</a></td>
+                                        </tr>
+                                        <% } )%>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <% } %>
                 </div>
-            </div>
-        </div>
     </section>
     <%- include("../partials/admin-footer") %>
-    <script>
-        function orderStatus(orderId, orderStatus) {
-            $.post('/admin/change-order-status', { order: orderId, orderStatus })
-              .done(response => {
-                let message;
-                switch (true) {
-                  case response.shipped:
-                    message = 'Your order has been Delivered';
-                    break;
-                  case response.cancel:
-                    message = 'Order has been canceled';
-                    break;
-                  case response.return:
-                    message = 'Order has been returned';
-                    break;
-                }
-                if (message) {
-                  Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: message,
-                    showConfirmButton: false,
-                    timer: 1500
-                  });
-                  setTimeout(() => location.reload(), 1500);
-                }
-              });
-          }
-    </script>
+        <script>
+            function orderStatus(orderId, orderStatus) {
+                $.post('/admin/change-order-status', { order: orderId, orderStatus })
+                    .done(response => {
+                        let message;
+                        switch (true) {
+                            case response.shipped:
+                                message = 'Your order has been Delivered';
+                                break;
+                            case response.cancel:
+                                message = 'Order has been canceled';
+                                break;
+                            case response.return:
+                                message = 'Order has been returned';
+                                break;
+                        }
+                        if (message) {
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: message,
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            setTimeout(() => location.reload(), 1500);
+                        }
+                    });
+            }
+        </script>

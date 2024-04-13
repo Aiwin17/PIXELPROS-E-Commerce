@@ -15,32 +15,32 @@ const instance = new Razorpay({
 module.exports = {
   doSignup: (userData) => {
     return new Promise(async (resolve, reject) => {
-      // let oldUser = db.get().collection(collection.USER_COLLECTION).aggregate([
-      //     {
-
-      //         $match: { $and: [{ mobileno: userData.mobileno }, { email: userData.email }] }
-
-      //     },
-      // ])
-      // if(oldUser){
-      //     resolve(true)
-      // }else{
-      userData.wallet = parseInt(userData.wallet);
-      userData.password = await bcrypt.hash(userData.password, 10);
-      db.get()
-        .collection(collection.USER_COLLECTION)
-        .insertOne(userData)
-        .then((userData) => {
-          resolve(true);
-        });
-      // }
+      try {
+        userData.wallet = Number(userData.wallet);
+        userData.password = await bcrypt.hash(userData.password, 10);
+        await db
+          .get()
+          .collection(collection.USER_COLLECTION)
+          .insertOne(userData);
+        const user = await db
+          .get()
+          .collection(collection.USER_COLLECTION)
+          .findOne({ _id: userData._id }, { projection: { password: 0 } });
+        resolve(user);
+      } catch (error) {
+        reject(error);
+      }
     });
   },
-  getOldUser:(email)=>{
-    return new Promise(async(resolve,reject)=>{
-      let oldUser = await db.get().collection(collection.USER_COLLECTION).findOne({email:email})
-        resolve(oldUser)
-    })
+
+  getOldUser: (email) => {
+    return new Promise(async (resolve, reject) => {
+      let oldUser = await db
+        .get()
+        .collection(collection.USER_COLLECTION)
+        .findOne({ email: email });
+      resolve(oldUser);
+    });
   },
   doLogin: (userData) => {
     return new Promise(async (resolve, reject) => {
@@ -82,8 +82,11 @@ module.exports = {
   },
   getUserDetails: (mobile_no) => {
     return new Promise(async (resolve, reject) => {
-      let user = await 
-      db.get().collection(collection.USER_COLLECTION).find({ mobileno: mobile_no }).toArray()
+      let user = await db
+        .get()
+        .collection(collection.USER_COLLECTION)
+        .find({ mobileno: mobile_no })
+        .toArray();
       console.log(user);
       if (user.length) {
         if (user.blocked) {
@@ -306,8 +309,8 @@ module.exports = {
       resolve(total[0]?.total);
     });
   },
-  placeOrder: (order, products, total, userId,walletAmount) => {
-    console.log(order);
+
+  placeOrder: (order, products, total, userId, walletAmount) => {
     let quantity = products.quantity;
     return new Promise(async (resolve, reject) => {
       let address = await db
@@ -327,11 +330,13 @@ module.exports = {
         );
       let orderId = "ODID" + Math.floor(Math.random() * 1000000);
       let status =
-        order.payment_option === "COD" || order.payment_option === "razorpay" || order.payment_option === "wallet"
+        order.payment_option === "COD" ||
+        order.payment_option === "razorpay" ||
+        order.payment_option === "wallet"
           ? "placed"
           : "Order Failed";
       let orderObj = {
-        orderid:orderId,
+        orderid: orderId,
         deliveryDetails: {
           name: address.address[0].name,
           mobile: address.address[0].number,
@@ -366,14 +371,17 @@ module.exports = {
           });
       } else {
         if (order.payment_option === "wallet") {
-          await db.get().collection(collection.USER_COLLECTION).updateOne(
-            { _id: new objectId(userId) },
-            {
-              $inc: {
-                wallet: -total
+          await db
+            .get()
+            .collection(collection.USER_COLLECTION)
+            .updateOne(
+              { _id: new objectId(userId) },
+              {
+                $inc: {
+                  wallet: -total,
+                },
               }
-            }
-          );
+            );
         }
         await products.forEach((i) => {
           db.get()
@@ -386,7 +394,7 @@ module.exports = {
         // await db.get().collection(collection.USER_COLLECTION).updateOne({_id:new objectId(userId)},
         // {
         //   $set:{
-        //     wallet:Number(walletAmount) 
+        //     wallet:Number(walletAmount)
         //   }
         // })
         db.get()
@@ -407,8 +415,7 @@ module.exports = {
         .get()
         .collection(collection.CART_COLLECTION)
         .findOne({ user: objectId(userId) });
-        resolve(cart.products);
-      
+      resolve(cart.products);
     });
   },
   getUserOrders: (userId) => {
@@ -520,9 +527,6 @@ module.exports = {
     });
   },
 
-
-
-
   /* The above code is defining a function called `postCategoryProducts` that takes in a parameter
   called `categoryData`. The function returns a Promise that resolves to an array of products that
   belong to the category specified in `categoryData.catname`. */
@@ -551,15 +555,19 @@ module.exports = {
       resolve(products);
     });
   },
-  findCategory:(categoryId)=>{
-    return new Promise(async(resolve,reject)=>{
-      await db.get().collection(collection.CATEGORY_COLLECTION).findOne({_id: objectId(categoryId)}).then((category)=>{
-        resolve(category)
-      })
-    })
+  findCategory: (categoryId) => {
+    return new Promise(async (resolve, reject) => {
+      await db
+        .get()
+        .collection(collection.CATEGORY_COLLECTION)
+        .findOne({ _id: objectId(categoryId) })
+        .then((category) => {
+          resolve(category);
+        });
+    });
   },
   getCategoryList: (categoryName) => {
-    let catName = categoryName.name
+    let catName = categoryName.name;
     return new Promise(async (resolve, reject) => {
       let products = await db
         .get()
@@ -830,59 +838,57 @@ module.exports = {
     });
   },
   addToWishlist: async (proId, userId) => {
-    return new Promise(async(resolve,reject)=>{
-    const proObj = {
-      item: objectId(proId),
-    };
-    try {
-      const userWishlist = await db
-        .get()
-        .collection(collection.WISHLIST_COLLECTION)
-        .findOne({ user: objectId(userId) });
-      if (userWishlist) {
-        const proExistIndex = userWishlist.products.findIndex(
-          (product) => product.item == proId
-        );
-        if (proExistIndex === -1) {
-          await db
-            .get()
-            .collection(collection.WISHLIST_COLLECTION)
-            .updateOne(
-              { user: objectId(userId) },
-              {
-                $push: { products: proObj },
-              }
-            );
-            resolve({status:true});
-        } else {
-          await db
-            .get()
-            .collection(collection.WISHLIST_COLLECTION)
-            .updateOne(
-              { user: objectId(userId) },
-              {
-                $pull: { products: proObj },
-              }
-            );
-            resolve({status:false});
-        }
-      } else {
-        const wishListObj = {
-          user: objectId(userId),
-          products: [proObj],
-        };
-        await db
+    return new Promise(async (resolve, reject) => {
+      const proObj = {
+        item: objectId(proId),
+      };
+      try {
+        const userWishlist = await db
           .get()
           .collection(collection.WISHLIST_COLLECTION)
-          .insertOne(wishListObj);
-          resolve({status:true});
+          .findOne({ user: objectId(userId) });
+        if (userWishlist) {
+          const proExistIndex = userWishlist.products.findIndex(
+            (product) => product.item == proId
+          );
+          if (proExistIndex === -1) {
+            await db
+              .get()
+              .collection(collection.WISHLIST_COLLECTION)
+              .updateOne(
+                { user: objectId(userId) },
+                {
+                  $push: { products: proObj },
+                }
+              );
+            resolve({ status: true });
+          } else {
+            await db
+              .get()
+              .collection(collection.WISHLIST_COLLECTION)
+              .updateOne(
+                { user: objectId(userId) },
+                {
+                  $pull: { products: proObj },
+                }
+              );
+            resolve({ status: false });
+          }
+        } else {
+          const wishListObj = {
+            user: objectId(userId),
+            products: [proObj],
+          };
+          await db
+            .get()
+            .collection(collection.WISHLIST_COLLECTION)
+            .insertOne(wishListObj);
+          resolve({ status: true });
+        }
+      } catch (error) {
+        return Promise.reject(error);
       }
-   
-    
-    }catch (error) {
-      return Promise.reject(error);
-    }
-  })
+    });
   },
   getWishlistCount: (userId) => {
     return new Promise(async (resolve, reject) => {
@@ -957,22 +963,32 @@ module.exports = {
         });
     });
   },
-  searchproducts:(searchedProduct)=>{
-    let product = searchedProduct.search
-    return new Promise(async (resolve,reject)=>{
-      let products=await db.get().collection(collection.PRODUCT_COLLECTION).find({name:product}).toArray()
-      resolve(products)
-    })
+  searchproducts: (searchedProduct) => {
+    let product = searchedProduct.search;
+    return new Promise(async (resolve, reject) => {
+      let products = await db
+        .get()
+        .collection(collection.PRODUCT_COLLECTION)
+        .find({ name: product })
+        .toArray();
+      resolve(products);
+    });
   },
-  viewTotalProduct : (pageNum, limit) => {
+  viewTotalProduct: (pageNum, limit) => {
     let skipNum = parseInt((pageNum - 1) * limit);
     return new Promise(async (resolve, reject) => {
       try {
-        let products = await db.get().collection(collection.PRODUCT_COLLECTION).find().skip(skipNum).limit(limit).toArray();
+        let products = await db
+          .get()
+          .collection(collection.PRODUCT_COLLECTION)
+          .find()
+          .skip(skipNum)
+          .limit(limit)
+          .toArray();
         resolve(products);
       } catch (error) {
         reject(error);
       }
     });
-},
+  },
 };

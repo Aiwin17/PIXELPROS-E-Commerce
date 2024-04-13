@@ -1,8 +1,12 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="en">
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:32:35 GMT -->
+
 <head>
     <meta charset="utf-8">
-    <title>mycamz admin</title>
+    <title>PIXELPROS ADMIN</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,77 +18,67 @@
     <link rel="shortcut icon" type="image/x-icon" href="../adminassets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link href="/adminassets/css/main.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.11.3/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.11.3/datatables.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.css">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
     <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" charset="utf8"
-    src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+        src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 </head>
 
 <body>
     <div class="screen-overlay"></div>
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
-           <h4>ADMIN</h4>
+            <a href="/admin" class="brand-wrap">
+                <h6>ADMIN</h6>
+            </a>
             <div>
-                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i>
+                </button>
             </div>
         </div>
         <nav>
             <ul class="menu-aside">
-                <li class="menu-item">
+                <li class="menu-item" id="dashboard">
                     <a class="menu-link" href="/admin"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="/admin/admin-orders"> <i class="icon material-icons md-shopping_cart"></i>
+                <li class="menu-item" id="products">
+                    <a class="menu-link" href="/admin/view-products"> <i
+                            class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Products</span>
+                    </a>
+                </li>
+                <li class="menu-item" id="orders">
+                    <a class="menu-link" href="/admin/admin-orders"> <i
+                            class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Orders</span>
                     </a>
                 </li>
-                <li class="menu-item ">
-                    <a class="menu-link" href="/admin/view-products"> <i class="icon material-icons md-shopping_bag"></i>
-                        <span class="text">Products</span>
-                    </a>
-                    <div class="submenu">
-                        <!-- <a href= class"active">Product List</a> -->
-                        <!-- <a href="/admin/add-products">Add Products</a> -->
-                        <!-- <a href="page-products-grid-2.html">Product grid 2</a>
-                        <a href="page-categories.html">Categories</a> -->
-                    </div>
-                </li>
-                <li class="menu-item ">
+                <li class="menu-item" id="categories">
                     <a class="menu-link" href="/admin/category-list"> <i class="icon material-icons md-store"></i>
                         <span class="text">Categories</span>
                     </a>
                 </li>
-                <li class="menu-item ">
-                    <a class="menu-link" href="/admin/coupons"> <i class="icon material-icons md-star"></i>
+                <li class="menu-item" id="banner">
+                    <a class="menu-link" href="/admin/view-banners"> <i class="icon material-icons md-add_box"></i>
+                        <span class="text">Banner</span>
+                    </a>
+                </li>
+                <li class="menu-item" id="coupons">
+                    <a class="menu-link" href="/admin/coupons"> <i class="icon material-icons md-monetization_on"></i>
                         <span class="text">Coupons</span>
                     </a>
                 </li>
-                <li class="menu-item ">
-                    <a class="menu-link" href="/admin/view-users"><i class="icon material-icons md-person"></i>
+                <li class="menu-item" id="users">
+                    <a class="menu-link" href="/admin/view-users"> <i class="icon material-icons md-person"></i>
                         <span class="text">Users</span>
                     </a>
-                        <!-- <div class="submenu">
-                            <a href="/admin/view-users" class="active">User List</a>
-                            <a href="page-products-grid-2.html">Product grid 2</a>
-                            <a href="page-categories.html">Categories</a>
-                        </div> -->
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="/admin/view-banners"> <i class="icon material-icons md-shopping_bag"></i>
-                        <span class="text">Banner</span>
-                    </a>
-                    <!-- <div class="submenu">
-                        <a href="/admin/logout">LOGOUT</a>
-                        <a href="page-account-register.html">User registration</a>
-                        <a href="page-error-404.html">Error 404</a>
-                    </div> -->
                 </li>
             </ul>
             <hr>
@@ -94,16 +88,47 @@
     </aside>
     <main class="main-wrap">
         <header class="main-header navbar">
-            <div class="col-search"></div>
+            <div class="col-search">
+            </div>
             <div class="col-nav">
-                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i
+                        class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i>
+                        </a>
+                    </li>
                     <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="adminassets/imgs/people/avatar2.jpg" alt="Admin"></a>
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
+                            aria-expanded="false"> <img class="img-xs rounded-circle"
+                                src="/adminassets/imgs/people/avatar2.jpg" alt="User"></a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                            <a class="dropdown-item text-danger" href="/admin/logout"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                            <a class="dropdown-item text-danger" href="/admin/logout"><i
+                                    class="material-icons md-exit_to_app"></i>Logout</a>
                         </div>
                     </li>
                 </ul>
             </div>
         </header>
-</head>
+
+
+        <script>
+            /*const dashboard = document.getElementById('dashboard');
+             const products = document.getElementById('products');
+             const orders = document.getElementById('orders');
+             const categories = document.getElementById('categories');
+             const banner = document.getElementById('banner');
+             const coupons = document.getElementById('coupons');
+             const users = document.querySelectorAll('menu-item');
+            const menu = document.querySelectorAll('.menu-item');
+            console.log(menu);
+
+            menu.forEach(item => {
+                item.addEventListener('click', () => {
+                    console.log(item.innerHTML);
+                });
+            });
+
+             */
+
+        </script>

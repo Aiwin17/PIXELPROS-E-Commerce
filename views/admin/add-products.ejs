@@ -1,172 +1,257 @@
 <%- include('../partials/admin-header')%>
-<section class="content-main">
-    <form action="/admin/add-products"  method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
-    <div class="row">
-        <div class="col-9">
-            <div class="content-header">
-                <h2 class="content-title">Add New Product</h2>
-                <div>
-                    <button class="btn btn-md rounded font-sm hover-up" type="submit">Publish</button>
-                <br>
-                <span id="submit-error" class="validation" style="color: rgb(255, 0, 0)"></span>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="mb-4">
-                        <label for="product_title" class="form-label">Product title</label>
-                        <input type="text" placeholder="Type here" class="form-control" name="productname" id="name">
-                        <span id="name-error" class="validation" style="color: rgb(255, 0, 0)"></span>
-                    </div>
-                    <div class="row gx-3">
-                        <div class="col-md-4  mb-3">
-                            <label for="product_sku" class="form-label"></label>
-                            <select name="category"  class="form-control" >
-                                <% category.forEach(categories => { %>
-                                    <option required><%= categories.name %></option>
-                                <% }) %>
-                            </select>
-                        </div>
-                        <div class="col-md-4  mb-3">
-                            <label for="product_color" class="form-label"></label>
-                            <input type="number" placeholder="Quantity" name="quantity" class="form-control" id="quantity">
-                            <span id="quantity-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+    <section class="content-main">
+        <form action="/admin/add-products" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-9">
+                    <div class="content-header">
+                        <h2 class="content-title">Add Product</h2>
+                        <div>
+                            <button class="btn btn-md rounded font-sm hover-up" type="button" onclick="submitForm()">Add
+                                new product</button>
+                            <br>
+                            <span id="submit-error" class="validation"></span>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div>
-                        <label class="form-label">Description</label>
-                        <textarea placeholder="Type here" id="description"  name="description" class="form-control" rows="4"></textarea>
-                        <span id="description-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <label for="product_title" class="form-label">Product title</label>
+                                <input type="text" placeholder="Name of product" class="form-control" name="productname"
+                                    id="name">
+                                <span id="name-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                            </div>
+                            <div class="row gx-3">
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_color" class="form-label">Quantity</label>
+                                    <input type="number" placeholder="Quantity" name="quantity" class="form-control"
+                                        id="quantity">
+                                    <span id="quantity-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row gx-2">
+                                <div class="col-sm-6 mb-3">
+                                    <label class="form-label">Category</label>
+                                    <select class="form-select" name="category">
+                                        <% category.forEach(categories=> { %>
+                                            <option>
+                                                <%= categories.name %>
+                                            </option>
+                                            <% }) %>
+                                    </select>
+                                </div>
+                            </div> <!-- row.// -->
+                        </div>
+                    </div>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div>
+                                <label class="form-label">Description</label>
+                                <textarea placeholder="Type here" id="description" name="description"
+                                    class="form-control" rows="4"></textarea>
+                                <span id="description-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card ">
+                        <div class="card-body">
+                            <div class="Container">
+                                <label class="form-label">Images</label>
+                                <span id="image-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                                <div class="container" style="margin-bottom: 30px;">
+                                    <input type="file" id="file1" accept="image/*" name="image" hidden>
+                                    <div class="img-area" data-img="">
+                                        <i class='bx bxs-cloud-upload icon'></i>
+                                        <h3>Upload Image</h3>
+                                        <p>Image size must be less than <span>2MB</span></p>
+                                    </div>
+                                    <button class="select-image">Select Image</button>
+                                </div>
+                                <div class="container" style="margin-bottom: 30px;">
+                                    <input type="file" id="file2" accept="image/*" name="image" hidden>
+                                    <div class="img-area" data-img="">
+                                        <i class='bx bxs-cloud-upload icon'></i>
+                                        <h3>Upload Image</h3>
+                                        <p>Image size must be less than <span>2MB</span></p>
+                                    </div>
+                                    <button class="select-image">Select Image</button>
+                                </div>
+                                <div class="container" style="margin-bottom: 30px;">
+                                    <input type="file" id="file3" accept="image/*" name="image" hidden>
+                                    <div class="img-area" data-img="">
+                                        <i class='bx bxs-cloud-upload icon'></i>
+                                        <h3>Upload Image</h3>
+                                        <p>Image size must be less than <span>2MB</span></p>
+                                    </div>
+                                    <button class="select-image">Select Image</button>
+                                </div>
+                                <div class="container">
+                                    <input type="file" id="file4" accept="image/*" name="image" hidden>
+                                    <div class="img-area" data-img="">
+                                        <i class='bx bxs-cloud-upload icon'></i>
+                                        <h3>Upload Image</h3>
+                                        <p>Image size must be less than <span>2MB</span></p>
+                                    </div>
+                                    <button class="select-image">Select Image</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div>
-                        <label class="form-label">Images</label>
-                        <input class="form-control" name="image" id="image" type="file">
-
-                        <label class="form-label">Images</label>
-                        <input class="form-control" name="image" id="image" type="file">
-
-                        <label class="form-label">Images</label>
-                        <input class="form-control" name="image" id="image" type="file">
-
-                        <label class="form-label" >Images</label>
-                        <input class="form-control" name="image" id="image" type="file">
-
-                        <span id="image-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+            <div class="col-lg-3">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label class="form-label">Price</label>
+                            <input type="number" placeholder="Type here" id="price" name="price" class="form-control">
+                            <span id="price-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-3">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="mb-4">
-                        <label class="form-label">Price</label>
-                        <input type="text" placeholder="Type here" id="price" name="price" class="form-control">
-                        <span id="price-error" class="validation" style="color: rgb(255, 0, 0)"></span>
-                    </div>
-                </div>
             </div>
-        </div>
-    </div>
-</form>
-</section>
-<script>
-    const nameError = document.getElementById("name-error");
-    const submitError = document.getElementById("submit-error");
-    const descriptionError = document.getElementById("description-error")
-    const priceError = document.getElementById("price-error");
-    const quantityerror = document.getElementById("quantity-error");
-    const imageError = document.getElementById("image-error")
-    function validateForm() {
-       let name = validateName()
-       let price =  validatePrice()
-       let description = validateDescription()
-       let quantity = validateQuantity()
-       let image = validateImage()
-        if (!name || !price || !description || !quantity || !image) {
-          submitError.style.display = "flex";
-          submitError.style.justifyContent = "center";
-          submitError.innerHTML = "Enter valid details";
-          setTimeout(() => {
-            submitError.style.display = "none";
-          }, 3000);
-          return false;
+        </form>
+    </section>
+    <script>
+        const nameError = document.getElementById("name-error");
+        const submitError = document.getElementById("submit-error");
+        const descriptionError = document.getElementById("description-error")
+        const priceError = document.getElementById("price-error");
+        const quantityerror = document.getElementById("quantity-error");
+        const imageError = document.getElementById("image-error")
+        function submitForm() {
+            if (validateForm()) {
+                document.querySelector('form');
+            }
         }
-        return true
-    }
-    function validateName() {
-      var name = document.getElementById("name").value;
-      if (name.length == 0) {
-        nameError.innerHTML = "Name is required";
-        return false;
-      }
-      else if(name.length > 10){
-        nameError.innerHTML = "Invalid Name"
-        return false
-      }
-      nameError.innerHTML = "";
-      return true;
-    }
-  
-    function validatePrice(){
-      const priceValue = document.getElementById("price").value;
-      if (priceValue.length == 0) {
-          priceError.innerHTML = "Price is required";
-          return false;
+        function validateForm() {
+            let name = validateName()
+            let price = validatePrice()
+            let description = validateDescription()
+            let quantity = validateQuantity()
+            let image = validateImages()
+            if (!name || !price || !description || !quantity || !image) {
+                return false;
+            }
+            return true
         }
-      else if(priceValue <= 0){
-        priceError.innerHTML = "Invalid Price";
-        return false;
-      }
-        priceError.innerHTML = "";
-        return true;
-    }
-    function validateDescription() {
-      var description = document.getElementById("description").value;
-      if (description == "") {
-        descriptionError.innerHTML = "Description is required";
-        return false;
-      }
-      descriptionError.innerHTML = "";
-      return true;
-    }
-    
-    function validateQuantity() {
-        var quantity = document.getElementById("quantity").value;
-        if(quantity < 0 ){
-            quantityerror.innerHTML = "Quantity cannot be a negative value"
-            return false
+        function validateName() {
+            var name = document.getElementById("name").value;
+            if (name.length == 0) {
+                nameError.innerHTML = "Name is required";
+                return false;
+            }
+            else if (name.length > 10) {
+                nameError.innerHTML = "Invalid Name"
+                return false
+            }
+            nameError.innerHTML = "";
+            return true;
         }
-        else if(quantity == 0){
-            quantityerror.innerHTML = "Quantity cannot be a zero"
-            return false
-        }
-        else if (quantity.length == 0) {
-          quantityerror.innerHTML = "Quantity is required";
-          return false;
-        }
-        quantityerror.innerHTML = "";
-        return true;
-    }
-    function validateImage(){
-        const image = document.getElementById('image').value
-        if(image.length==0){
-            imageError.innerHTML = "Image is Required";
-            return false
-        }
-        imageError.innerHTML=""
-        return true
-    }
-</script>
-<%- include('../partials/admin-footer')%>
 
+        function validatePrice() {
+            const priceValue = document.getElementById("price").value;
+            if (priceValue.length == 0) {
+                priceError.innerHTML = "Price is required";
+                return false;
+            }
+            else if (priceValue <= 0) {
+                priceError.innerHTML = "Invalid Price";
+                return false;
+            }
+            priceError.innerHTML = "";
+            return true;
+        }
+        function validateDescription() {
+            var description = document.getElementById("description").value;
+            if (description == "") {
+                descriptionError.innerHTML = "Description is required";
+                return false;
+            }
+            descriptionError.innerHTML = "";
+            return true;
+        }
+
+        function validateQuantity() {
+            var quantity = document.getElementById("quantity").value;
+            if (quantity < 0) {
+                quantityerror.innerHTML = "Quantity cannot be a negative value"
+                return false
+            }
+            else if (quantity == 0) {
+                quantityerror.innerHTML = "Quantity cannot be a zero"
+                return false
+            }
+            else if (quantity.length == 0) {
+                quantityerror.innerHTML = "Quantity is required";
+                return false;
+            }
+            quantityerror.innerHTML = "";
+            return true;
+        }
+        // Function to validate images
+        function validateImages() {
+            const imageInputs = document.querySelectorAll('input[type="file"]');
+            const imageError = document.getElementById("image-error");
+
+            let isValid = true;
+
+            imageInputs.forEach((input) => {
+                if (input.files.length === 0) {
+                    isValid = false;
+                }
+            });
+            if (!isValid) {
+                imageError.innerHTML = "Images are required";
+            } else {
+                imageError.innerHTML = "";
+            }
+            return isValid;
+        }
+        // Get all select image buttons
+        const selectImages = document.querySelectorAll('.select-image');
+
+        // Loop through each select image button
+        selectImages.forEach((selectImage, index) => {
+            // Get the corresponding input file element and img area
+            const inputFile = document.querySelector(`#file${index + 1}`);
+            const imgArea = document.querySelectorAll('.img-area')[index];
+
+            // Add click event listener to each select image button
+            selectImage.addEventListener('click', function () {
+                inputFile.click();
+            });
+
+            // Add change event listener to each input file element
+            inputFile.addEventListener('change', function () {
+                const image = this.files[0];
+                if (image.size < 2000000) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        // Remove any existing images in the img area
+                        const allImg = imgArea.querySelectorAll('img');
+                        allImg.forEach(item => item.remove());
+
+                        // Create new img element and set its source to the selected image
+                        const imgUrl = reader.result;
+                        const img = document.createElement('img');
+                        img.src = imgUrl;
+
+                        // Append the img element to the img area
+                        imgArea.appendChild(img);
+                        imgArea.classList.add('active');
+                        imgArea.dataset.img = image.name;
+                    };
+                    reader.readAsDataURL(image);
+                } else {
+                    alert("Image size more than 2MB");
+                }
+            });
+        });
+    </script>
+    <%- include('../partials/admin-footer')%>

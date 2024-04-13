@@ -1,48 +1,57 @@
-<%- include('../partials/custom-header')%>
-<section class="pt-150 pb-150">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-10 m-auto">
-                <div class="row  d-flex justify-content-center">
-                    <div class="col-lg-5">
-                        <div class="login_wrap widget-taber-content p-30 background-white border-radius-10 mb-md-5 mb-lg-0 mb-sm-5">
-                            <div class="padding_eight_all bg-white">
-                                <div class="heading_s1">
-                                    <h3 class="mb-30">Login</h3>
-                                </div>
-                                <form action="/login" method="post">
-                                    <div class="form-group">
-                                        <% if (loginErr) { %>
-                                         <p class="text-danger">Invalid Credentials</p>
-                                        <% } %>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" required="" name="email" id="email" placeholder="Your Email">
-                                    </div>
-                                    <div class="form-group">
-                                        <input required="" type="password" name="password" placeholder="Password">
-                                    </div>
-                                    <div class="login_footer form-group">
-                                        <div class="chek-form">
-                                            <!-- <div class="custome-checkbox">
-                                                <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="">
-                                                <label class="form-check-label" for="exampleCheckbox1"><span>Remember me</span></label>
-                                            </div> -->
-                                        </div>
-                                        <a class="text-muted" href="/otp-changePassword">Forgot password?</a>
-                                    </div>
-                                    <a href="/otp-Login" type="submit" class="d-flex justify-content-center" name="login">OTP Log in</a><br>
-                                    <a href="/user-signup" type="submit" class="form-group d-flex justify-content-center" name="login">Create New Account</a><br>
-                                    <div class="form-group d-flex justify-content-center">
-                                        <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Log in</button>
-                                    </div>
-                                </form>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIXELPROS</title>
+    <link rel="icon" type="image/png" href="images/icons/App-Logo.jpg" />
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+    <div class="App-logo">
+        <img class="logo" src="images/icons/App-Logo.jpg" alt="App-Logo">
+        <span class="App-name">PIXELPROS</span>
+    </div>
+    <div class="main-container">
+        <div class="login-container">
+            <div class="login-img-container">
+                <img class="login-image" src="images/Login-Image.png" alt="">
+            </div>
+            <div class="login-form-container">
+                <div class="login-text">
+                    <span>Login</span>
+                </div>
+                <form action="/login" method="post">
+                    <div class="form-container">
+                        <div class="form">
+                            <div class="details">
+                                <label class="labels">EmailID</label>
+                                <input type="text" class="inputs" placeholder="Enter your email" required=""
+                                    name="email" id="email">
+                            </div>
+                            <div class="details">
+                                <label class="labels">Password</label>
+                                <input type="password" required="" class="inputs" name="password"
+                                    placeholder="Enter your password">
+                            </div>
+                            <div class="details">
+                                <a class="forgot-password" href="/otp-changePassword">Forgot Password?</a>
+                            </div>
+                            <div class="details">
+                                <button class="login-button" name="login" type="submit">LOGIN</button>
+                                <button class="otp-button">LOGIN WITH OTP</button>
+                            </div>
+                            <div class="signup-account">
+                                <a class="new-account" href="/signup">Create new account</a>
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
-</section>
-<%- include('../partials/custom-footer')%>
+</body>
+
+</html>

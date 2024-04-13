@@ -1,106 +1,63 @@
-<%- include('../partials/custom-header')%>
-<section class="pt-150 pb-150">
-  <div class="container">
-      <div class="row">
-          <div class="col-lg-10 m-auto">
-              <div class="row d-flex justify-content-center">
-                  <div class="col-lg-6">
-                      <div class="login_wrap widget-taber-content p-30 background-white border-radius-5">
-                          <div class="padding_eight_all bg-white">
-                              <div class="heading_s1">
-                                  <h3 class="mb-30">Create an Account</h3>
-                              </div>
-                              <form action="/user-signup" method="post">
-                                  <div class="form-group">
-                                      <input onkeyup="validateName()" type="text" required="" id="form3Example1c" name="username" placeholder="Username">
-                                      <span id="name-error" style="color: red"></span>
-                                  </div>
-                                  <div class="form-group">
-                                      <input onkeyup="validateEmail()" type="text" required="" id="form3Example3c" name="email" placeholder="Email">
-                                      <span id="email-error" style="color: red"></span>
-                                  </div>
-                                  <div class="form-group">
-                                      <input required="" type="number" name="mobileno" placeholder="Mobile Number">
-                                  </div>
-                                  <div class="form-group">
-                                      <input onkeyup="validatePassword()" required="" type="password" id="form3Example4c" name="password" placeholder="Password">
-                                      <span id="password-error" style="color: red"></span>                                  
-                                  </div>
-                                  <div class="form-group">
-                                      <button  onclick="validateForm()" type="submit" id="submit-error" class="btn btn-fill-out btn-block hover-up">Submit &amp; Register</button>
-                                      <span id="submit-error" style="color: red"></span>
-                                  </div>
-                                  <%if(signupErr!= ""){%>
-                                    <p class="text-danger"><%=signupErr%></p>
-                                  <%}%>
-                                  <input type="number" value="0" name="wallet" hidden>
-                              </form>
-                              <div class="text-muted text-center">Already have an account? <a href="/login">Sign in now</a></div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIXELPROS</title>
+  <link rel="icon" type="image/png" href="images/icons/App-Logo.jpg" />
+  <link rel="stylesheet" href="css/signup.css">
+</head>
+
+<body>
+  <div class="App-logo">
+    <img class="logo" src="images/icons/App-Logo.jpg" alt="App-Logo">
+    <span class="App-name">PIXELPROS</span>
   </div>
-</section>
-<script>
- var nameError = document.getElementById("name-error");
- var emailError = document.getElementById("email-error");
- var passwordError = document.getElementById("password-error");
- var submitError = document.getElementById("submit-error");
+  <div class="main-container">
+    <div class="login-container">
+      <div class="login-img-container">
+        <img class="login-image" src="images/Login-Image.png" alt="">
+      </div>
+      <div class="login-form-container">
+        <div class="login-text">
+          <span>Sign Up</span>
+        </div>
+        <form action="/signup" method="post">
+          <div class="form-container">
+            <div class="form">
+              <div class="details">
+                <input type="text" class="inputs" placeholder="Username" required="" name="username">
+              </div>
+              <div class="details">
+                <input type="text" required="" class="inputs" name="email" placeholder="Email">
+              </div>
+              <div class="details">
+                <input type="text" required="" class="inputs" name="mobileno" placeholder="MobileNo">
+              </div>
+              <div class="details">
+                <input type="password" required="" class="inputs" name="password" placeholder="Password">
+              </div>
+              <div class="details">
+                <input type="password" required="" class="inputs" id="confirm-password" placeholder="Confirm">
+                <input type="number" value="0" name="wallet" hidden>
+              </div>
+              <div class="details">
+                <a class="forgot-password" href="/otp-changePassword">Forgot Password?</a>
+              </div>
+              <div class="details">
+                <button class="login-button" type="submit">CREATE ACCOUNT</button>
+              </div>
+              <div class="signup-account">
+                <span class="question">Already have an account? </span>
+                <a class="new-account" href="/login">Login</a>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
 
- function validateName() {
-   var name = document.getElementById("form3Example1c").value;
-   if (name.length == 0) {
-     nameError.innerHTML = "Name is required";
-     return false;
-   }
-   if (!name.match(/^[A-Za-z]+ [A-Za-z]+$/)) {
-     nameError.innerHTML = "Write full name";
-     return false;
-   }
-   nameError.innerHTML = "";
-   return true;
- }
-
- function validateEmail() {
-   var email = document.getElementById("form3Example3c").value;
-   if (email.length == 0) {
-     emailError.innerHTML = "Email is required";
-     return false;
-   }
-   if (!email.match(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/)) {
-     emailError.innerHTML = "Email invalid";
-     return false;
-   }
-   emailError.innerHTML = "";
-   return true;
- }
-
- function validatePassword() {
-   var password = document.getElementById("form3Example4c").value;
-   var passChecker = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-   if (password.match(passChecker)) {
-     passwordError.innerHTML = "";
-     return true;
-   } else {
-     passwordError.innerHTML =
-       "required 6-20 character,1 numeric digit, 1 uppercase and 1 lowercase";
-     return false;
-   }
- }
-
- function validateForm() {
-   if (!validateName() || !validateEmail() || !validatePassword()) {
-     submitError.style.display = "flex";
-     submitError.style.justifyContent = "center";
-     submitError.innerHTML = "Please fix all errors to submit";
-     setTimeout(() => {
-       submitError.style.display = "none";
-     }, 3000);
-     return false;
-   }
- }
-</script>
-<%- include('../partials/custom-footer')%>
+</html>

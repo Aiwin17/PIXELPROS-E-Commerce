@@ -1,71 +1,133 @@
 <%- include('../partials/admin-header')%>
-<section class="content-main">
-    <form action="/admin/add-banner" method="post" onsubmit="return validateForm()" enctype="multipart/form-data" >
-    <div class="row">
-        <div class="col-6">
-            <div class="content-header">
-                <h2 class="content-title">Add Banner</h2>
-                <div>
-                    <button type="submit" class="btn btn-md rounded font-sm">Add</button>
+    <section class="content-main">
+        <form action="/admin/add-banner" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-9">
+                    <div class="content-header">
+                        <h2 class="content-title">Add Banner</h2>
+                        <div>
+                            <button class="btn btn-md rounded font-sm hover-up" type="button"
+                                onclick="submitForm()">Add</button>
+                            <br>
+                            <span id="submit-error" class="validation"></span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="row">
-                            <div class="col-md-9">
-                                <div class="mb-4">
-                                    <label class="form-label">Banner Name</label>
-                                    <input type="text" name="bannername" id="banname" class="form-control">
-                                    <span style="color: red;" id="banname-error"></span>
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <label for="banner_title" class="form-label">Banner Title</label>
+                                <input type="text" placeholder="Name of banner" class="form-control" name="bannertitle"
+                                    id="name">
+                                <span id="name-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="Container">
+                                <label class="form-label">Images</label>
+                                <span id="image-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                                <div class="container">
+                                    <input type="file" id="file" accept="image/*" name="image" hidden>
+                                    <div class="img-area" data-img="">
+                                        <i class='bx bxs-cloud-upload icon'></i>
+                                        <h3>Upload Image</h3>
+                                        <p>Image size must be less than <span>2MB</span></p>
+                                    </div>
+                                    <button class="select-image">Select Image</button>
                                 </div>
                             </div>
-                    </div>
-                    <hr class="mb-4 mt-0">
-                    <div class="col-md-9">
-                        <div class="mb-4">
-                                <label class="form-label">Images</label>
-                                <input class="form-control" name="image" type="file">
                         </div>
-                        <span style="color: red;" id="submit-error"></span>
                     </div>
                 </div>
             </div>
+        </form>
+    </section>
+    <script>
+        const nameError = document.getElementById("name-error");
+        const submitError = document.getElementById("submit-error");
+        const imageError = document.getElementById("image-error");
 
-        </div>
-    </div>
-    </div>
-    </div>
-</form>
-</section>
-<script>
-    let bannerErr = document.getElementById('banname-error');
-    let submitError = document.getElementById('submit-error');
-    
-    function validateBannerName() {
-      let banname = document.getElementById('banname');
-      if (banname.value.length === 0) {
-        bannerErr.innerHTML = "Banner name is required";
-        return false;
-      }
-      bannerErr.innerHTML = "";
-      return true;
-    }
-    
-    function validateForm() {
-      let bannername = validateBannerName();
-      if (!bannername) {
-        submitError.style.display = "flex";
-        submitError.style.justifyContent = "center";
-        submitError.innerHTML = "Please fix all errors to submit";
-        setTimeout(() => {
-          submitError.style.display = "none";
-        }, 3000);
-        return false;
-      }
-    }
-  </script>
-<%- include('../partials/admin-footer')%>
+        function submitForm() {
+            if (validateForm()) {
+                document.querySelector('form')
+            }
+        }
+
+        function validateForm() {
+            let name = validateName();
+            let image = validateImages();
+            if (!name || !image) {
+                return false;
+            }
+            return true;
+        }
+
+        function validateName() {
+            var name = document.getElementById("name").value;
+            if (name.length == 0) {
+                nameError.innerHTML = "Name is required";
+                return false;
+            } else if (name.length > 10) {
+                nameError.innerHTML = "Invalid Name";
+                return false;
+            }
+            nameError.innerHTML = "";
+            return true;
+        }
+
+        // Function to validate images
+        function validateImages() {
+            const inputFile = document.getElementById('file');
+            const imageError = document.getElementById('image-error');
+
+            if (inputFile.files.length === 0) {
+                imageError.innerHTML = "Image is required";
+                return false;
+            } else {
+                imageError.innerHTML = "";
+                return true;
+            }
+        }
+
+        // Get the select image button
+        const selectImage = document.querySelector('.select-image');
+
+        // Get the input file element
+        const inputFile = document.getElementById('file');
+
+        // Get the img area
+        const imgArea = document.querySelector('.img-area');
+
+        // Add click event listener to the select image button
+        selectImage.addEventListener('click', function () {
+            inputFile.click();
+        });
+
+        // Add change event listener to the input file element
+        inputFile.addEventListener('change', function () {
+            const image = this.files[0];
+            if (image.size < 2000000) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    // Remove any existing images in the img area
+                    imgArea.innerHTML = "";
+
+                    // Create new img element and set its source to the selected image
+                    const img = document.createElement('img');
+                    img.src = reader.result;
+
+                    // Append the img element to the img area
+                    imgArea.appendChild(img);
+                    imgArea.classList.add('active');
+                    imgArea.dataset.img = image.name;
+                };
+                reader.readAsDataURL(image);
+            } else {
+                alert("Image size more than 2MB");
+            }
+        });
+    </script>
+    <%- include('../partials/admin-footer')%>
