@@ -1,0 +1,104 @@
+<%- include('../partials/user-header')%>
+  <main style="height: 100%; width:100%; display: flex; flex-direction: column;" class="main">
+    <div style="display: flex; justify-content: center; margin-top: 100px; margin-right: 20px;">
+      <h1>Add Address</h1>
+    </div>
+    <section style="display: flex; justify-content: center; margin-top: 50px; height: 100%;">
+      <div
+        style="width:70%; height:80%; display: flex; justify-content: center; border-radius: 10px; box-shadow: 0 0px 3px 0px rgba(0, 0, 0, 0.2) ;">
+        <form action="/address" onsubmit="return validateForm()" method="post" style="width: 100%">
+          <div style="padding: 20px; display: flex;">
+            <input type="text" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189)" name="firstname"
+              placeholder="First Name">
+            <input type="text" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189); margin-left: 10px;"
+              name="lastname" placeholder="Last Name">
+          </div>
+          <div style="padding: 20px;">
+            <input type="text" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189)" name="country"
+              placeholder="Country">
+          </div>
+          <div style="padding: 20px;">
+            <input type="text" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189)" name="state"
+              placeholder="State">
+          </div>
+          <div style="padding: 20px;">
+            <input type="text" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189)" name="address"
+              placeholder="Address">
+          </div>
+          <div style="padding: 20px; display: flex;">
+            <input type="number" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189)" name="postcode"
+              placeholder="Postcode / ZIP">
+            <input type="number"
+              style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189); margin-left: 10px;" name="Phoneno"
+              placeholder="Phoneno">
+          </div>
+          <div style="padding: 20px; display: flex; justify-content: center;">
+            <button type="submit"
+              style="background-color: rgb(219, 41, 41); width:100px; padding: 10px; border-radius: 10px; color:white">Add</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+  <script>
+    var nameError = document.getElementById(" name-error");
+    var mobilenoError = document.getElementById("mobileno-error");
+    var addressError = document.getElementById("address-error");
+    var countryError = document.getElementById("country-error");
+    var districtError = document.getElementById("district-error");
+    var pincodeError = document.getElementById("pincode-error");
+    var submitError = document.getElementById("submit-error");
+
+    function validateName() {
+      var name = document.getElementById("name").value; if (name.length === 0) {
+        nameError.innerHTML = "Name is required"; return false;
+      } if (!name.match(/^[A-Za-z]+ [A-Za-z]+$/)) {
+        nameError.innerHTML = "Write full name"; return false;
+      } nameError.innerHTML = ""; return true;
+    }
+
+    function validateMobileNo() {
+      var mobileno = document.getElementById("mobilenumber").value; if (mobileno.length === 0) {
+        mobilenoError.innerHTML = "Mobile number is required"; return false;
+      } mobilenoError.innerHTML = ""; return true;
+    }
+
+    function validateAddress() {
+      var address = document.getElementById("address").value; if (address.length === 0) {
+        addressError.innerHTML = "Address is required"; return false;
+      } addressError.innerHTML = ""; return true;
+    }
+
+    function validateCountry() {
+      var country = document.getElementById("country").value; if (country.length === 0) {
+        countryError.innerHTML = "Country is required"; return false;
+      } countryError.innerHTML = ""; return true;
+    }
+
+    function validateDistrict() {
+      var district = document.getElementById("district").value; if (district.length === 0) {
+        districtError.innerHTML = "District is required"; return false;
+      } districtError.innerHTML = ""; return true;
+    }
+
+    function validatePincode() {
+      var pincode = document.getElementById("pincode").value; if (pincode.length === 0) {
+        pincodeError.innerHTML = "Pincode is required"; return false;
+      } pincodeError.innerHTML = ""; return true;
+    }
+
+    function validateForm() {
+      var name = validateName(); var mobileno = validateMobileNo(); var address = validateAddress(); var
+        country = validateCountry(); var district = validateDistrict(); var pincode = validatePincode(); if (!name || !mobileno
+          || !address || !country || !district || !pincode) {
+        submitError.style.display = "flex";
+        submitError.style.justifyContent = "center"; submitError.innerHTML = "Please fix all errors to submit";
+        setTimeout(() => {
+          submitError.style.display = "none";
+        }, 3000);
+        return false;
+      }
+      return true;
+    }
+  </script>
+  <%- include('../partials/user-footer')%>

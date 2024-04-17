@@ -68,9 +68,9 @@ router.post(
 );
 
 //PlaceOrder
-router.get("/place-order", userSession, usercontrollers.getPlaceOrder);
+router.get("/checkout", userSession, usercontrollers.getPlaceOrder);
 
-router.post("/place-order", usercontrollers.postPlaceOrder);
+router.post("/checkout", usercontrollers.postPlaceOrder);
 
 router.post("/verify-payment", usercontrollers.postVerifyPayment);
 

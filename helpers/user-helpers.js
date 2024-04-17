@@ -467,7 +467,7 @@ module.exports = {
       resolve(orderItems);
     });
   },
-  addAddress: (details) => {
+  addAddress: (details, userId) => {
     return new Promise(async (resolve, reject) => {
       try {
         const newObjectId = new ObjectID();
@@ -475,7 +475,7 @@ module.exports = {
           .get()
           .collection(collection.USER_COLLECTION)
           .updateOne(
-            { _id: new ObjectID(details.userId) },
+            { _id: new ObjectID(userId) },
             {
               $push: {
                 address: {
@@ -485,6 +485,7 @@ module.exports = {
               },
             }
           );
+        console.log(response);
         resolve({ status: true, newAddressId: newObjectId });
       } catch (error) {
         reject(error);

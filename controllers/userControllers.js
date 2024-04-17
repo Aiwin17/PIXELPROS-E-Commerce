@@ -316,7 +316,7 @@ module.exports = {
       .getTotalAmount(userId)
       .then(async (Total) => {
         await userHelpers.getUsers(userId).then((user) => {
-          res.render("user/place-order", {
+          res.render("user/checkout", {
             user,
             cartCount,
             Total,
@@ -405,15 +405,16 @@ module.exports = {
   getAddress: async (req, res) => {
     let wishlistCount = await userHelpers.getWishlistCount(req.session.userId);
     let cartCount = await userHelpers.getCartCount(req.session.userId);
-    res.render("user/address", {
+    res.render("user/add-address", {
       user: req.session.user,
       cartCount,
       wishlistCount,
     });
   },
   postAddress: async (req, res) => {
-    let address = await userHelpers.addAddress(req.body);
-    res.redirect("/user-profile");
+    const userId = req.session.userId;
+    await userHelpers.addAddress(req.body, userId);
+    res.redirect("/checkout");
   },
   getUserAddress: async (req, res) => {
     let userId = req.session.userId;
