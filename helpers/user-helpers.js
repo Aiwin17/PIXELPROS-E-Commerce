@@ -5,9 +5,6 @@ const { ObjectID } = require("bson");
 const objectId = require("mongodb").ObjectId;
 const twilio = require("../twilio");
 const Razorpay = require("razorpay");
-const { name } = require("ejs");
-const { resolve } = require("path");
-const { log } = require("console");
 const instance = new Razorpay({
   key_id: process.env.KEY_ID,
   key_secret: process.env.KEY_SECRET,
@@ -311,7 +308,7 @@ module.exports = {
   },
 
   placeOrder: (order, products, total, userId, walletAmount) => {
-    let quantity = products.quantity;
+    console.log(order, "Entered");
     return new Promise(async (resolve, reject) => {
       let address = await db
         .get()
@@ -319,7 +316,7 @@ module.exports = {
         .findOne(
           {
             _id: objectId(userId),
-            address: { $elemMatch: { _id: objectId(order.address) } },
+            address: { $elemMatch: { _id: objectId(order.addressId) } },
           },
           {
             projection: {
@@ -328,6 +325,7 @@ module.exports = {
             },
           }
         );
+      console.log(address, "address");
       let orderId = "ODID" + Math.floor(Math.random() * 1000000);
       let status =
         order.payment_option === "COD" ||
@@ -343,13 +341,14 @@ module.exports = {
           address: address.address[0].address,
           pincode: address.address[0].pincode,
         },
-        userId: objectId(userId),
+        userId: userId,
         paymentMethod: order.payment_option,
         products: products,
         totalAmount: Number(total),
         status: status,
         date: new Date(),
       };
+      console.log("Stopped");
       if (order.coupon) {
         db.get()
           .collection(collection.COUPON_COLLECTION)
@@ -391,12 +390,17 @@ module.exports = {
               { $inc: { stock: -i.quantity } }
             );
         });
-        // await db.get().collection(collection.USER_COLLECTION).updateOne({_id:new objectId(userId)},
-        // {
-        //   $set:{
-        //     wallet:Number(walletAmount)
-        //   }
-        // })
+        await db
+          .get()
+          .collection(collection.USER_COLLECTION)
+          .updateOne(
+            { _id: new objectId(userId) },
+            {
+              $set: {
+                wallet: Number(walletAmount),
+              },
+            }
+          );
         db.get()
           .collection(collection.ORDER_COLLECTION)
           .insertOne(orderObj)

@@ -1,43 +1,47 @@
 <%- include('../partials/user-header')%>
-<main style="height: 100%; width:100%; display: flex; flex-direction: column;" class="main">
+  <main style="height: 100%; width:100%; display: flex; flex-direction: column;" class="main">
     <div style="display: flex; justify-content: center; margin-top: 100px; margin-right: 20px;">
       <h1>Add Address</h1>
     </div>
     <section style="display: flex; justify-content: center; margin-top: 50px; height: 100%;">
-      <div
-        style="width:70%; height:80%; display: flex; justify-content: center; border-radius: 10px; box-shadow: 0 0px 3px 0px rgba(0, 0, 0, 0.2) ;">
-        <form action="/address" onsubmit="return validateForm()" method="post" style="width: 100%">
-          <div style="padding: 20px; display: flex;">
-            <input type="text" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189)" name="first-name"
-              placeholder="First Name">
-            <input type="text" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189); margin-left: 10px;"
-              name="last-name" placeholder="Last Name">
-          </div>
-          <div style="padding: 20px;">
-            <input type="text" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189)" name="country"
-              placeholder="Country">
-          </div>
-          <div style="padding: 20px;">
-            <input type="text" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189)" name="state"
-              placeholder="State">
-          </div>
-          <div style="padding: 20px;">
-            <input type="text" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189)" name="address"
-              placeholder="Address">
-          </div>
-          <div style="padding: 20px; display: flex;">
-            <input type="number" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189)" name="postcode"
-              placeholder="Postcode / ZIP">
-            <input type="number" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189); margin-left: 10px;"
-              name="Phoneno" placeholder="Phoneno">
-          </div>
-          <div style="padding: 20px; display: flex; justify-content: center;">
-            <button style="background-color: rgb(219, 41, 41); padding: 10px; border-radius: 10px; color:white">Save</button>
-          </div>
-        </form>
-      </div>
+      <%=console.log(address)%>
+        <div
+          style="width:70%; height:80%; display: flex; justify-content: center; border-radius: 10px; box-shadow: 0 0px 3px 0px rgba(0, 0, 0, 0.2) ;">
+          <form action="/edit-address?id=<%= address._id %>" method="post" style="width: 100%">
+            <div style="padding: 20px; display: flex;">
+              <input type="text" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189)" name="first-name"
+                value="<%= address.firstname %>" placeholder="First Name">
+              <input type="text"
+                style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189); margin-left: 10px;"
+                name="last-name" value="<%= address.lastname %>" placeholder="Last Name">
+            </div>
+            <div style="padding: 20px;">
+              <input type="text" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189)" name="country"
+                value="<%= address.country %>"
+              placeholder=" Country">
+            </div>
+            <div style="padding: 20px;">
+              <input type="text" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189)" name="state"
+                value="<%= address.state %>"
+              placeholder=" State">
+            </div>
+            <div style="padding: 20px;">
+              <input type="text" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189)" name="address"
+                value="<%= address.address %>" placeholder=" Address">
+            </div>
+            <div style="padding: 20px; display: flex;">
+              <input type="number" style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189)" name="postcode"
+                value="<%= address.postcode %>" placeholder=" Postcode / ZIP">
+              <input type="number"
+                style="width:100%; padding:8px; border: 1px solid rgb(189, 189, 189); margin-left: 10px;" name="Phoneno"
+                value="<%= address.Phoneno %>"  placeholder=" Phoneno">
+            </div>
+            <div style="padding: 20px; display: flex; justify-content: center;">
+              <button type="submit"
+                style="background-color: rgb(219, 41, 41); padding: 10px; border-radius: 10px; color:white">Save</button>
+            </div>
+          </form>
+        </div>
     </section>
   </main>
-<%- include('../partials/user-footer')%>
-
-
+  <%- include('../partials/user-footer')%>

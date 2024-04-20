@@ -19,7 +19,7 @@
 
 
   <!-- Shoping Cart -->
-  <form class="bg0 p-t-75 p-b-85">
+  <form class="bg0 p-t-75 p-b-85" id="checkout_form">
     <div class="container">
       <div class="row">
         <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
@@ -59,12 +59,13 @@
 
           <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
             <div class="flex-w flex-m m-r-20 m-tb-5">
-              <input class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" name="coupon"
-                placeholder="Coupon Code">
+              <input id='applyCoupon' value="" class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5"
+                type="text" name="coupon" placeholder="Coupon Code">
 
-              <div class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
+              <a onclick="applyCoupen('<%= user._id %>')"
+                class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
                 Apply coupon
-              </div>
+              </a>
             </div>
 
             <a href="/cart">
@@ -90,8 +91,8 @@
             </div>
 
             <div class="size-209">
-              <span style="font-size: 15px; color:red;" class="mtext-110 cl2">
-                ₹<%= Total %>
+              <span style="font-size: 15px; color:red;" class="mtext-110 cl2" id="totalAmount">
+                ₹<%=Total%>
               </span>
             </div>
           </div>
@@ -120,6 +121,7 @@
 
                   <div class="p-t-15">
                     <div class="bor8 bg0 m-b-12">
+                      <input type="text" name="addressId" value="<%= user.address[0]._id %>" hidden>
                       <% const name=user?.address[0]?.firstname.concat(" ", user?.address[0]?.lastname) %>
                       <input class=" stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="name" readonly
                         value="<%= name %>">
@@ -141,7 +143,7 @@
                     </div>
 
                     <div class="bor8 bg0 m-b-12">
-                      <input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="phone-no" readonly
+                      <input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="phoneno" readonly
                         value="<%= user?.address[0]?.Phoneno %>">
                     </div>
 
@@ -152,9 +154,10 @@
                   </div>
                   <a href="#">
                     <div class="flex-w">
-                      <div class="flex-c-m stext-101 cl2 size-115 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer">
+                      <a href="/edit-address?id=<%= user._id %>" type="button"
+                        class="flex-c-m stext-101 cl2 size-115 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer">
                         Update Address
-                      </div>
+                      </a>
                     </div>
                   </a>
                 </div>
@@ -167,7 +170,7 @@
 
                 <div class="payment_option">
                   <div class="custome-radio">
-                    <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios3"
+                    <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleCheckbox"
                       value="COD" checked>
                     <label style="font-weight: bold;" class="form-check-label" for="exampleRadios3"
                       data-bs-toggle="collapse" data-target="#bankTranfer" aria-controls="bankTranfer">Cash On
@@ -178,7 +181,7 @@
                     </div>
                   </div>
                   <div class="custome-radio">
-                    <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios4"
+                    <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleCheckbox"
                       value="razorpay">
                     <label style="font-weight: bold; margin-top: 10px;" class="form-check-label" for="exampleRadios4"
                       data-bs-toggle="collapse" data-target="#checkPayment"
@@ -188,19 +191,22 @@
                         Store State / County, Store Postcode. </p>
                     </div>
                   </div>
-                  <% if (user.wallet>=Total) { %>
+                  <%# if (user.wallet>=Total) { %>
                     <div class="custome-radio">
-                      <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios5"
-                        value="wallet">
-                      <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse"
-                        data-target="#paypal" aria-controls="paypal">Wallet</label>
+                      <input class="form-check-input" required="" type="radio" name="payment_option"
+                        id="exampleCheckbox" value="wallet">
+                      <label style="font-weight: bold; margin-top: 10px;" class="form-check-label" for="exampleRadios5"
+                        data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">Wallet</label>
+                      <span id='walletAmount'>
+                        <%= user.wallet %>
+                      </span>
                     </div>
-                    <% } %>
+                    <%# } %>
                 </div>
 
-                <button style="margin-top: 30px;"
+                <button type="submit" id="checkout" style="margin-top: 30px; background-color: rgb(45, 226, 45);"
                   class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
-                  Proceed to Checkout
+                  Place Order
                 </button>
         </div>
       </div>
@@ -221,7 +227,7 @@
       walletTotal = parseFloat(walletTotal.replace('₹', ''));
 
       $.ajax({
-        url: '/place-order',
+        url: '/checkout',
         method: 'post',
         data: $('#checkout_form').serialize() + '&total=' + total + '&wallet=' + walletTotal,
         success: (response) => {
@@ -296,9 +302,9 @@
     function applyCoupen(userId) {
       let couponCode = document.getElementById('applyCoupon').value
       let totalAmount = document.getElementById('totalAmount').innerHTML
-      let total = parseInt(totalAmount)
-      couponCode = couponCode.trim('', " ")
-      console.log(totalAmount, total, '|', couponCode, '|')
+      console.log(total, "LLLLLLLL")
+      console.log(totalAmount, "{{}}{{}}")
+      console.log(total, ":::::")
       $.ajax({
         url: '/apply-coupon',
         data: {
@@ -334,7 +340,7 @@
         }
       })
     }
-    var checkbox = document.getElementById('exampleCheckbox');
+    const checkbox = document.getElementById('exampleCheckbox');
     let total = document.getElementById('totalAmount').textContent
     total = parseFloat(total.replace('₹', ''));
     let walletTotal = document.getElementById('walletAmount').textContent
@@ -357,10 +363,5 @@
         document.getElementById('walletAmount').textContent = '₹ ' + walletTotal
       }
     });
-    function couponApply(clickedElement) {
-      let couponCode = clickedElement.innerHTML;
-      let input = document.querySelector('.coupon-input');
-      input.value = couponCode;
-    }
   </script>
   <%- include('../partials/user-footer')%>

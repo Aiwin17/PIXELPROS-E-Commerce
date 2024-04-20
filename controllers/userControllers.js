@@ -4,6 +4,7 @@ const adminHelpers = require("../helpers/admin-helpers");
 const generateInvoice = require("../config/pdfKit");
 const db = require("../config/connection");
 const collection = require("../config/collections");
+const { ObjectId } = require("mongodb");
 
 module.exports = {
   middleware: async (req, res, next) => {
@@ -333,7 +334,9 @@ module.exports = {
       });
   },
   postPlaceOrder: async (req, res) => {
-    let userId = req.session.userId;
+    console.log(req.body, "Address");
+    let userId = ObjectId(req.session.userId);
+    console.log(userId);
     let coupon = req.body.coupon;
     let totalPrice = req.body.total;
     let walletAmount = req.body.wallet;
@@ -345,8 +348,16 @@ module.exports = {
     } else {
       total = totalPrice;
     }
+    console.log(
+      req.body,
+      products,
+      total,
+      req.session.userId,
+      walletAmount,
+      "//////////"
+    );
     userHelpers
-      .placeOrder(req.body, products, total, req.session.userId, walletAmount)
+      .placeOrder(req.body, products, total, userId, walletAmount)
       .then((orderId) => {
         if (
           req.body.payment_option === "COD" ||
@@ -441,9 +452,12 @@ module.exports = {
   getEditAddress: async (req, res) => {
     try {
       let user = req.session.user;
+      console.log(user, "::");
+      console.log(req.query.id, "::");
       const address = user.address.find((item) => {
-        return item._id == req.query.id;
+        return item._id !== req.query.id;
       });
+      console.log(address);
       let wishlistCount = await userHelpers.getWishlistCount(
         req.session.userId
       );
@@ -476,7 +490,7 @@ module.exports = {
   postEditAddress: async (req, res) => {
     let addressId = req.query.id;
     await userHelpers.editAddress(req.body, addressId).then(() => {
-      res.redirect("/user-profile");
+      res.redirect("/checkout");
     });
   },
   postEditProfile: async (req, res) => {

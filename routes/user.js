@@ -106,7 +106,7 @@ router.post("/address", usercontrollers.postAddress);
 
 router.get("/user-address/:id", userSession, usercontrollers.getUserAddress);
 
-router.get("/edit-address", usercontrollers.getEditAddress);
+router.get("/edit-address", userSession, usercontrollers.getEditAddress);
 
 router.post("/edit-address", usercontrollers.postEditAddress);
 
