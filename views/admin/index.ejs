@@ -19,7 +19,7 @@
             <div class="text">
               <h6 class="mb-1 card-title">Revenue</h6>
               <% if(total) { %>
-                <span>₹<%=total %></span>
+                <span>₹<%=total%></span>
                 <% } else { %>
                   <span>₹0</span>
                   <% } %>
@@ -86,17 +86,12 @@
         <div class="card mb-4">
           <article class="card-body">
             <h5 class="card-title">Revenue Base on Area</h5>
-            <canvas id="myChart2" height="217"></canvas>
+            <canvas id="myChart2" height="217px"></canvas>
           </article>
         </div>
       </div>
     </div>
   </section>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
-    integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <script>
     $.ajax({
       url: "/admin/graph-statics",
@@ -105,14 +100,13 @@
       success: function (response) {
         const ctx = document.getElementById("myChart");
         let status2 = response.saleStatistics;
-        // let salesStatus = [0,0,0,0,0,0,0,0,0,0,0,0]
         let salesStatus = [];
         status2.forEach((item) => {
           salesStatus[item._id - 1] = item.totalAmount;
         });
         const monthNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         new Chart(ctx, {
-          type: "bar",
+          type: "line",
           data: {
             labels: monthNumbers.map((monthNumber) =>
               moment(monthNumber, "M").format("MMM")
@@ -133,8 +127,9 @@
             },
           },
         });
-        const ctx2 = document.getElementById("myChartPi");
+        const ctx2 = document.getElementById("myChart2");
         let status = response.orderStatistics;
+        console.log(status);
         let statusCount = [];
         let orderStatus = [];
         status.forEach((item) => {
@@ -142,7 +137,7 @@
           statusCount.push(item.count);
         });
         new Chart(ctx2, {
-          type: "doughnut",
+          type: "bar",
           data: {
             labels: orderStatus,
             datasets: [

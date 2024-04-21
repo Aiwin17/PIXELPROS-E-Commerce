@@ -1,7 +1,7 @@
 const express = require("express");
 const db = require("./config/connection");
 const cookieParser = require("cookie-parser");
-const session = require("express-session");
+const session = require('express-session');
 const dotenv = require("dotenv");
 const path = require("path");
 const logger = require("morgan");
@@ -37,9 +37,9 @@ app.use(express.static(path.join(__dirname, "public")));
 //Setting up a session middleware in an Express application
 app.use(
   session({
-    secret: "Key",
-    resave: true,
-    saveUninitialized: true,
+    secret: "key",
+    resave: false,
+    saveUninitialized: false,
     cookie: { maxAge: 600000 },
   })
 );
@@ -64,19 +64,3 @@ app.use(function (err, req, res, next) {
 });
 
 module.exports = app;
-
-/*
-const createError = require("http-errors");
-// Multer is a Node.js middleware used for handling multipart/form-data, which is typically used for
-// uploading files.
-app.use(
-  multer({ dest: "./public/images", storage: fileStorage }).array("image")
-);
-const multer = require("multer");
-const fileStorage = require("./utils/multer");
-// Multer is a Node.js middleware used for handling multipart/form-data, which is typically used for
-// uploading files.
-app.use(
-  multer({ dest: "./public/images", storage: fileStorage }).array("image")
-);
-*/

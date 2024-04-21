@@ -238,7 +238,7 @@
               'success'
             )
             setTimeout(() => {
-              location.href = '/'
+              location.href =' /order-success'
             }, 1500)
           } else {
             razorpayPayment(response)
@@ -292,7 +292,7 @@
         success: (response) => {
           console.log(response.status)
           if (response.status) {
-            location.href = '/'
+            location.href = '/order-success'
           } else {
             alert("Payment Failed")
           }

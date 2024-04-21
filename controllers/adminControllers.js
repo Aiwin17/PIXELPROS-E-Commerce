@@ -197,9 +197,11 @@ module.exports = {
       });
     });
   },
-  getGraphStatics: async (req, res) => {
+    getGraphStatics: async (req, res) => {
     let orderStatistics = await adminHelpers.getOrdrStatistics();
     let saleStatistics = await adminHelpers.getSaleStatistics();
+    console.log(orderStatistics, "Order Statistics");
+    console.log(saleStatistics, "saleStatistics");
     res.json({ orderStatistics, saleStatistics });
   },
   getSalesReport: async (req, res) => {

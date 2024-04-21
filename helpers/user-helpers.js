@@ -1,7 +1,7 @@
 const db = require("../config/connection");
 const collection = require("../config/collections");
 const bcrypt = require("bcrypt");
-const { ObjectID } = require("bson");
+const { ObjectId } = require("mongodb");
 const objectId = require("mongodb").ObjectId;
 const twilio = require("../twilio");
 const Razorpay = require("razorpay");
@@ -49,6 +49,7 @@ module.exports = {
         .findOne({ email: userData.email });
       if (user) {
         bcrypt.compare(userData.password, user.password).then((status) => {
+          console.log(status,"status");
           if (status) {
             if (user.blocked) {
               reject(true);
@@ -325,7 +326,6 @@ module.exports = {
             },
           }
         );
-      console.log(address, "address");
       let orderId = "ODID" + Math.floor(Math.random() * 1000000);
       let status =
         order.payment_option === "COD" ||
@@ -336,10 +336,12 @@ module.exports = {
       let orderObj = {
         orderid: orderId,
         deliveryDetails: {
-          name: address.address[0].name,
-          mobile: address.address[0].number,
+          firstname: address.address[0].firstname,
+          lastname: address.address[0].lastname,
+          mobile: address.address[0].Phoneno,
+          state: address.address[0].state,
           address: address.address[0].address,
-          pincode: address.address[0].pincode,
+          pincode: address.address[0].postcode,
         },
         userId: userId,
         paymentMethod: order.payment_option,
@@ -424,13 +426,34 @@ module.exports = {
   },
   getUserOrders: (userId) => {
     return new Promise(async (resolve, reject) => {
-      let orders = await db
-        .get()
-        .collection(collection.ORDER_COLLECTION)
-        .find({ userId: objectId(userId) })
-        .sort({ date: -1 }) // sort by creation date in descending order
-        .toArray();
-      resolve(orders);
+      try {
+        let orders = await db
+          .get()
+          .collection(collection.ORDER_COLLECTION)
+          .find({ userId: ObjectId(userId) })
+          .sort({ date: -1 })
+          .toArray();
+
+        if (orders.length > 0) {
+          for (const order of orders) {
+            for (const item of order.products) {
+              const product = await db
+                .get()
+                .collection(collection.PRODUCT_COLLECTION)
+                .findOne({ _id: ObjectId(item.item) });
+              if (product) {
+                item.product = { ...product, quantity: item.quantity };
+                delete item.item;
+              }
+            }
+          }
+          resolve(orders);
+        } else {
+          resolve([]);
+        }
+      } catch (error) {
+        reject(error);
+      }
     });
   },
   getOrderProducts: (orderId) => {

@@ -15,13 +15,9 @@ module.exports = {
 
   //User-Signup
   getSignUp: async (req, res) => {
-    // let wishlistCount = await userHelpers.getWishlistCount(req.session.userId);
-    // let cartCount = await userHelpers.getCartCount(req.session.userId);
     let signupErr = "";
     res.render("user/user-signup", {
       user: false,
-      // cartCount,
-      // wishlistCount,
       signupErr,
     });
   },
@@ -35,7 +31,6 @@ module.exports = {
         req.session.user = user;
         res.redirect("/");
       } catch (error) {
-        // Handle signup error
         console.error("Signup failed:", error);
         res.status(500).send("Internal Server Error");
       }
@@ -56,10 +51,17 @@ module.exports = {
 
   //User-Login
   getLogin: async (req, res) => {
-    let cartCount = await userHelpers.getCartCount(req.session.userId);
-    let loginErr = "";
-    res.render("user/user-login", { user: false, cartCount, loginErr });
+    if (req.session.loggedIn) {
+      res.redirect("/");
+    } else {
+      const logErr = req.session.loginError;
+      if (logErr) {
+        req.session.loginError = false;
+      }
+      res.render("user/user-login", { logErr });
+    }
   },
+
   postLogin: (req, res) => {
     userHelpers.doLogin(req.body).then(async (response) => {
       if (response.status) {
@@ -70,9 +72,8 @@ module.exports = {
         req.session.user = response.user;
         res.redirect("/");
       } else {
-        let cartCount = await userHelpers.getCartCount(req.session.userId);
-        let loginErr = "Invalid Credentials ";
-        res.render("user/login", { user: false, cartCount, loginErr });
+        req.session.loginError = "Invalid username or Password";
+        res.redirect("/login");
       }
     });
   },
@@ -334,9 +335,7 @@ module.exports = {
       });
   },
   postPlaceOrder: async (req, res) => {
-    console.log(req.body, "Address");
     let userId = ObjectId(req.session.userId);
-    console.log(userId);
     let coupon = req.body.coupon;
     let totalPrice = req.body.total;
     let walletAmount = req.body.wallet;
@@ -348,14 +347,6 @@ module.exports = {
     } else {
       total = totalPrice;
     }
-    console.log(
-      req.body,
-      products,
-      total,
-      req.session.userId,
-      walletAmount,
-      "//////////"
-    );
     userHelpers
       .placeOrder(req.body, products, total, userId, walletAmount)
       .then((orderId) => {

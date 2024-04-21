@@ -7,6 +7,7 @@
     <title>PIXELPROS</title>
     <link rel="icon" type="image/png" href="images/icons/App-Logo.jpg" />
     <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 
 <body>
@@ -14,44 +15,101 @@
         <img class="logo" src="images/icons/App-Logo.jpg" alt="App-Logo">
         <span class="App-name">PIXELPROS</span>
     </div>
-    <div class="main-container">
-        <div class="login-container">
-            <div class="login-img-container">
-                <img class="login-image" src="images/Login-Image.png" alt="">
-            </div>
-            <div class="login-form-container">
-                <div class="login-text">
-                    <span>Login</span>
-                </div>
-                <form action="/login" method="post">
-                    <div class="form-container">
-                        <div class="form">
-                            <div class="details">
-                                <label class="labels">EmailID</label>
-                                <input type="text" class="inputs" placeholder="Enter your email" required=""
-                                    name="email" id="email">
-                            </div>
-                            <div class="details">
-                                <label class="labels">Password</label>
-                                <input type="password" required="" class="inputs" name="password"
-                                    placeholder="Enter your password">
-                            </div>
-                            <div class="details">
-                                <a class="forgot-password" href="/otp-changePassword">Forgot Password?</a>
-                            </div>
-                            <div class="details">
-                                <button class="login-button" name="login" type="submit">LOGIN</button>
-                                <button class="otp-button">LOGIN WITH OTP</button>
-                            </div>
-                            <div class="signup-account">
-                                <a class="new-account" href="/signup">Create new account</a>
-                            </div>
-                        </div>
+    <% if (logErr) { %>
+        <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+        <script>
+            function showToast(message, type) {
+                Toastify({
+                    text: message,
+                    duration: 3000,
+                    newWindow: true,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: type === 'error' ? "#ff4c4c" : "linear-gradient(to right, #00b09b, #96c93d)",
+                }).showToast();
+            }
+            showToast("<%= logErr %>", "error");
+        </script>
+        <% } %>
+            <div class="main-container">
+                <div class="login-container">
+                    <div class="login-img-container">
+                        <img class="login-image" src="images/Login-Image.png" alt="">
                     </div>
-                </form>
+                    <div class="login-form-container">
+                        <div class="login-text">
+                            <span>Login</span>
+                        </div>
+                        <form action="/login" method="post" onsubmit="return validateForm()">
+                            <div class="form-container">
+                                <div class="form">
+                                    <div class="details">
+                                        <label class="labels">EmailID</label>
+                                        <input onkeydown="validateEmail(this)" type="text" class="inputs"
+                                            placeholder="Enter your email" required="" name="email" id="email">
+                                        <span style="color: red;" id="email-error"></span>
+                                    </div>
+                                    <div class="details">
+                                        <label class="labels">Password</label>
+                                        <input onkeyup="validatePassword(this)" type="password" required=""
+                                            class="inputs" name="password" id="password"
+                                            placeholder="Enter your password">
+                                        <span style="color: red;" id="password-error"></span>
+                                    </div>
+                                    <div class="details">
+                                        <a class="forgot-password" href="/otp-changePassword">Forgot Password?</a>
+                                    </div>
+                                    <div class="details">
+                                        <button class="login-button" name="login" type="submit">LOGIN</button>
+                                        <button class="otp-button">LOGIN WITH OTP</button>
+                                    </div>
+                                    <div class="signup-account">
+                                        <a class="new-account" href="/signup">Create new account</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 </body>
+
+<script>
+    function validateForm() {
+        const email = document.getElementById("email");
+        const password = document.getElementById("password");
+        const isEmailValid = validateEmail(email);
+        const isPasswordValid = validatePassword(password);
+        return isEmailValid && isPasswordValid;
+    }
+    function validateEmail(emailInput) {
+        const email = emailInput.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailError = document.getElementById('email-error');
+        if (emailRegex.test(email)) {
+            emailError.innerHTML = "";
+            return true;
+        } else if (email === "") {
+            emailError.innerHTML = "Invalid Email";
+            return false;
+        }
+        else {
+            emailError.innerHTML = "Invalid Email";
+            return false;
+        }
+    }
+    function validatePassword(passwordInput) {
+        const password = passwordInput.value.trim();
+        const passwordError = document.getElementById('password-error');
+        if (password.length <= 3 || password.length > 15 || password.length === 0) {
+            passwordError.innerHTML = "Invalid Password";
+            return false;
+        } else {
+            passwordError.innerHTML = "";
+            return true;
+        }
+    }
+</script>
 
 </html>
