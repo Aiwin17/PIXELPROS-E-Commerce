@@ -61,7 +61,6 @@ module.exports = {
       res.render("user/user-login", { logErr });
     }
   },
-
   postLogin: (req, res) => {
     userHelpers.doLogin(req.body).then(async (response) => {
       if (response.status) {
@@ -138,7 +137,6 @@ module.exports = {
       });
     });
   },
-
   getSingleProduct: async (req, res) => {
     let id = req.params.id;
     let wishlistCount = await userHelpers.getWishlistCount(req.session.userId);
@@ -152,11 +150,16 @@ module.exports = {
       });
     });
   },
+  postProQuantity: (req, res) => {
+    userHelpers.changeProductQuantity(req.body).then(async (response) => {
+      response.total = await userHelpers.getTotalAmount(req.body.user);
+      res.json(response);
+    });
+  },
 
   //OTP
   getOtpLogin: async (req, res) => {
     let checkUser = req.query.user;
-    console.log(checkUser);
     if (checkUser) {
       res.render("user/otp-Login", { user: false, error: true });
     } else {
@@ -278,7 +281,6 @@ module.exports = {
     }
   },
   getaddToCart: (req, res) => {
-    console.log(req.query.id);
     userHelpers.addToCart(req.query.id, req.session.userId).then(async () => {
       let wishlistCount = await userHelpers.getWishlistCount(
         req.session.userId
@@ -289,14 +291,6 @@ module.exports = {
   },
   postRemoveCart: async (req, res) => {
     userHelpers.removeCart(req.body).then((response) => {
-      res.json(response);
-    });
-  },
-
-  //Product-Quatity
-  postProQuantity: (req, res) => {
-    userHelpers.changeProductQuantity(req.body).then(async (response) => {
-      response.total = await userHelpers.getTotalAmount(req.body.user);
       res.json(response);
     });
   },
@@ -356,13 +350,36 @@ module.exports = {
         ) {
           res.json({ codSuccess: true });
         } else {
+          console.log(orderId, "orderid");
+          console.log(total, "total");
           userHelpers.generateRazorpay(orderId, total).then((response) => {
+            console.log(response, "response");
             res.json(response);
           });
         }
       });
   },
 
+  //Verify-Payment
+  postVerifyPayment: (req, res) => {
+    userHelpers
+      .verifyPayment(req.body)
+      .then((response) => {
+        if (response.status) {
+          userHelpers
+            .changePaymentStatus(req.body["order[receipt]"])
+            .then(() => {
+              res.json({ status: true });
+            })
+        } else {
+          res.json({ status: false });
+        }
+      })
+      .catch((err) => {
+        console.log("Error: " + err);
+        res.json({ status: false });
+      });
+  },
   //Orders
   getOrderSuccess: async (req, res) => {
     let wishlistCount = await userHelpers.getWishlistCount(req.session.userId);
@@ -443,12 +460,9 @@ module.exports = {
   getEditAddress: async (req, res) => {
     try {
       let user = req.session.user;
-      console.log(user, "::");
-      console.log(req.query.id, "::");
       const address = user.address.find((item) => {
         return item._id !== req.query.id;
       });
-      console.log(address);
       let wishlistCount = await userHelpers.getWishlistCount(
         req.session.userId
       );
@@ -529,18 +543,6 @@ module.exports = {
         wishlistCount,
       });
     });
-  },
-  postVerifyPayment: (req, res) => {
-    userHelpers
-      .verifyPayment(req.body)
-      .then(() => {
-        userHelpers.changePaymentStatus(req.body["order[receipt]"]).then(() => {
-          res.json({ status: true });
-        });
-      })
-      .catch((err) => {
-        res.json({ status: false });
-      });
   },
   postApplyCoupon: async (req, res) => {
     await userHelpers

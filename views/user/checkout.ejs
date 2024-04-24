@@ -217,7 +217,6 @@
   <script>
     $("#checkout_form").submit((e) => {
       e.preventDefault()
-      console.log('////////')
       let couponCode = document.getElementById('applyCoupon').value
       let userId = document.getElementById('applyCoupon').value
       let discountPrice = parseInt(document.getElementById('totalAmount').innerText)
@@ -238,7 +237,7 @@
               'success'
             )
             setTimeout(() => {
-              location.href =' /order-success'
+              location.href = ' /order-success'
             }, 1500)
           } else {
             razorpayPayment(response)
@@ -248,13 +247,13 @@
     })
     function razorpayPayment(order) {
       var options = {
-        "key": "rzp_test_OBIWtPdGUChjsm", // Enter the Key ID generated from the Dashboard
-        "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "key": "rzp_test_M2ghOvBNM7gTz9",
+        "amount": order.amount, 
         "currency": "INR",
-        "name": "CamShop", //your business name
+        "name": "PIXELPROS", //your business name
         "description": "Test Transaction",
         "image": "https://example.com/your_logo",
-        "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "order_id": order.id, 
         "handler": function (response) {
           verifyPayment(response, order)
         },
@@ -271,14 +270,14 @@
         }
       };
       var rzp1 = new Razorpay(options);
-      rzp1.on('payment.failed', function (response) {
+      /*rzp1.on('payment.failed', function (response) {
         window.location.href = '/cart'
       })
       rzp1.on('payment.window.closed', function () {
-
         window.location.href = '/cart'
-      });
+      });*/
       rzp1.open();
+      /*e.preventDefault();*/
     }
 
     function verifyPayment(payment, order) {
@@ -302,9 +301,6 @@
     function applyCoupen(userId) {
       let couponCode = document.getElementById('applyCoupon').value
       let totalAmount = document.getElementById('totalAmount').innerHTML
-      console.log(total, "LLLLLLLL")
-      console.log(totalAmount, "{{}}{{}}")
-      console.log(total, ":::::")
       $.ajax({
         url: '/apply-coupon',
         data: {

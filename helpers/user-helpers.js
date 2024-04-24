@@ -5,10 +5,12 @@ const { ObjectId } = require("mongodb");
 const objectId = require("mongodb").ObjectId;
 const twilio = require("../twilio");
 const Razorpay = require("razorpay");
-const instance = new Razorpay({
+
+let instance = new Razorpay({
   key_id: process.env.KEY_ID,
   key_secret: process.env.KEY_SECRET,
 });
+
 module.exports = {
   doSignup: (userData) => {
     return new Promise(async (resolve, reject) => {
@@ -49,7 +51,7 @@ module.exports = {
         .findOne({ email: userData.email });
       if (user) {
         bcrypt.compare(userData.password, user.password).then((status) => {
-          console.log(status,"status");
+          console.log(status, "status");
           if (status) {
             if (user.blocked) {
               reject(true);
@@ -309,7 +311,6 @@ module.exports = {
   },
 
   placeOrder: (order, products, total, userId, walletAmount) => {
-    console.log(order, "Entered");
     return new Promise(async (resolve, reject) => {
       let address = await db
         .get()
@@ -350,7 +351,6 @@ module.exports = {
         status: status,
         date: new Date(),
       };
-      console.log("Stopped");
       if (order.coupon) {
         db.get()
           .collection(collection.COUPON_COLLECTION)
@@ -726,14 +726,17 @@ module.exports = {
     });
   },
   generateRazorpay: (orderId, total) => {
+    console.log("orderId-total:", orderId, total);
     return new Promise((resolve, reject) => {
       var options = {
         amount: total * 100,
         currency: "INR",
         receipt: "" + orderId,
       };
+      console.log(options, "options");
       instance.orders.create(options, function (err, order) {
         if (err) {
+          console.log("Razorpay Error:", err);
         } else {
           resolve(order);
         }
@@ -751,9 +754,9 @@ module.exports = {
       );
       hmac = hmac.digest("hex");
       if (hmac == details["payment[razorpay_signature]"]) {
-        resolve();
+        resolve({ status: true });
       } else {
-        reject();
+        reject({ status: false });
       }
     });
   },

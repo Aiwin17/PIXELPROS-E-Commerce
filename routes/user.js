@@ -35,7 +35,6 @@ router.get(
   loginSession,
   usercontrollers.getOtpChangePassword
 );
-
 router.post("/otp-changePassword", usercontrollers.postOtpChangePassword);
 
 router.post("/mobileno-verify", usercontrollers.postVerifyNumber);
@@ -70,9 +69,9 @@ router.post(
 //PlaceOrder
 router.get("/checkout", userSession, usercontrollers.getPlaceOrder);
 
-router.post("/checkout", usercontrollers.postPlaceOrder);
+router.post("/checkout", userSession, usercontrollers.postPlaceOrder);
 
-router.post("/verify-payment", usercontrollers.postVerifyPayment);
+router.post("/verify-payment", userSession, usercontrollers.postVerifyPayment);
 
 //Orders
 router.get("/order-success", userSession, usercontrollers.getOrderSuccess);
